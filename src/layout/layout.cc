@@ -786,11 +786,10 @@ TVM_STATIC_IR_FUNCTOR(ReprPrinter, vtable)
 TVM_FFI_STATIC_INIT_BLOCK() {
   namespace refl = tvm::ffi::reflection;
   refl::GlobalDef()
-      .def_packed("tl.Layout",
-                  [](PackedArgs args, Any *rv) {
-                    *rv = Layout(args[0].cast<Array<IterVar>>(),
-                                 args[1].cast<Array<PrimExpr>>());
-                  })
+      .def("tl.Layout",
+           [](Array<IterVar> forward_var, Array<PrimExpr> forward_index) {
+             return Layout(forward_var, forward_index);
+           })
       .def("tl.Layout_input_shape",
            [](Layout layout) { return layout->InputShape(); })
       .def("tl.Layout_output_shape",
@@ -805,14 +804,12 @@ TVM_FFI_STATIC_INIT_BLOCK() {
              const LayoutNode *other_node = other.as<LayoutNode>();
              return layout->IsEqual(other_node);
            })
-      .def_packed("tl.Fragment",
-                  [](PackedArgs args, Any *rv) {
-                    *rv = Fragment(
-                        /*forward_var=*/args[0].cast<Array<IterVar>>(),
-                        /*forward_index=*/args[1].cast<Array<PrimExpr>>(),
-                        /*forward_thread=*/args[2].cast<PrimExpr>(),
-                        /*thread_replicate=*/args[3].cast<IterVar>());
-                  })
+      .def("tl.Fragment",
+           [](Array<IterVar> forward_var, Array<PrimExpr> forward_index,
+          PrimExpr forward_thread, IterVar thread_replicate) {
+         return Fragment(forward_var, forward_index, forward_thread,
+                 thread_replicate);
+           })
       .def("tl.Fragment_is_equal",
            [](Fragment fragment, Fragment other) {
              const FragmentNode *other_node = other.as<FragmentNode>();
