@@ -1,0 +1,10 @@
+[package]
+name = "tilelang-rs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+tilelang-rs-core = { path = "../tilelang-rs-core" }
+tilelang-rs-ffi = { path = "../tilelang-rs-ffi" }
+tilelang-rs-macros = { path = "../tilelang-rs-macros" }

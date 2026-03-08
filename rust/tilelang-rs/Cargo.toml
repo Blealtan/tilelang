@@ -1,0 +1,16 @@
+[workspace]
+members = [
+    "tilelang-rs-ffi",
+    "tilelang-rs-core",
+    "tilelang-rs-macros",
+    "tilelang-rs",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+tvm-ffi = { path = "../../3rdparty/tvm/3rdparty/tvm-ffi/rust/tvm-ffi" }
