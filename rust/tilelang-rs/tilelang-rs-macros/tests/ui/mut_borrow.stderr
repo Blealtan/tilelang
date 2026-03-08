@@ -1,0 +1,6 @@
+error: TLRS003: #[tl_ir] 中禁止显式 &mut 可变借用。
+       help: 使用 DSL 状态容器，不要依赖 host 可变引用。
+ --> tests/ui/mut_borrow.rs:6:14
+  |
+6 |     let _r = &mut { x };
+  |              ^

@@ -1,0 +1,6 @@
+error: TLRS004: #[tl_ir] 中禁止 host 赋值/复合赋值。
+       help: 改用 alloc_var/load/store 或 select 表达分支结果。
+ --> tests/ui/assign.rs:6:5
+  |
+6 |     x = 2;
+  |     ^
