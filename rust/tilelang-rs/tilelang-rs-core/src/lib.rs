@@ -1,9 +1,9 @@
 use std::string::String as StdString;
 
+use std::sync::LazyLock;
 pub use tilelang_rs_ffi as ffi;
-use tvm_ffi::{
-    error::TYPE_ERROR, object::ObjectRef, AnyValue, Array, DLDataTypeExt, Map, String as FfiString,
-};
+
+use tvm_ffi::{AnyValue, Array, DLDataTypeExt, Map, String as FfiString};
 
 pub type Result<T> = tvm_ffi::Result<T>;
 
@@ -45,13 +45,13 @@ impl IntoPrimExpr for ffi::ir::PrimExpr {
 
 impl IntoPrimExpr for ffi::tir::Var {
     fn into_prim_expr(self) -> ffi::ir::PrimExpr {
-        ffi::ir::PrimExpr::from_object(self.as_object_ref().clone())
+        self.into()
     }
 }
 
 impl IntoPrimExpr for ffi::ir::IntImm {
     fn into_prim_expr(self) -> ffi::ir::PrimExpr {
-        ffi::ir::PrimExpr::from_object(self.as_object_ref().clone())
+        self.into()
     }
 }
 
@@ -139,10 +139,8 @@ where
             self.step,
         )
         .expect("Serial frame construction should not fail");
-        let vars = frame.vars().expect("ForFrame::vars should not fail");
-        let base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
-        (base, vars)
+        let vars = for_frame_vars(&frame);
+        (frame.into(), vars)
     }
 }
 
@@ -178,10 +176,8 @@ where
             self.step,
         )
         .expect("Vectorized frame construction should not fail");
-        let vars = frame.vars().expect("ForFrame::vars should not fail");
-        let base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
-        (base, vars)
+        let vars = for_frame_vars(&frame);
+        (frame.into(), vars)
     }
 }
 
@@ -217,10 +213,8 @@ where
             self.step,
         )
         .expect("Unroll frame construction should not fail");
-        let vars = frame.vars().expect("ForFrame::vars should not fail");
-        let base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
-        (base, vars)
+        let vars = for_frame_vars(&frame);
+        (frame.into(), vars)
     }
 }
 
@@ -253,10 +247,8 @@ where
             .collect();
         let frame = ffi::tl::Parallel(Array::new(extents), self.annotations)
             .expect("Parallel frame construction should not fail");
-        let vars = frame.vars().expect("ForFrame::vars should not fail");
-        let base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
-        (base, vars)
+        let vars = for_frame_vars(&frame);
+        (frame.into(), vars)
     }
 }
 
@@ -298,10 +290,8 @@ where
             self.group,
         )
         .expect("Pipelined frame construction should not fail");
-        let vars = frame.vars().expect("ForFrame::vars should not fail");
-        let base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
-        (base, vars)
+        let vars = for_frame_vars(&frame);
+        (frame.into(), vars)
     }
 }
 
@@ -367,7 +357,7 @@ impl LocalVar {
         let span = empty_span().expect("empty_span should not fail");
         let load = ffi::tir::BufferLoad(self.buffer.clone(), scalar_index(), None, span)
             .expect("BufferLoad should not fail");
-        ffi::ir::PrimExpr::from_object(load.as_object_ref().clone())
+        load.into()
     }
 
     pub fn store<V>(&self, value: V)
@@ -442,10 +432,7 @@ impl BuilderContext {
                 return Err(err);
             }
         };
-        let module_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-            module_frame.as_object_ref().clone(),
-        );
-        let module_guard = FrameGuard::enter(module_base);
+        let module_guard = FrameGuard::enter(module_frame.into());
 
         Ok(Self {
             name,
@@ -493,11 +480,8 @@ impl BuilderContext {
     {
         let prim_func_frame = ffi::script::ir_builder::tir::PrimFunc(is_private)
             .expect("PrimFunc frame construction should not fail");
-        let prim_func_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-            prim_func_frame.as_object_ref().clone(),
-        );
 
-        self.with_frame(prim_func_base, || {
+        self.with_frame(prim_func_frame.clone().into(), || {
             ffi::script::ir_builder::tir::FuncName(FfiString::from(name))
                 .expect("FuncName should not fail");
             f(&prim_func_frame)
@@ -513,24 +497,16 @@ impl BuilderContext {
         let cond = cond.into_pred_expr().to_prim_expr();
         let if_frame =
             ffi::script::ir_builder::tir::If(cond).expect("If frame construction should not fail");
-        let if_base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(if_frame.as_object_ref().clone());
 
-        self.with_frame(if_base, || {
+        self.with_frame(if_frame.into(), || {
             let then_frame = ffi::script::ir_builder::tir::Then()
                 .expect("Then frame construction should not fail");
-            let then_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-                then_frame.as_object_ref().clone(),
-            );
-            let value = self.with_frame(then_base, then_branch);
+            let value = self.with_frame(then_frame.into(), then_branch);
 
             if let Some(else_branch) = else_branch {
                 let else_frame = ffi::script::ir_builder::tir::Else()
                     .expect("Else frame construction should not fail");
-                let else_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-                    else_frame.as_object_ref().clone(),
-                );
-                self.with_frame(else_base, else_branch);
+                self.with_frame(else_frame.into(), else_branch);
             }
 
             value
@@ -564,7 +540,7 @@ impl Drop for BuilderContext {
 
 pub fn debug_print<T>(object: T) -> StdString
 where
-    T: Into<ObjectRef>,
+    T: Into<tvm_ffi::object::ObjectRef>,
 {
     let printed = ffi::ir::DebugPrint(object.into()).expect("DebugPrint should not fail");
     printed.as_str().to_owned()
@@ -687,7 +663,7 @@ pub mod language {
             span,
         )
         .expect("Select should not fail");
-        ffi::ir::PrimExpr::from_object(expr.as_object_ref().clone())
+        expr.into()
     }
 }
 
@@ -758,7 +734,7 @@ pub mod pred {
             PredExpr::Expr(expr) => {
                 let span = empty_span().expect("empty_span should not fail");
                 let not = ffi::tir::Not(expr, span).expect("Not should not fail");
-                PredExpr::Expr(ffi::ir::PrimExpr::from_object(not.as_object_ref().clone()))
+                PredExpr::Expr(not.into())
             }
         }
     }
@@ -782,7 +758,7 @@ pub mod pred {
                         let span = empty_span().expect("empty_span should not fail");
                         let and =
                             ffi::tir::And(lhs_expr, rhs_expr, span).expect("And should not fail");
-                        PredExpr::Expr(ffi::ir::PrimExpr::from_object(and.as_object_ref().clone()))
+                        PredExpr::Expr(and.into())
                     }
                 }
             }
@@ -808,12 +784,25 @@ pub mod pred {
                         let span = empty_span().expect("empty_span should not fail");
                         let or =
                             ffi::tir::Or(lhs_expr, rhs_expr, span).expect("Or should not fail");
-                        PredExpr::Expr(ffi::ir::PrimExpr::from_object(or.as_object_ref().clone()))
+                        PredExpr::Expr(or.into())
                     }
                 }
             }
         }
     }
+}
+
+static FORFRAME_VARS_GETTER: LazyLock<tvm_ffi::object_wrapper::FieldGetter<Array<ffi::tir::Var>>> =
+    LazyLock::new(|| {
+        tvm_ffi::object_wrapper::FieldGetter::new("script.ir_builder.tir.ForFrame", "vars")
+            .expect("ForFrame.vars field must be registered in TVM reflection")
+    });
+
+fn for_frame_vars(frame: &ffi::script::ir_builder::tir::ForFrame) -> Array<ffi::tir::Var> {
+    let obj_ref: tvm_ffi::object::ObjectRef = frame.clone().into();
+    FORFRAME_VARS_GETTER
+        .get(&obj_ref)
+        .expect("ForFrame.vars must be accessible")
 }
 
 fn empty_annotations() -> Result<Map<FfiString, AnyValue>> {
@@ -835,7 +824,7 @@ fn int64_imm(value: i64) -> Result<ffi::ir::PrimExpr> {
     let dtype = tvm_ffi::DLDataType::try_from_str("int64")?;
     let span = empty_span()?;
     let imm = ffi::ir::IntImm(dtype, value, span)?;
-    Ok(ffi::ir::PrimExpr::from_object(imm.as_object_ref().clone()))
+    Ok(imm.into())
 }
 
 fn assert_loop_vars(vars: Array<ffi::tir::Var>, expected: usize) {
@@ -852,7 +841,7 @@ fn bool_imm(value: bool) -> Result<ffi::ir::PrimExpr> {
     let dtype = tvm_ffi::DLDataType::try_from_str("bool")?;
     let span = empty_span()?;
     let imm = ffi::ir::IntImm(dtype, if value { 1 } else { 0 }, span)?;
-    Ok(ffi::ir::PrimExpr::from_object(imm.as_object_ref().clone()))
+    Ok(imm.into())
 }
 
 fn binary_pred<L, R, F, O>(lhs: L, rhs: R, op: F) -> PredExpr
@@ -860,16 +849,19 @@ where
     L: IntoPrimExpr,
     R: IntoPrimExpr,
     F: FnOnce(ffi::ir::PrimExpr, ffi::ir::PrimExpr, ffi::ir::Span) -> Result<O>,
-    O: Into<ObjectRef>,
+    O: Into<ffi::ir::PrimExpr>,
 {
     let span = empty_span().expect("empty_span should not fail");
     let expr = op(lhs.into_prim_expr(), rhs.into_prim_expr(), span)
         .expect("binary predicate construction should not fail");
-    PredExpr::Expr(ffi::ir::PrimExpr::from_object(expr.into()))
+    PredExpr::Expr(expr.into())
 }
 
-fn downcast_ir_module(object: ObjectRef) -> Result<ffi::ir::IRModule> {
-    object.try_into().map_err(|_object: ObjectRef| {
-        tvm_ffi::Error::new(TYPE_ERROR, "IRBuilder did not produce an ir.IRModule", "")
-    })
+fn downcast_ir_module(object: tvm_ffi::object::ObjectRef) -> Result<ffi::ir::IRModule> {
+    use tvm_ffi::error::TYPE_ERROR;
+    object
+        .try_into()
+        .map_err(|_object: tvm_ffi::object::ObjectRef| {
+            tvm_ffi::Error::new(TYPE_ERROR, "IRBuilder did not produce an ir.IRModule", "")
+        })
 }

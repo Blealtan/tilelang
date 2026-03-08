@@ -9,7 +9,7 @@ fn public_ffi_surface_can_construct_ir_nodes() -> Result<()> {
     let span = ffi::ir::Span(source, 0, 0, 0, 0)?;
     let dtype = tvm_ffi::DLDataType::try_from_str("int64")?;
     let imm = ffi::ir::IntImm(dtype, 42, span)?;
-    let expr = ffi::ir::PrimExpr::from_object(imm.as_object_ref().clone());
+    let expr = ffi::ir::PrimExpr::from(imm);
     let printed = debug_print(expr);
 
     assert!(printed.contains("T.int64(42)"));
