@@ -1,0 +1,23 @@
+error[E0061]: this function takes 1 argument but 2 arguments were supplied
+ --> tests/ui/parallel_variadic.rs:4:13
+  |
+4 |     let _ = T::parallel(2i64, 3i64);
+  |             ^^^^^^^^^^^       ---- unexpected argument #2 of type `i64`
+  |
+note: expected `[_; _]`, found `i64`
+ --> tests/ui/parallel_variadic.rs:4:25
+  |
+4 |     let _ = T::parallel(2i64, 3i64);
+  |                         ^^^^
+  = note: expected array `[_; _]`
+              found type `i64`
+note: function defined here
+ --> src/lib.rs
+  |
+  |     pub fn parallel<E, const N: usize>(extents: [E; N]) -> ParallelDsl<E, N>
+  |            ^^^^^^^^
+help: remove the extra argument
+  |
+4 -     let _ = T::parallel(2i64, 3i64);
+4 +     let _ = T::parallel(/* extents */);
+  |

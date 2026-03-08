@@ -5,4 +5,8 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
+tilelang-rs-ffi = { path = "../tilelang-rs-ffi" }
 tvm-ffi.workspace = true
+
+[dev-dependencies]
+trybuild = "1.0.116"
