@@ -4,10 +4,17 @@ pub mod _tvm_ffi_stubgen_detail {
 }
 
 pub use crate::_tvm_ffi_stubgen_detail::types::ObjectRValueRef;
+pub mod expr_functor {
+    pub use crate::_tvm_ffi_stubgen_detail::types::expr_functor::PyExprMutator;
+    pub use crate::_tvm_ffi_stubgen_detail::types::expr_functor::PyExprVisitor;
+}
 pub mod ffi {
     pub mod reflection {
         pub use crate::_tvm_ffi_stubgen_detail::types::ffi::reflection::AccessPath;
     }
+}
+pub mod instrument {
+    pub use crate::_tvm_ffi_stubgen_detail::types::instrument::PassInstrument;
 }
 pub mod ir {
     pub use crate::_tvm_ffi_stubgen_detail::functions::ir::BaseFuncCopy;
@@ -116,12 +123,680 @@ pub mod ir {
         pub use crate::_tvm_ffi_stubgen_detail::functions::ir::analysis::CollectCallMap;
     }
 }
+pub mod meta_schedule {
+    pub use crate::_tvm_ffi_stubgen_detail::types::meta_schedule::ExtractedTask;
+}
 pub mod relax {
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dfb_rewrite_add;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dfb_rewrite_add_binding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dfb_rewrite_mutate_irmodule;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dfb_rewrite_remove_all_unused;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dfb_rewrite_remove_unused;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dfb_rewrite_replace_all_uses;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BindingBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderAddFunction;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderBeginBindingBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderBeginDataflowBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderBeginScope;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderCreate;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderCurrentBlockIsDataFlow;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderEmit;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderEmitMatchCast;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderEmitNormalized;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderEmitOutput;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderEndBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderEndScope;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderFinalize;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderGetContextIRModule;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderGetUniqueName;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderLookupBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderNormalize;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::BlockBuilderUpdateFunction;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::Call;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::Constant;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::CopyWithNewVars;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::DataTypeImm;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::DataflowBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::DataflowBlockRewrite;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::DataflowVar;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::DataflowVarFromId;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderC;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderConvertConstant;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderCreate;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderDeclareFunction;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderEmitCall;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderEmitFunction;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderEmitGoto;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderEmitIf;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderEmitRet;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderEndFunction;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderF;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderGet;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderImm;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecBuilderR;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExecutableLoadFromFile;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprMutatorVisitBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprMutatorVisitBindingBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprMutatorVisitExpr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprMutatorVisitVarDef;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprVisitorVisitBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprVisitorVisitBindingBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprVisitorVisitExpr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprVisitorVisitSpan;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExprVisitorVisitVarDef;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ExternFunc;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FuncStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FuncStructInfoOpaqueFunc;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FuncWithAttr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FuncWithAttrs;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FuncWithoutAttr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::Function;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FunctionBindParams;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FunctionBindSymbolicVars;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FunctionCreateEmpty;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::FunctionInlineFunctions;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::GetShapeOf;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::If;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::MakePyExprMutator;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::MakePyExprVisitor;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::MatchCast;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ObjectStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ObjectType;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PackedFuncType;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PrimStructInfoFromDtype;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PrimStructInfoFromValue;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PrimValue;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorGetVarRemap;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorLookupBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorSetVarRemap;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorVisitBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorVisitBindingBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorVisitExpr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorVisitExprPostOrder;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorVisitVarDef;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorVisitWithNewScope;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprMutatorWithStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprVisitorVisitBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprVisitorVisitBindingBlock;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprVisitorVisitExpr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::PyExprVisitorVisitVarDef;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::SeqExpr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ShapeExpr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ShapeStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::ShapeType;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::StringImm;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::StructInfoIsBaseOf;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::TETensor;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::TensorStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::TensorType;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::Tuple;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::TupleGetItem;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::TupleStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::UpdateStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::VMCodeGen;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::VMLink;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::VMTIRCodeGen;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::Var;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::VarBinding;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::VarFromId;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::BlockBuilder;
     pub use crate::_tvm_ffi_stubgen_detail::types::relax::DTensorStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::DataflowBlockPass;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::DataflowBlockRewrite;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::DynTensorType;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::ExecBuilder;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::FuncStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::FunctionPass;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::Id;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::MatchResult;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::ObjectStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::ObjectType;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::PackedFuncType;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::PrimStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::ShapeStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::ShapeType;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::TEPlaceholderOp;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::TensorStructInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::relax::TupleStructInfo;
+    pub mod analysis {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::all_global_vars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::all_vars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::bound_vars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::computable_at_compile_time;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::contains_impure_call;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::detect_recursion;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::free_vars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::get_var2val;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::has_reshape_pattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::name_to_binding;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::post_order_visit;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::remove_all_unused;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::suggest_layout_transforms;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::udchain;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::well_formed;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::CollectNonNegativeExpressions;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::DefinableTIRVarsInStructInfo;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::DefinedSymbolicVars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::DeriveCallRetStructInfo;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::EraseToWellDefined;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::FreeSymbolicVars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::GetStaticType;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::StructInfoBaseCheck;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::StructInfoLCA;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::analysis::TIRVarsInStructInfo;
+    }
+    pub mod attrs {
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AdaptivePool1DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AdaptivePool2DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AdaptivePool3DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AllClassNonMaximumSuppressionAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AllGatherAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AllReduceAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ArgmaxArgminAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ArgsortAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AstypeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::AttentionAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::BatchNormAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::BucketizeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::CallInplacePackedAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::CallTIRInplaceAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::CallTIRWithGradAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ConcatAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Conv1DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Conv1DTransposeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Conv2DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Conv2DTransposeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Conv3DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::DistributionAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::DropoutAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::EinsumAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ExpandDimsAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::FlipAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::GatherElementsAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::GatherNDAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::GridSampleAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::GroupNormAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::HintOnDeviceAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::IndexPutAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::InitAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::InstanceNormAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::LayerNormAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::LayoutTransformAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::LeakyReluAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::MatmulAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::MeshgridAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::MultinomialFromUniformAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::NLLLossAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::OneHotAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::PReluAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::PadAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::PermuteDimsAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::PixelShuffleAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Pool1DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Pool2DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Pool3DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::QuantizeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::RMSNormAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::RepeatAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::Resize2DAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ScanopAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ScatterCollectiveAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ScatterElementsAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ScatterNDAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::SliceScatterAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::SoftmaxAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::SoftplusAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::SortAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::SplitAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::SqueezeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::StackAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::StatisticalAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::StridedSliceAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::TakeAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::TileAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::ToVDeviceAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::TopKAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::TriluAttrs;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::attrs::WrapParamAttrs;
+    }
+    pub mod backend {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::GetPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::GetPatternsWithPrefix;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::MetaScheduleExtractTask;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::RegisterPatterns;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::RemovePatterns;
+        pub mod adreno {
+            pub mod transform {
+                pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::adreno::transform::AnnotateCustomMemoryScope;
+                    pub use crate::_tvm_ffi_stubgen_detail::functions::relax::backend::adreno::transform::FoldVDeviceScopeChange;
+            }
+        }
+    }
+    pub mod contrib {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::contrib::extract_arg_idx;
+    }
+    pub mod distributed {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::DTensorStructInfo;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::DeviceMesh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::Placement;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::PlacementFromText;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::Replica;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::Sharding;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::distributed::DeviceMesh;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::distributed::Placement;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::distributed::PlacementSpec;
+        pub mod transform {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::transform::LegalizeRedistribute;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::transform::LowerDistIR;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::transform::LowerGlobalViewToLocalView;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::distributed::transform::PropagateSharding;
+        }
+    }
+    pub mod dpl {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::current_context;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::dup_pattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::dup_seq;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::enter_context;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::exit_context;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::extract_matched_expr;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::match_dfb;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::match_expr;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::only_used_by;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::rewrite_bindings;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::rewrite_call;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::used_by;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::AndPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::AttrPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::CallPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::ConstantPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::DataTypePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::DataflowVarPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::ExprPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::ExternFuncPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::FunctionPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::GlobalVarPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::NotPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::OrPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::OrRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PatternContext;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PatternMatchingRewriterApply;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PatternMatchingRewriterFromModule;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PatternMatchingRewriterFromPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PatternRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PatternSeq;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::PrimArrPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::SameShapeConstraint;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::ShapePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::StructInfoPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::TupleGetItemPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::TuplePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::TupleRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::UnorderedTuplePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::VarPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::dpl::WildcardPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::AndPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::AttrPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::CallPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::ConstantPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::DFConstraint;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::DFPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::DataTypePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::DataflowVarPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::ExprPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::ExprPatternRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::ExternFuncPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::FunctionPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::GlobalVarPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::NotPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::OrPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::OrRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::PatternContextRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::PatternMatchingRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::PatternSeq;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::PrimArrPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::SameShapeConstraint;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::ShapePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::StructInfoPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::TupleGetItemPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::TuplePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::TupleRewriter;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::UnorderedTuplePattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::VarPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::dpl::WildcardPattern;
+    }
     pub mod expr {
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::Binding;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::BindingBlock;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::Call;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::Constant;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::DataTypeImm;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::DataflowBlock;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::DataflowVar;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::ExternFunc;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::Function;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::If;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::LeafExpr;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::MatchCast;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::PrimValue;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::SeqExpr;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::ShapeExpr;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::StringImm;
         pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::Tuple;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::TupleGetItem;
         pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::Var;
         pub use crate::_tvm_ffi_stubgen_detail::types::relax::expr::VarBinding;
+    }
+    pub mod op {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::abs;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::acos;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::acosh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::add;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::arange;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::argmax;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::argmin;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::argsort;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::asin;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::asinh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::assert_op;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::astype;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::atan;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::atanh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::bitwise_and;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::bitwise_not;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::bitwise_or;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::bitwise_xor;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::broadcast_to;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::bucketize;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_builtin_with_ctx;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_dps_packed;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_inplace_packed;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_pure_packed;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_py_func;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_tir;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_tir_inplace;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::call_tir_with_grad;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ceil;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::clip;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::collapse_sum_like;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::collapse_sum_to;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::concat;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::cos;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::cosh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::cumprod;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::cumsum;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::dequantize;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::divide;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::dynamic_strided_slice;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::einsum;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::equal;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::erf;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ewise_fma;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::exp;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::expand_dims;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::eye;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::eye_like;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::flatten;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::flip;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::floor;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::floor_divide;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::floor_mod;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::full;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::full_like;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::gather_elements;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::gather_nd;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::greater;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::greater_equal;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::hamming_window;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::hint_on_device;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::index_put;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::index_tensor;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::invoke_closure;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::invoke_pure_closure;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::isfinite;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::isinf;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::isnan;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::layout_transform;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::left_shift;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::less;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::less_equal;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::log;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::log_add_exp;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::logical_and;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::logical_not;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::logical_or;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::logical_xor;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::make_closure;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::matmul;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::max;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::maximum;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::mean;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::meshgrid;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::min;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::minimum;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::mod_;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::multinomial_from_uniform;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::multiply;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::negative;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nonzero;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::not_equal;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::null_value;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::one_hot;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ones;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ones_like;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::outer;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::permute_dims;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::power;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::print;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::prod;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::quantize;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::repeat;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::reshape;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::right_shift;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::round;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::rsqrt;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::scatter_elements;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::scatter_nd;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::shape_of;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::shape_to_tensor;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sigmoid;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sign;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sin;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sinh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::slice_scatter;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sort;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::split;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sqrt;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::square;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::squeeze;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::stack;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::std;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::strided_slice;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::subtract;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::sum;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::take;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::tan;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::tanh;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::tensor_to_shape;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::tile;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::to_vdevice;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::topk;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::tril;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::triu;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::trunc;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::unique;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::variance;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::where_;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::wrap_param;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::zeros;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::zeros_like;
+        pub mod builtin {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::builtin::alloc_tensor;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::builtin::stop_lift_params;
+        }
+        pub mod ccl {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ccl::allgather;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ccl::allreduce;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ccl::broadcast_from_worker0;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::ccl::scatter_from_worker0;
+        }
+        pub mod dist {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::dist::annotate_sharding;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::dist::call_tir_local_view;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::dist::redistribute;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::dist::redistribute_replica_to_shard;
+        }
+        pub mod grad {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::avg_pool2d_backward;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::end_checkpoint;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::max_pool2d_backward;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::nll_loss_backward;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::no_grad;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::start_checkpoint;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::grad::take_backward;
+        }
+        pub mod image {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::image::grid_sample;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::image::resize2d;
+        }
+        pub mod memory {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::memory::alloc_storage;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::memory::alloc_tensor;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::memory::ensure_zero_offset;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::memory::kill_storage;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::memory::kill_tensor;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::memory::view;
+        }
+        pub mod nn {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::adaptive_avg_pool1d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::adaptive_avg_pool2d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::adaptive_avg_pool3d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::attention;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::attention_var_len;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::avg_pool1d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::avg_pool2d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::avg_pool3d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::batch_norm;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::conv1d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::conv1d_transpose;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::conv2d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::conv2d_transpose;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::conv3d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::cross_entropy_with_logits;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::dropout;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::gelu;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::gelu_tanh;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::group_norm;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::instance_norm;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::layer_norm;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::leakyrelu;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::log_softmax;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::max_pool1d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::max_pool2d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::max_pool3d;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::nll_loss;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::pad;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::pixel_shuffle;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::prelu;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::relu;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::rms_norm;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::selu;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::silu;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::softmax;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::nn::softplus;
+        }
+        pub mod vision {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::vision::all_class_non_max_suppression;
+        }
+        pub mod vm {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::vm::alloc_storage;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::vm::alloc_tensor;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::vm::call_tir_dyn;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::op::vm::kill_object;
+        }
+    }
+    pub mod testing {
+        pub mod transform {
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::testing::transform::ApplyEmptyCppMutator;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::testing::transform::DataflowAliasAnalysis;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::testing::transform::DataflowInplaceAnalysis;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::testing::transform::DataflowLivenessAnalysis;
+            pub use crate::_tvm_ffi_stubgen_detail::functions::relax::testing::transform::SingleInplaceCall;
+        }
+    }
+    pub mod training {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::training::AppendLoss;
+    }
+    pub mod transform {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::AdjustMatmulOrder;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::AllocateWorkspace;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::AlterOpImpl;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::AnnotateTIROpPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::AttachAttrLayoutFreeBuffers;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::AttachGlobalSymbol;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::BindParams;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::BindSymbolicVars;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::BundleModelParams;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::CallTIRRewrite;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::CanonicalizeBindings;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::CombineParallelMatmul;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ComputePrimValue;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ConvertLayout;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ConvertToDataflow;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::DataflowUseInplaceCalls;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::DeadCodeElimination;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::DecomposeOpsForInference;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::DecomposeOpsForTraining;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::EliminateCommonSubexpr;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ExpandMatmulOfSum;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ExpandTupleArguments;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::FewShotTuning;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::FoldConstant;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::FuseOps;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::FuseOpsByPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::FuseTIR;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::FusionPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::Gradient;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::InlinePrivateFunctions;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::KillAfterLastUse;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LambdaLift;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LazyGetInput;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LazySetOutput;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LegalizeOps;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LiftTransformParams;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LowerAllocTensor;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::LowerRuntimeBuiltin;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::MakeDataflowBlockPass;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::MakeFunctionPass;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::MergeCompositeFunctions;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::MetaScheduleApplyDatabase;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::MetaScheduleTuneIRMod;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::MetaScheduleTuneTIR;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::Normalize;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::NormalizeGlobalVar;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RealizeVDevice;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RemovePurityChecking;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RemoveUnusedOutputs;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RemoveUnusedParameters;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ReorderPermuteDimsAfterConcat;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ReorderTakeAfterMatmul;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RewriteCUDAGraph;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RewriteDataflowReshape;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::RunCodegen;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::SpecializePrimFuncBasedOnCallSite;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::SplitCallTIRByPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::SplitLayoutRewritePreproc;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::StaticPlanBlockMemory;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ToMixedPrecision;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::ToNonDataflow;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::TopologicalSort;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::UpdateParamStructInfo;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::UpdateVDevice;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::relax::transform::VMShapeLower;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::transform::FusionPattern;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::transform::InferLayoutOutput;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::transform::InplaceOpportunity;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::transform::LayoutDecision;
+        pub use crate::_tvm_ffi_stubgen_detail::types::relax::transform::PatternCheckContext;
     }
 }
 pub mod script {
@@ -485,7 +1160,59 @@ pub mod script {
     }
 }
 pub mod target {
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::Build;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::ListTargetKindOptions;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::ListTargetKindOptionsFromName;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::ListTargetKinds;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::Target;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetCurrent;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetEnterScope;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetExitScope;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetExport;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetGetDeviceType;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetGetFeature;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetKindGetAttr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetTagAddTag;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::TargetTagListTags;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::VirtualDevice_ForDeviceTargetAndMemoryScope;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::target::WithHost;
+    pub use crate::_tvm_ffi_stubgen_detail::types::target::MemoryInfo;
     pub use crate::_tvm_ffi_stubgen_detail::types::target::Target;
+    pub use crate::_tvm_ffi_stubgen_detail::types::target::TargetKind;
+    pub use crate::_tvm_ffi_stubgen_detail::types::target::TargetTag;
+    pub use crate::_tvm_ffi_stubgen_detail::types::target::VirtualDevice;
+    pub mod build {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::c;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::cuda;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::metal;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::opencl;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_c;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cpp;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cuda;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cuda_without_compile;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cutedsl_without_compile;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::webgpu;
+    }
+}
+pub mod te {
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::ComputeOp;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::CreatePrimFunc;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::ExternOp;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::OpGetOutput;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::OpInputTensors;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::OpNumOutputs;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::Placeholder;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::ScanOp;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::Tensor;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::TensorEqual;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::te::TensorHash;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::BaseComputeOp;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::ComputeOp;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::ExternOp;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::Operation;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::PlaceholderOp;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::ScanOp;
+    pub use crate::_tvm_ffi_stubgen_detail::types::te::Tensor;
 }
 pub mod tir {
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::abs;
@@ -1061,9 +1788,25 @@ pub mod tl {
     }
 }
 pub mod transform {
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::ApplyPassToFunction;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::EnterPassContext;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::ExitPassContext;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::GetCurrentPassContext;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::Info;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::ListConfigs;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::MakeModulePass;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::OverrideInstruments;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::PassContext;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::PassInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::PrintIR;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::ReplaceGlobalVars;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::RunPass;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::transform::Sequential;
+    pub use crate::_tvm_ffi_stubgen_detail::types::transform::ModulePass;
     pub use crate::_tvm_ffi_stubgen_detail::types::transform::Pass;
     pub use crate::_tvm_ffi_stubgen_detail::types::transform::PassContext;
     pub use crate::_tvm_ffi_stubgen_detail::types::transform::PassInfo;
+    pub use crate::_tvm_ffi_stubgen_detail::types::transform::Sequential;
 }
 
 pub fn load_library(path: &str) -> tvm_ffi::Result<tvm_ffi::Module> {
