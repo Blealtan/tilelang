@@ -1,0 +1,38 @@
+---
+description: 代码提交前格式化规则
+alwaysApply: true
+---
+
+# 代码提交前格式化
+
+在用户要求提交代码之前，必须先根据语言进行代码格式化。
+
+## 当前格式化规则
+
+### Rust
+使用 `cargo fmt` 格式化 Rust 代码：
+
+```bash
+cargo fmt
+```
+
+对于特定的 workspace 或 package：
+
+```bash
+# 格式化整个 workspace
+cargo fmt --all
+
+# 格式化特定 package
+cargo fmt -p package-name
+```
+
+## 处理流程
+
+1. **识别修改的文件语言**
+2. **应用对应的格式化工具**
+3. **如果遇到未知语言，询问用户应该使用什么格式化工具**
+4. **将新的格式化规则添加到此文档**
+
+## 待补充的语言
+
+遇到新语言时，询问用户并在此处添加规则。
