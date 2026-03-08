@@ -1,10 +1,12 @@
 use proc_macro::TokenStream;
-use quote::quote;
+use proc_macro2::{Span, TokenStream as TokenStream2};
+use quote::{format_ident, quote};
 use syn::spanned::Spanned;
 use syn::visit::{self, Visit};
 use syn::{
-    parse_macro_input, Arm, BinOp, ExprAssign, ExprBinary, ExprClosure, ExprForLoop, ExprLet,
-    ExprReference, FnArg, ItemFn, Local, Pat, PatIdent, PatReference, TypeReference,
+    parse_macro_input, parse_quote, Arm, BinOp, Block, Expr, ExprAssign, ExprBinary, ExprBlock,
+    ExprClosure, ExprForLoop, ExprGroup, ExprIf, ExprLet, ExprParen, ExprReference, ExprUnary,
+    FnArg, ItemFn, Local, Pat, PatIdent, PatReference, ReturnType, Stmt, TypeReference, UnOp,
 };
 
 #[proc_macro_attribute]
@@ -17,7 +19,10 @@ pub fn tl_ir(_attr: TokenStream, item: TokenStream) -> TokenStream {
         return TokenStream::from(error.to_compile_error());
     }
 
-    TokenStream::from(quote!(#input))
+    match expand_tl_ir(&input) {
+        Ok(tokens) => TokenStream::from(tokens),
+        Err(error) => TokenStream::from(error.to_compile_error()),
+    }
 }
 
 #[derive(Default)]
@@ -35,7 +40,7 @@ impl Precheck {
         Some(first)
     }
 
-    fn push_error(&mut self, span: proc_macro2::Span, code: &str, message: &str, help: &str) {
+    fn push_error(&mut self, span: Span, code: &str, message: &str, help: &str) {
         self.errors.push(syn::Error::new(
             span,
             format!("{code}: {message}\nhelp: {help}"),
@@ -224,5 +229,213 @@ fn pattern_has_mut(pat: &Pat) -> bool {
         Pat::TupleStruct(tuple) => tuple.elems.iter().any(pattern_has_mut),
         Pat::Type(typed) => pattern_has_mut(&typed.pat),
         _ => false,
+    }
+}
+
+fn expand_tl_ir(input: &ItemFn) -> syn::Result<TokenStream2> {
+    let attrs = &input.attrs;
+    let vis = &input.vis;
+    let mut sig = input.sig.clone();
+    let fn_name = sig.ident.clone();
+    sig.output = ReturnType::Type(
+        Default::default(),
+        Box::new(parse_quote!(
+            ::tilelang_rs_core::Result<::tilelang_rs_core::ffi::ir::IRModule>
+        )),
+    );
+
+    let ctx_ident = format_ident!("__ctx");
+    let body = transform_block(&input.block, &ctx_ident)?;
+
+    Ok(quote! {
+        #(#attrs)*
+        #vis #sig {
+            let #ctx_ident = ::tilelang_rs_core::BuilderContext::new(stringify!(#fn_name))?;
+            #ctx_ident.with_tir_prim_func(stringify!(#fn_name), false, |_prim_func| {
+                #body
+                Ok(())
+            })?;
+            #ctx_ident.finish_ir_module()
+        }
+    })
+}
+
+fn transform_block(block: &Block, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
+    let mut tokens = TokenStream2::new();
+    for stmt in &block.stmts {
+        tokens.extend(transform_stmt(stmt, ctx_ident)?);
+    }
+    Ok(tokens)
+}
+
+fn transform_stmt(stmt: &Stmt, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
+    match stmt {
+        Stmt::Local(local) => Ok(quote!(#local)),
+        Stmt::Item(item) => Ok(quote!(#item)),
+        Stmt::Macro(mac) => Ok(quote!(#mac)),
+        Stmt::Expr(expr, semi) => transform_stmt_expr(expr, semi.is_some(), ctx_ident),
+    }
+}
+
+fn transform_stmt_expr(
+    expr: &Expr,
+    has_semi: bool,
+    ctx_ident: &syn::Ident,
+) -> syn::Result<TokenStream2> {
+    match expr {
+        Expr::ForLoop(for_loop) => transform_for_loop(for_loop, ctx_ident),
+        Expr::If(expr_if) => transform_if_stmt(expr_if, ctx_ident),
+        Expr::Block(expr_block) => transform_block_expr(expr_block, has_semi, ctx_ident),
+        Expr::Group(ExprGroup { expr, .. }) | Expr::Paren(ExprParen { expr, .. }) => {
+            transform_stmt_expr(expr, has_semi, ctx_ident)
+        }
+        _ => {
+            if has_semi {
+                Ok(quote!(#expr;))
+            } else {
+                Ok(quote!(#expr;))
+            }
+        }
+    }
+}
+
+fn transform_block_expr(
+    expr_block: &ExprBlock,
+    has_semi: bool,
+    ctx_ident: &syn::Ident,
+) -> syn::Result<TokenStream2> {
+    let attrs = &expr_block.attrs;
+    let label = &expr_block.label;
+    let inner = transform_block(&expr_block.block, ctx_ident)?;
+    let block = quote! {
+        #(#attrs)*
+        #label
+        {
+            #inner
+        }
+    };
+    if has_semi {
+        Ok(quote!(#block;))
+    } else {
+        Ok(block)
+    }
+}
+
+fn transform_for_loop(for_loop: &ExprForLoop, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
+    let dsl = &for_loop.expr;
+    let vars_ident = format_ident!("__vars");
+    let inner_ctx_ident = format_ident!("__ctx");
+    let binding = loop_binding(&for_loop.pat, &vars_ident)?;
+    let body = transform_block(&for_loop.body, &inner_ctx_ident)?;
+
+    Ok(quote! {
+        #ctx_ident.for_each(#dsl, |#inner_ctx_ident, #vars_ident| {
+            #binding
+            #body
+            Ok(())
+        })?;
+    })
+}
+
+fn loop_binding(pat: &Pat, vars_ident: &syn::Ident) -> syn::Result<TokenStream2> {
+    match pat {
+        Pat::Ident(_) => Ok(quote! {
+            let #pat = ::tilelang_rs_core::FromLoopVars::bind1(#vars_ident)?;
+        }),
+        Pat::Tuple(tuple) => {
+            let arity = tuple.elems.len();
+            let bind_fn = match arity {
+                2 => format_ident!("bind2"),
+                3 => format_ident!("bind3"),
+                4 => format_ident!("bind4"),
+                _ => {
+                    return Err(syn::Error::new(
+                        tuple.span(),
+                        "#[tl_ir] 目前仅支持单变量循环绑定或 2-4 元组绑定。",
+                    ))
+                }
+            };
+            Ok(quote! {
+                let #pat = ::tilelang_rs_core::FromLoopVars::#bind_fn(#vars_ident)?;
+            })
+        }
+        _ => Err(syn::Error::new(
+            pat.span(),
+            "#[tl_ir] 目前仅支持标识符或元组循环绑定模式。",
+        )),
+    }
+}
+
+fn transform_if_stmt(expr_if: &ExprIf, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
+    let cond = lower_predicate(&expr_if.cond)?;
+    let then_body = transform_block(&expr_if.then_branch, ctx_ident)?;
+    let else_body = if let Some((_, else_expr)) = &expr_if.else_branch {
+        let else_tokens = transform_else_expr(else_expr, ctx_ident)?;
+        quote!(Some(|| {
+            #else_tokens
+            Ok(())
+        }))
+    } else {
+        quote!(None::<fn() -> ::tilelang_rs_core::Result<()>>)
+    };
+
+    Ok(quote! {
+        #ctx_ident.if_stmt(
+            #cond,
+            || {
+                #then_body
+                Ok(())
+            },
+            #else_body,
+        )?;
+    })
+}
+
+fn transform_else_expr(expr: &Expr, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
+    match expr {
+        Expr::Block(expr_block) => transform_block(&expr_block.block, ctx_ident),
+        Expr::If(expr_if) => transform_if_stmt(expr_if, ctx_ident),
+        Expr::Group(ExprGroup { expr, .. }) | Expr::Paren(ExprParen { expr, .. }) => {
+            transform_else_expr(expr, ctx_ident)
+        }
+        _ => Ok(quote!(#expr;)),
+    }
+}
+
+fn lower_predicate(expr: &Expr) -> syn::Result<TokenStream2> {
+    match expr {
+        Expr::Binary(ExprBinary {
+            left, op, right, ..
+        }) => match op {
+            BinOp::Eq(_) => Ok(quote!(::tilelang_rs_core::pred::eq(#left, #right)?)),
+            BinOp::Ne(_) => Ok(quote!(::tilelang_rs_core::pred::ne(#left, #right)?)),
+            BinOp::Lt(_) => Ok(quote!(::tilelang_rs_core::pred::lt(#left, #right)?)),
+            BinOp::Le(_) => Ok(quote!(::tilelang_rs_core::pred::le(#left, #right)?)),
+            BinOp::Gt(_) => Ok(quote!(::tilelang_rs_core::pred::gt(#left, #right)?)),
+            BinOp::Ge(_) => Ok(quote!(::tilelang_rs_core::pred::ge(#left, #right)?)),
+            BinOp::And(_) => {
+                let lhs = lower_predicate(left)?;
+                let rhs = lower_predicate(right)?;
+                Ok(quote!(::tilelang_rs_core::pred::and(#lhs, || { Ok(#rhs) })?))
+            }
+            BinOp::Or(_) => {
+                let lhs = lower_predicate(left)?;
+                let rhs = lower_predicate(right)?;
+                Ok(quote!(::tilelang_rs_core::pred::or(#lhs, || { Ok(#rhs) })?))
+            }
+            _ => Ok(quote!(::tilelang_rs_core::pred::to_ir_bool(#expr)?)),
+        },
+        Expr::Unary(ExprUnary {
+            op: UnOp::Not(_),
+            expr,
+            ..
+        }) => {
+            let inner = lower_predicate(expr)?;
+            Ok(quote!(::tilelang_rs_core::pred::not(#inner)?))
+        }
+        Expr::Paren(ExprParen { expr, .. }) | Expr::Group(ExprGroup { expr, .. }) => {
+            lower_predicate(expr)
+        }
+        _ => Ok(quote!(::tilelang_rs_core::pred::to_ir_bool(#expr)?)),
     }
 }
