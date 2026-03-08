@@ -57,6 +57,6 @@ fn runtime_loads_from_explicit_env_paths_and_is_idempotent() -> Result<()> {
     runtime::ensure_runtime_loaded()?;
 
     let ctx = BuilderContext::new("runtime_env_paths")?;
-    let _module = ctx.finish_ir_module()?;
+    let _module = ctx.finish_ir_module();
     Ok(())
 }

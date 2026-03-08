@@ -2,9 +2,7 @@ use std::string::String as StdString;
 
 pub use tilelang_rs_ffi as ffi;
 use tvm_ffi::{
-    error::{TYPE_ERROR, VALUE_ERROR},
-    object::ObjectRef,
-    AnyValue, Array, DLDataTypeExt, Map, String as FfiString,
+    error::TYPE_ERROR, object::ObjectRef, AnyValue, Array, DLDataTypeExt, Map, String as FfiString,
 };
 
 pub type Result<T> = tvm_ffi::Result<T>;
@@ -14,7 +12,7 @@ pub const PHASE: &str = "phase4";
 pub mod runtime;
 
 pub trait IntoPrimExpr {
-    fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr>;
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr;
 }
 
 pub trait IntoDType {
@@ -40,20 +38,20 @@ impl IntoDType for String {
 }
 
 impl IntoPrimExpr for ffi::ir::PrimExpr {
-    fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr> {
-        Ok(self)
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self
     }
 }
 
 impl IntoPrimExpr for ffi::tir::Var {
-    fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr> {
-        Ok(ffi::ir::PrimExpr::from_object(self.as_object_ref().clone()))
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        ffi::ir::PrimExpr::from_object(self.as_object_ref().clone())
     }
 }
 
 impl IntoPrimExpr for ffi::ir::IntImm {
-    fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr> {
-        Ok(ffi::ir::PrimExpr::from_object(self.as_object_ref().clone()))
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        ffi::ir::PrimExpr::from_object(self.as_object_ref().clone())
     }
 }
 
@@ -61,8 +59,8 @@ macro_rules! impl_into_prim_expr_for_int {
     ($($ty:ty),* $(,)?) => {
         $(
             impl IntoPrimExpr for $ty {
-                fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr> {
-                    int64_imm(self as i64)
+                fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+                    int64_imm(self as i64).expect("int literal to PrimExpr should never fail")
                 }
             }
         )*
@@ -76,31 +74,37 @@ pub struct FrameGuard {
 }
 
 impl FrameGuard {
-    pub fn enter(frame: ffi::script::ir_builder::IRBuilderFrame) -> Result<Self> {
-        ffi::script::ir_builder::IRBuilderFrameEnter(frame.clone())?;
-        Ok(Self { frame: Some(frame) })
+    pub fn enter(frame: ffi::script::ir_builder::IRBuilderFrame) -> Self {
+        ffi::script::ir_builder::IRBuilderFrameEnter(frame.clone())
+            .expect("IRBuilderFrameEnter should not fail");
+        Self { frame: Some(frame) }
     }
 
-    pub fn exit(mut self) -> Result<()> {
-        self.exit_inner()
+    pub fn exit(mut self) {
+        self.exit_inner();
     }
 
-    fn exit_inner(&mut self) -> Result<()> {
+    fn exit_inner(&mut self) {
         if let Some(frame) = self.frame.take() {
-            ffi::script::ir_builder::IRBuilderFrameExit(frame)?;
+            ffi::script::ir_builder::IRBuilderFrameExit(frame)
+                .expect("IRBuilderFrameExit should not fail");
         }
-        Ok(())
     }
 }
 
 impl Drop for FrameGuard {
     fn drop(&mut self) {
-        let _ = self.exit_inner();
+        self.exit_inner();
     }
 }
 
 pub trait ForDsl {
-    fn into_for_frame(self) -> Result<ffi::script::ir_builder::tir::ForFrame>;
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    );
 }
 
 pub struct SerialDsl<S, E> {
@@ -122,13 +126,23 @@ where
     S: IntoPrimExpr,
     E: IntoPrimExpr,
 {
-    fn into_for_frame(self) -> Result<ffi::script::ir_builder::tir::ForFrame> {
-        ffi::script::ir_builder::tir::Serial(
-            self.start.into_prim_expr()?,
-            self.stop.into_prim_expr()?,
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    ) {
+        let frame = ffi::script::ir_builder::tir::Serial(
+            self.start.into_prim_expr(),
+            self.stop.into_prim_expr(),
             self.annotations,
             self.step,
         )
+        .expect("Serial frame construction should not fail");
+        let vars = frame.vars().expect("ForFrame::vars should not fail");
+        let base =
+            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
+        (base, vars)
     }
 }
 
@@ -151,13 +165,23 @@ where
     S: IntoPrimExpr,
     E: IntoPrimExpr,
 {
-    fn into_for_frame(self) -> Result<ffi::script::ir_builder::tir::ForFrame> {
-        ffi::script::ir_builder::tir::Vectorized(
-            self.start.into_prim_expr()?,
-            self.stop.into_prim_expr()?,
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    ) {
+        let frame = ffi::script::ir_builder::tir::Vectorized(
+            self.start.into_prim_expr(),
+            self.stop.into_prim_expr(),
             self.annotations,
             self.step,
         )
+        .expect("Vectorized frame construction should not fail");
+        let vars = frame.vars().expect("ForFrame::vars should not fail");
+        let base =
+            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
+        (base, vars)
     }
 }
 
@@ -180,13 +204,23 @@ where
     S: IntoPrimExpr,
     E: IntoPrimExpr,
 {
-    fn into_for_frame(self) -> Result<ffi::script::ir_builder::tir::ForFrame> {
-        ffi::script::ir_builder::tir::Unroll(
-            self.start.into_prim_expr()?,
-            self.stop.into_prim_expr()?,
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    ) {
+        let frame = ffi::script::ir_builder::tir::Unroll(
+            self.start.into_prim_expr(),
+            self.stop.into_prim_expr(),
             self.annotations,
             self.step,
         )
+        .expect("Unroll frame construction should not fail");
+        let vars = frame.vars().expect("ForFrame::vars should not fail");
+        let base =
+            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
+        (base, vars)
     }
 }
 
@@ -206,12 +240,23 @@ impl<E, const N: usize> ForDsl for ParallelDsl<E, N>
 where
     E: IntoPrimExpr,
 {
-    fn into_for_frame(self) -> Result<ffi::script::ir_builder::tir::ForFrame> {
-        let mut extents = Vec::with_capacity(N);
-        for extent in self.extents {
-            extents.push(extent.into_prim_expr()?);
-        }
-        ffi::tl::Parallel(Array::new(extents), self.annotations)
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    ) {
+        let extents: Vec<ffi::ir::PrimExpr> = self
+            .extents
+            .into_iter()
+            .map(|e| e.into_prim_expr())
+            .collect();
+        let frame = ffi::tl::Parallel(Array::new(extents), self.annotations)
+            .expect("Parallel frame construction should not fail");
+        let vars = frame.vars().expect("ForFrame::vars should not fail");
+        let base =
+            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
+        (base, vars)
     }
 }
 
@@ -237,16 +282,26 @@ where
     S: IntoPrimExpr,
     E: IntoPrimExpr,
 {
-    fn into_for_frame(self) -> Result<ffi::script::ir_builder::tir::ForFrame> {
-        ffi::tl::Pipelined(
-            self.start.into_prim_expr()?,
-            self.stop.into_prim_expr()?,
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    ) {
+        let frame = ffi::tl::Pipelined(
+            self.start.into_prim_expr(),
+            self.stop.into_prim_expr(),
             self.num_stages,
             self.order,
             self.stage,
             self.sync,
             self.group,
         )
+        .expect("Pipelined frame construction should not fail");
+        let vars = frame.vars().expect("ForFrame::vars should not fail");
+        let base =
+            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
+        (base, vars)
     }
 }
 
@@ -257,32 +312,32 @@ pub enum PredExpr {
 }
 
 pub trait IntoPredExpr {
-    fn into_pred_expr(self) -> Result<PredExpr>;
+    fn into_pred_expr(self) -> PredExpr;
 }
 
 impl IntoPredExpr for PredExpr {
-    fn into_pred_expr(self) -> Result<PredExpr> {
-        Ok(self)
+    fn into_pred_expr(self) -> PredExpr {
+        self
     }
 }
 
 impl IntoPredExpr for bool {
-    fn into_pred_expr(self) -> Result<PredExpr> {
-        Ok(PredExpr::Const(self))
+    fn into_pred_expr(self) -> PredExpr {
+        PredExpr::Const(self)
     }
 }
 
 impl IntoPredExpr for ffi::ir::PrimExpr {
-    fn into_pred_expr(self) -> Result<PredExpr> {
-        Ok(PredExpr::Expr(self))
+    fn into_pred_expr(self) -> PredExpr {
+        PredExpr::Expr(self)
     }
 }
 
 impl PredExpr {
-    pub fn to_prim_expr(self) -> Result<ffi::ir::PrimExpr> {
+    pub fn to_prim_expr(self) -> ffi::ir::PrimExpr {
         match self {
-            Self::Const(value) => bool_imm(value),
-            Self::Expr(expr) => Ok(expr),
+            Self::Const(value) => bool_imm(value).expect("bool_imm should not fail"),
+            Self::Expr(expr) => expr,
         }
     }
 
@@ -308,50 +363,62 @@ impl LocalVar {
         &self.buffer
     }
 
-    pub fn load(&self) -> Result<ffi::ir::PrimExpr> {
-        let span = empty_span()?;
-        let load = ffi::tir::BufferLoad(self.buffer.clone(), scalar_index(), None, span)?;
-        Ok(ffi::ir::PrimExpr::from_object(load.as_object_ref().clone()))
+    pub fn load(&self) -> ffi::ir::PrimExpr {
+        let span = empty_span().expect("empty_span should not fail");
+        let load = ffi::tir::BufferLoad(self.buffer.clone(), scalar_index(), None, span)
+            .expect("BufferLoad should not fail");
+        ffi::ir::PrimExpr::from_object(load.as_object_ref().clone())
     }
 
-    pub fn store<V>(&self, value: V) -> Result<()>
+    pub fn store<V>(&self, value: V)
     where
         V: IntoPrimExpr,
     {
         ffi::script::ir_builder::tir::BufferStore(
             self.buffer.clone(),
-            value.into_prim_expr()?,
+            value.into_prim_expr(),
             scalar_index(),
             None,
         )
+        .expect("BufferStore should not fail");
     }
 }
 
 pub struct FromLoopVars;
 
 impl FromLoopVars {
-    pub fn bind1(vars: Array<ffi::tir::Var>) -> Result<ffi::tir::Var> {
-        expect_loop_vars(vars.clone(), 1)?;
-        vars.get(0)
+    pub fn bind1(vars: Array<ffi::tir::Var>) -> ffi::tir::Var {
+        assert_loop_vars(vars.clone(), 1);
+        vars.get(0).expect("index 0 must exist after count check")
     }
 
-    pub fn bind2(vars: Array<ffi::tir::Var>) -> Result<(ffi::tir::Var, ffi::tir::Var)> {
-        expect_loop_vars(vars.clone(), 2)?;
-        Ok((vars.get(0)?, vars.get(1)?))
+    pub fn bind2(vars: Array<ffi::tir::Var>) -> (ffi::tir::Var, ffi::tir::Var) {
+        assert_loop_vars(vars.clone(), 2);
+        (
+            vars.get(0).expect("index 0 must exist"),
+            vars.get(1).expect("index 1 must exist"),
+        )
     }
 
-    pub fn bind3(
-        vars: Array<ffi::tir::Var>,
-    ) -> Result<(ffi::tir::Var, ffi::tir::Var, ffi::tir::Var)> {
-        expect_loop_vars(vars.clone(), 3)?;
-        Ok((vars.get(0)?, vars.get(1)?, vars.get(2)?))
+    pub fn bind3(vars: Array<ffi::tir::Var>) -> (ffi::tir::Var, ffi::tir::Var, ffi::tir::Var) {
+        assert_loop_vars(vars.clone(), 3);
+        (
+            vars.get(0).expect("index 0 must exist"),
+            vars.get(1).expect("index 1 must exist"),
+            vars.get(2).expect("index 2 must exist"),
+        )
     }
 
     pub fn bind4(
         vars: Array<ffi::tir::Var>,
-    ) -> Result<(ffi::tir::Var, ffi::tir::Var, ffi::tir::Var, ffi::tir::Var)> {
-        expect_loop_vars(vars.clone(), 4)?;
-        Ok((vars.get(0)?, vars.get(1)?, vars.get(2)?, vars.get(3)?))
+    ) -> (ffi::tir::Var, ffi::tir::Var, ffi::tir::Var, ffi::tir::Var) {
+        assert_loop_vars(vars.clone(), 4);
+        (
+            vars.get(0).expect("index 0 must exist"),
+            vars.get(1).expect("index 1 must exist"),
+            vars.get(2).expect("index 2 must exist"),
+            vars.get(3).expect("index 3 must exist"),
+        )
     }
 }
 
@@ -378,13 +445,7 @@ impl BuilderContext {
         let module_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
             module_frame.as_object_ref().clone(),
         );
-        let module_guard = match FrameGuard::enter(module_base) {
-            Ok(guard) => guard,
-            Err(err) => {
-                let _ = ffi::script::ir_builder::IRBuilderExit(builder);
-                return Err(err);
-            }
-        };
+        let module_guard = FrameGuard::enter(module_base);
 
         Ok(Self {
             name,
@@ -403,103 +464,92 @@ impl BuilderContext {
             .expect("BuilderContext builder accessed after finish_ir_module")
     }
 
-    pub fn enter_frame(
-        &self,
-        frame: ffi::script::ir_builder::IRBuilderFrame,
-    ) -> Result<FrameGuard> {
+    pub fn enter_frame(&self, frame: ffi::script::ir_builder::IRBuilderFrame) -> FrameGuard {
         FrameGuard::enter(frame)
     }
 
-    pub fn with_frame<T, F>(
-        &self,
-        frame: ffi::script::ir_builder::IRBuilderFrame,
-        f: F,
-    ) -> Result<T>
+    pub fn with_frame<T, F>(&self, frame: ffi::script::ir_builder::IRBuilderFrame, f: F) -> T
     where
-        F: FnOnce() -> Result<T>,
+        F: FnOnce() -> T,
     {
-        let guard = self.enter_frame(frame)?;
-        let body_result = f();
-        let exit_result = guard.exit();
-
-        match (body_result, exit_result) {
-            (Ok(value), Ok(())) => Ok(value),
-            (Err(err), _) => Err(err),
-            (Ok(_), Err(err)) => Err(err),
-        }
+        let guard = self.enter_frame(frame);
+        let value = f();
+        guard.exit();
+        value
     }
 
-    pub fn for_each<D, T, F>(&self, dsl: D, f: F) -> Result<T>
+    pub fn for_each<D, T, F>(&self, dsl: D, f: F) -> T
     where
         D: ForDsl,
-        F: FnOnce(&Self, Array<ffi::tir::Var>) -> Result<T>,
+        F: FnOnce(&Self, Array<ffi::tir::Var>) -> T,
     {
-        let frame = dsl.into_for_frame()?;
-        let vars = frame.vars()?;
-        let base =
-            ffi::script::ir_builder::IRBuilderFrame::from_object(frame.as_object_ref().clone());
+        let (base, vars) = dsl.enter();
         self.with_frame(base, || f(self, vars))
     }
 
-    pub fn with_tir_prim_func<T, F>(&self, name: &str, is_private: bool, f: F) -> Result<T>
+    pub fn with_tir_prim_func<T, F>(&self, name: &str, is_private: bool, f: F) -> T
     where
-        F: FnOnce(&ffi::script::ir_builder::tir::PrimFuncFrame) -> Result<T>,
+        F: FnOnce(&ffi::script::ir_builder::tir::PrimFuncFrame) -> T,
     {
-        let prim_func_frame = ffi::script::ir_builder::tir::PrimFunc(is_private)?;
+        let prim_func_frame = ffi::script::ir_builder::tir::PrimFunc(is_private)
+            .expect("PrimFunc frame construction should not fail");
         let prim_func_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
             prim_func_frame.as_object_ref().clone(),
         );
 
         self.with_frame(prim_func_base, || {
-            ffi::script::ir_builder::tir::FuncName(FfiString::from(name))?;
+            ffi::script::ir_builder::tir::FuncName(FfiString::from(name))
+                .expect("FuncName should not fail");
             f(&prim_func_frame)
         })
     }
 
-    pub fn if_stmt<C, T, F, E>(&self, cond: C, then_branch: F, else_branch: Option<E>) -> Result<T>
+    pub fn if_stmt<C, T, F, E>(&self, cond: C, then_branch: F, else_branch: Option<E>) -> T
     where
         C: IntoPredExpr,
-        F: FnOnce() -> Result<T>,
-        E: FnOnce() -> Result<T>,
+        F: FnOnce() -> T,
+        E: FnOnce() -> T,
     {
-        let cond = cond.into_pred_expr()?.to_prim_expr()?;
-        let if_frame = ffi::script::ir_builder::tir::If(cond)?;
+        let cond = cond.into_pred_expr().to_prim_expr();
+        let if_frame =
+            ffi::script::ir_builder::tir::If(cond).expect("If frame construction should not fail");
         let if_base =
             ffi::script::ir_builder::IRBuilderFrame::from_object(if_frame.as_object_ref().clone());
 
         self.with_frame(if_base, || {
-            let then_frame = ffi::script::ir_builder::tir::Then()?;
+            let then_frame = ffi::script::ir_builder::tir::Then()
+                .expect("Then frame construction should not fail");
             let then_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
                 then_frame.as_object_ref().clone(),
             );
-            let then_result = self.with_frame(then_base, then_branch);
+            let value = self.with_frame(then_base, then_branch);
 
-            match (then_result, else_branch) {
-                (Ok(value), None) => Ok(value),
-                (Err(err), _) => Err(err),
-                (Ok(_), Some(else_branch)) => {
-                    let else_frame = ffi::script::ir_builder::tir::Else()?;
-                    let else_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-                        else_frame.as_object_ref().clone(),
-                    );
-                    self.with_frame(else_base, else_branch)
-                }
+            if let Some(else_branch) = else_branch {
+                let else_frame = ffi::script::ir_builder::tir::Else()
+                    .expect("Else frame construction should not fail");
+                let else_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
+                    else_frame.as_object_ref().clone(),
+                );
+                self.with_frame(else_base, else_branch);
             }
+
+            value
         })
     }
 
-    pub fn finish_ir_module(mut self) -> Result<ffi::ir::IRModule> {
+    pub fn finish_ir_module(mut self) -> ffi::ir::IRModule {
         if let Some(module_frame) = self.module_frame.take() {
-            module_frame.exit()?;
+            module_frame.exit();
         }
 
         let builder = self
             .builder
             .take()
             .expect("BuilderContext finished more than once");
-        let module_obj = ffi::script::ir_builder::IRBuilderGet(builder.clone())?;
-        ffi::script::ir_builder::IRBuilderExit(builder)?;
-        downcast_ir_module(module_obj)
+        let module_obj = ffi::script::ir_builder::IRBuilderGet(builder.clone())
+            .expect("IRBuilderGet should not fail");
+        ffi::script::ir_builder::IRBuilderExit(builder).expect("IRBuilderExit should not fail");
+        downcast_ir_module(module_obj).expect("IRBuilder should produce an ir.IRModule")
     }
 }
 
@@ -512,12 +562,12 @@ impl Drop for BuilderContext {
     }
 }
 
-pub fn debug_print<T>(object: T) -> Result<StdString>
+pub fn debug_print<T>(object: T) -> StdString
 where
     T: Into<ObjectRef>,
 {
-    let printed = ffi::ir::DebugPrint(object.into())?;
-    Ok(printed.as_str().to_owned())
+    let printed = ffi::ir::DebugPrint(object.into()).expect("DebugPrint should not fail");
+    printed.as_str().to_owned()
 }
 
 pub mod language {
@@ -596,58 +646,62 @@ pub mod language {
         tvm_ffi::DLDataType::try_from_str("float32").expect("float32 should be a valid dtype")
     }
 
-    pub fn alloc_var<D, I>(dtype: D, init: I) -> Result<LocalVar>
+    pub fn alloc_var<D, I>(dtype: D, init: I) -> LocalVar
     where
         D: IntoDType,
         I: IntoPrimExpr,
     {
-        let dtype = dtype.into_dtype()?;
+        let dtype = dtype
+            .into_dtype()
+            .expect("alloc_var: dtype conversion should not fail");
         let buffer = ffi::script::ir_builder::tir::AllocBuffer(
             scalar_index(),
             dtype,
             None,
             Array::new(vec![]),
-            int64_imm(0)?,
+            int64_imm(0).expect("int64_imm(0) should not fail"),
             FfiString::from("local.var"),
             -1,
             0,
             FfiString::from("default"),
             None,
-        )?;
+        )
+        .expect("AllocBuffer should not fail");
         let local_var = LocalVar::new(buffer);
-        local_var.store(init)?;
-        Ok(local_var)
+        local_var.store(init);
+        local_var
     }
 
-    pub fn select<C, T, E>(cond: C, then_value: T, else_value: E) -> Result<ffi::ir::PrimExpr>
+    pub fn select<C, T, E>(cond: C, then_value: T, else_value: E) -> ffi::ir::PrimExpr
     where
         C: IntoPredExpr,
         T: IntoPrimExpr,
         E: IntoPrimExpr,
     {
-        let cond = cond.into_pred_expr()?.to_prim_expr()?;
-        let span = empty_span()?;
+        let cond = cond.into_pred_expr().to_prim_expr();
+        let span = empty_span().expect("empty_span should not fail");
         let expr = ffi::tir::Select(
             cond,
-            then_value.into_prim_expr()?,
-            else_value.into_prim_expr()?,
+            then_value.into_prim_expr(),
+            else_value.into_prim_expr(),
             span,
-        )?;
-        Ok(ffi::ir::PrimExpr::from_object(expr.as_object_ref().clone()))
+        )
+        .expect("Select should not fail");
+        ffi::ir::PrimExpr::from_object(expr.as_object_ref().clone())
     }
 }
 
 pub mod pred {
     use super::*;
 
-    pub fn to_ir_bool<C>(cond: C) -> Result<PredExpr>
+    pub fn to_ir_bool<C>(cond: C) -> PredExpr
     where
         C: IntoPredExpr,
     {
         cond.into_pred_expr()
     }
 
-    pub fn eq<L, R>(lhs: L, rhs: R) -> Result<PredExpr>
+    pub fn eq<L, R>(lhs: L, rhs: R) -> PredExpr
     where
         L: IntoPrimExpr,
         R: IntoPrimExpr,
@@ -655,7 +709,7 @@ pub mod pred {
         binary_pred(lhs, rhs, ffi::tir::EQ)
     }
 
-    pub fn ne<L, R>(lhs: L, rhs: R) -> Result<PredExpr>
+    pub fn ne<L, R>(lhs: L, rhs: R) -> PredExpr
     where
         L: IntoPrimExpr,
         R: IntoPrimExpr,
@@ -663,7 +717,7 @@ pub mod pred {
         binary_pred(lhs, rhs, ffi::tir::NE)
     }
 
-    pub fn lt<L, R>(lhs: L, rhs: R) -> Result<PredExpr>
+    pub fn lt<L, R>(lhs: L, rhs: R) -> PredExpr
     where
         L: IntoPrimExpr,
         R: IntoPrimExpr,
@@ -671,7 +725,7 @@ pub mod pred {
         binary_pred(lhs, rhs, ffi::tir::LT)
     }
 
-    pub fn le<L, R>(lhs: L, rhs: R) -> Result<PredExpr>
+    pub fn le<L, R>(lhs: L, rhs: R) -> PredExpr
     where
         L: IntoPrimExpr,
         R: IntoPrimExpr,
@@ -679,7 +733,7 @@ pub mod pred {
         binary_pred(lhs, rhs, ffi::tir::LE)
     }
 
-    pub fn gt<L, R>(lhs: L, rhs: R) -> Result<PredExpr>
+    pub fn gt<L, R>(lhs: L, rhs: R) -> PredExpr
     where
         L: IntoPrimExpr,
         R: IntoPrimExpr,
@@ -687,7 +741,7 @@ pub mod pred {
         binary_pred(lhs, rhs, ffi::tir::GT)
     }
 
-    pub fn ge<L, R>(lhs: L, rhs: R) -> Result<PredExpr>
+    pub fn ge<L, R>(lhs: L, rhs: R) -> PredExpr
     where
         L: IntoPrimExpr,
         R: IntoPrimExpr,
@@ -695,70 +749,66 @@ pub mod pred {
         binary_pred(lhs, rhs, ffi::tir::GE)
     }
 
-    pub fn not<C>(cond: C) -> Result<PredExpr>
+    pub fn not<C>(cond: C) -> PredExpr
     where
         C: IntoPredExpr,
     {
-        match cond.into_pred_expr()? {
-            PredExpr::Const(value) => Ok(PredExpr::Const(!value)),
+        match cond.into_pred_expr() {
+            PredExpr::Const(value) => PredExpr::Const(!value),
             PredExpr::Expr(expr) => {
-                let span = empty_span()?;
-                let not = ffi::tir::Not(expr, span)?;
-                Ok(PredExpr::Expr(ffi::ir::PrimExpr::from_object(
-                    not.as_object_ref().clone(),
-                )))
+                let span = empty_span().expect("empty_span should not fail");
+                let not = ffi::tir::Not(expr, span).expect("Not should not fail");
+                PredExpr::Expr(ffi::ir::PrimExpr::from_object(not.as_object_ref().clone()))
             }
         }
     }
 
-    pub fn and<L, R, F>(lhs: L, rhs: F) -> Result<PredExpr>
+    pub fn and<L, R, F>(lhs: L, rhs: F) -> PredExpr
     where
         L: IntoPredExpr,
         R: IntoPredExpr,
-        F: FnOnce() -> Result<R>,
+        F: FnOnce() -> R,
     {
-        let lhs = lhs.into_pred_expr()?;
+        let lhs = lhs.into_pred_expr();
         match lhs {
-            PredExpr::Const(false) => Ok(PredExpr::Const(false)),
-            PredExpr::Const(true) => rhs()?.into_pred_expr(),
+            PredExpr::Const(false) => PredExpr::Const(false),
+            PredExpr::Const(true) => rhs().into_pred_expr(),
             PredExpr::Expr(lhs_expr) => {
-                let rhs = rhs()?.into_pred_expr()?;
+                let rhs = rhs().into_pred_expr();
                 match rhs {
-                    PredExpr::Const(false) => Ok(PredExpr::Const(false)),
-                    PredExpr::Const(true) => Ok(PredExpr::Expr(lhs_expr)),
+                    PredExpr::Const(false) => PredExpr::Const(false),
+                    PredExpr::Const(true) => PredExpr::Expr(lhs_expr),
                     PredExpr::Expr(rhs_expr) => {
-                        let span = empty_span()?;
-                        let and = ffi::tir::And(lhs_expr, rhs_expr, span)?;
-                        Ok(PredExpr::Expr(ffi::ir::PrimExpr::from_object(
-                            and.as_object_ref().clone(),
-                        )))
+                        let span = empty_span().expect("empty_span should not fail");
+                        let and =
+                            ffi::tir::And(lhs_expr, rhs_expr, span).expect("And should not fail");
+                        PredExpr::Expr(ffi::ir::PrimExpr::from_object(and.as_object_ref().clone()))
                     }
                 }
             }
         }
     }
 
-    pub fn or<L, R, F>(lhs: L, rhs: F) -> Result<PredExpr>
+    pub fn or<L, R, F>(lhs: L, rhs: F) -> PredExpr
     where
         L: IntoPredExpr,
         R: IntoPredExpr,
-        F: FnOnce() -> Result<R>,
+        F: FnOnce() -> R,
     {
-        let lhs = lhs.into_pred_expr()?;
+        let lhs = lhs.into_pred_expr();
         match lhs {
-            PredExpr::Const(true) => Ok(PredExpr::Const(true)),
-            PredExpr::Const(false) => rhs()?.into_pred_expr(),
+            PredExpr::Const(true) => PredExpr::Const(true),
+            PredExpr::Const(false) => rhs().into_pred_expr(),
             PredExpr::Expr(lhs_expr) => {
-                let rhs = rhs()?.into_pred_expr()?;
+                let rhs = rhs().into_pred_expr();
                 match rhs {
-                    PredExpr::Const(true) => Ok(PredExpr::Const(true)),
-                    PredExpr::Const(false) => Ok(PredExpr::Expr(lhs_expr)),
+                    PredExpr::Const(true) => PredExpr::Const(true),
+                    PredExpr::Const(false) => PredExpr::Expr(lhs_expr),
                     PredExpr::Expr(rhs_expr) => {
-                        let span = empty_span()?;
-                        let or = ffi::tir::Or(lhs_expr, rhs_expr, span)?;
-                        Ok(PredExpr::Expr(ffi::ir::PrimExpr::from_object(
-                            or.as_object_ref().clone(),
-                        )))
+                        let span = empty_span().expect("empty_span should not fail");
+                        let or =
+                            ffi::tir::Or(lhs_expr, rhs_expr, span).expect("Or should not fail");
+                        PredExpr::Expr(ffi::ir::PrimExpr::from_object(or.as_object_ref().clone()))
                     }
                 }
             }
@@ -788,20 +838,14 @@ fn int64_imm(value: i64) -> Result<ffi::ir::PrimExpr> {
     Ok(ffi::ir::PrimExpr::from_object(imm.as_object_ref().clone()))
 }
 
-fn expect_loop_vars(vars: Array<ffi::tir::Var>, expected: usize) -> Result<()> {
+fn assert_loop_vars(vars: Array<ffi::tir::Var>, expected: usize) {
     let actual = vars.len();
-    if actual == expected {
-        return Ok(());
-    }
-
-    Err(tvm_ffi::Error::new(
-        VALUE_ERROR,
-        &format!(
-            "expected {} loop vars, but got {} from ForFrame",
-            expected, actual
-        ),
-        "",
-    ))
+    assert!(
+        actual == expected,
+        "expected {} loop vars from ForFrame, got {}",
+        expected,
+        actual,
+    );
 }
 
 fn bool_imm(value: bool) -> Result<ffi::ir::PrimExpr> {
@@ -811,16 +855,17 @@ fn bool_imm(value: bool) -> Result<ffi::ir::PrimExpr> {
     Ok(ffi::ir::PrimExpr::from_object(imm.as_object_ref().clone()))
 }
 
-fn binary_pred<L, R, F, O>(lhs: L, rhs: R, op: F) -> Result<PredExpr>
+fn binary_pred<L, R, F, O>(lhs: L, rhs: R, op: F) -> PredExpr
 where
     L: IntoPrimExpr,
     R: IntoPrimExpr,
     F: FnOnce(ffi::ir::PrimExpr, ffi::ir::PrimExpr, ffi::ir::Span) -> Result<O>,
     O: Into<ObjectRef>,
 {
-    let span = empty_span()?;
-    let expr = op(lhs.into_prim_expr()?, rhs.into_prim_expr()?, span)?;
-    Ok(PredExpr::Expr(ffi::ir::PrimExpr::from_object(expr.into())))
+    let span = empty_span().expect("empty_span should not fail");
+    let expr = op(lhs.into_prim_expr(), rhs.into_prim_expr(), span)
+        .expect("binary predicate construction should not fail");
+    PredExpr::Expr(ffi::ir::PrimExpr::from_object(expr.into()))
 }
 
 fn downcast_ir_module(object: ObjectRef) -> Result<ffi::ir::IRModule> {

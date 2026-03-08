@@ -94,6 +94,6 @@ fn runtime_loads_from_runtime_dir_override() -> Result<()> {
 
     runtime::ensure_runtime_loaded()?;
     let ctx = BuilderContext::new("runtime_dir_override")?;
-    let _module = ctx.finish_ir_module()?;
+    let _module = ctx.finish_ir_module();
     Ok(())
 }
