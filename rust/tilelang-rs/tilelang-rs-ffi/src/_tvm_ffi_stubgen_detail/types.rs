@@ -30,7 +30,20 @@ pub mod expr_functor {
 
     impl PyExprMutator {}
 
-    impl PyExprMutator {}
+    static FIELD_EXPR_FUNCTOR_PYEXPRMUTATOR__BUILDER_: std::sync::LazyLock<
+        tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+    > = std::sync::LazyLock::new(|| {
+        tvm_ffi::object_wrapper::FieldGetter::new("expr_functor.PyExprMutator", "builder_")
+            .expect("non-layout field builder_ must be registered in TVM reflection")
+    });
+    impl PyExprMutator {
+        pub fn get_builder_(&self) -> tvm_ffi::Any {
+            let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+            FIELD_EXPR_FUNCTOR_PYEXPRMUTATOR__BUILDER_
+                .get_any(&__obj)
+                .expect("non-layout field builder_ should be accessible")
+        }
+    }
 
     #[repr(C)]
     #[derive(tvm_ffi::derive::Object)]
@@ -88,6 +101,12 @@ pub mod ffi {
             }
         }
 
+        static FIELD_FFI_REFLECTION_ACCESSPATH__STEP: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new("ffi.reflection.AccessPath", "step")
+                .expect("non-layout field step must be registered in TVM reflection")
+        });
         static METHOD_FFI_REFLECTION_ACCESSPATH___ROOT: LazyLock<tvm_ffi::Function> =
             LazyLock::new(|| {
                 tvm_ffi::object_wrapper::resolve_type_method("ffi.reflection.AccessPath", "_root")
@@ -242,6 +261,12 @@ pub mod ffi {
                 views.push(AnyView::from(self as &tvm_ffi::object::ObjectRef));
                 views.extend(args.iter().map(AnyView::from));
                 func.call_packed(&views)
+            }
+            pub fn get_step(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_FFI_REFLECTION_ACCESSPATH__STEP
+                    .get_any(&__obj)
+                    .expect("non-layout field step should be accessible")
             }
         }
     }
@@ -605,14 +630,14 @@ pub mod ir {
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::Span>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("ir.TupleType", "span")
-            .expect("parent-range field span must be registered in TVM reflection")
+            .expect("non-layout field span must be registered in TVM reflection")
     });
     impl TupleType {
         pub fn get_span(&self) -> crate::ir::Span {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_IR_TUPLETYPE__SPAN
                 .get(&__obj)
-                .expect("parent-range field span access should not fail")
+                .expect("non-layout field span should be accessible")
         }
     }
 
@@ -646,14 +671,14 @@ pub mod ir {
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::Span>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("ir.FuncType", "span")
-            .expect("parent-range field span must be registered in TVM reflection")
+            .expect("non-layout field span must be registered in TVM reflection")
     });
     impl FuncType {
         pub fn get_span(&self) -> crate::ir::Span {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_IR_FUNCTYPE__SPAN
                 .get(&__obj)
-                .expect("parent-range field span access should not fail")
+                .expect("non-layout field span should be accessible")
         }
     }
 
@@ -678,14 +703,14 @@ pub mod ir {
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::Span>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("ir.TensorMapType", "span")
-            .expect("parent-range field span must be registered in TVM reflection")
+            .expect("non-layout field span must be registered in TVM reflection")
     });
     impl TensorMapType {
         pub fn get_span(&self) -> crate::ir::Span {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_IR_TENSORMAPTYPE__SPAN
                 .get(&__obj)
-                .expect("parent-range field span access should not fail")
+                .expect("non-layout field span should be accessible")
         }
     }
 
@@ -763,14 +788,14 @@ pub mod ir {
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Map<tvm_ffi::String, tvm_ffi::AnyValue>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("ir.DictAttrs", "__dict__")
-            .expect("parent-range field __dict__ must be registered in TVM reflection")
+            .expect("non-layout field __dict__ must be registered in TVM reflection")
     });
     impl DictAttrs {
         pub fn get___dict__(&self) -> tvm_ffi::Map<tvm_ffi::String, tvm_ffi::AnyValue> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_IR_DICTATTRS____DICT__
                 .get(&__obj)
-                .expect("parent-range field __dict__ access should not fail")
+                .expect("non-layout field __dict__ should be accessible")
         }
     }
 
@@ -1578,74 +1603,74 @@ pub mod relax {
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("relax.TEPlaceholderOp", "name")
-            .expect("parent-range field name must be registered in TVM reflection")
+            .expect("non-layout field name must be registered in TVM reflection")
     });
     static FIELD_RELAX_TEPLACEHOLDEROP__TAG: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("relax.TEPlaceholderOp", "tag")
-            .expect("parent-range field tag must be registered in TVM reflection")
+            .expect("non-layout field tag must be registered in TVM reflection")
     });
     static FIELD_RELAX_TEPLACEHOLDEROP__ATTRS: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Map<tvm_ffi::String, tvm_ffi::AnyValue>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("relax.TEPlaceholderOp", "attrs")
-            .expect("parent-range field attrs must be registered in TVM reflection")
+            .expect("non-layout field attrs must be registered in TVM reflection")
     });
     static FIELD_RELAX_TEPLACEHOLDEROP__VALUE: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::RelaxExpr>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("relax.TEPlaceholderOp", "value")
-            .expect("parent-range field value must be registered in TVM reflection")
+            .expect("non-layout field value must be registered in TVM reflection")
     });
     static FIELD_RELAX_TEPLACEHOLDEROP__SHAPE: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::PrimExpr>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("relax.TEPlaceholderOp", "shape")
-            .expect("parent-range field shape must be registered in TVM reflection")
+            .expect("non-layout field shape must be registered in TVM reflection")
     });
     static FIELD_RELAX_TEPLACEHOLDEROP__DTYPE: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("relax.TEPlaceholderOp", "dtype")
-            .expect("parent-range field dtype must be registered in TVM reflection")
+            .expect("non-layout field dtype must be registered in TVM reflection")
     });
     impl TEPlaceholderOp {
         pub fn get_name(&self) -> tvm_ffi::String {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_RELAX_TEPLACEHOLDEROP__NAME
                 .get(&__obj)
-                .expect("parent-range field name access should not fail")
+                .expect("non-layout field name should be accessible")
         }
         pub fn get_tag(&self) -> tvm_ffi::String {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_RELAX_TEPLACEHOLDEROP__TAG
                 .get(&__obj)
-                .expect("parent-range field tag access should not fail")
+                .expect("non-layout field tag should be accessible")
         }
         pub fn get_attrs(&self) -> tvm_ffi::Map<tvm_ffi::String, tvm_ffi::AnyValue> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_RELAX_TEPLACEHOLDEROP__ATTRS
                 .get(&__obj)
-                .expect("parent-range field attrs access should not fail")
+                .expect("non-layout field attrs should be accessible")
         }
         pub fn get_value(&self) -> crate::ir::RelaxExpr {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_RELAX_TEPLACEHOLDEROP__VALUE
                 .get(&__obj)
-                .expect("parent-range field value access should not fail")
+                .expect("non-layout field value should be accessible")
         }
         pub fn get_shape(&self) -> tvm_ffi::Array<crate::ir::PrimExpr> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_RELAX_TEPLACEHOLDEROP__SHAPE
                 .get(&__obj)
-                .expect("parent-range field shape access should not fail")
+                .expect("non-layout field shape should be accessible")
         }
         pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_RELAX_TEPLACEHOLDEROP__DTYPE
                 .get(&__obj)
-                .expect("parent-range field dtype access should not fail")
+                .expect("non-layout field dtype should be accessible")
         }
     }
 
@@ -1787,14 +1812,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.AllReduceAttrs", "op_type")
-                .expect("parent-range field op_type must be registered in TVM reflection")
+                .expect("non-layout field op_type must be registered in TVM reflection")
         });
         impl AllReduceAttrs {
             pub fn get_op_type(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ALLREDUCEATTRS__OP_TYPE
                     .get(&__obj)
-                    .expect("parent-range field op_type access should not fail")
+                    .expect("non-layout field op_type should be accessible")
             }
         }
 
@@ -1820,26 +1845,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.AllGatherAttrs", "num_workers")
-                .expect("parent-range field num_workers must be registered in TVM reflection")
+                .expect("non-layout field num_workers must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_ALLGATHERATTRS__IN_GROUP: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.AllGatherAttrs", "in_group")
-                .expect("parent-range field in_group must be registered in TVM reflection")
+                .expect("non-layout field in_group must be registered in TVM reflection")
         });
         impl AllGatherAttrs {
             pub fn get_num_workers(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ALLGATHERATTRS__NUM_WORKERS
                     .get(&__obj)
-                    .expect("parent-range field num_workers access should not fail")
+                    .expect("non-layout field num_workers should be accessible")
             }
             pub fn get_in_group(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ALLGATHERATTRS__IN_GROUP
                     .get(&__obj)
-                    .expect("parent-range field in_group access should not fail")
+                    .expect("non-layout field in_group should be accessible")
             }
         }
 
@@ -1868,26 +1893,26 @@ pub mod relax {
                 "relax.attrs.ScatterCollectiveAttrs",
                 "num_workers",
             )
-            .expect("parent-range field num_workers must be registered in TVM reflection")
+            .expect("non-layout field num_workers must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_SCATTERCOLLECTIVEATTRS__AXIS: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ScatterCollectiveAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl ScatterCollectiveAttrs {
             pub fn get_num_workers(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SCATTERCOLLECTIVEATTRS__NUM_WORKERS
                     .get(&__obj)
-                    .expect("parent-range field num_workers access should not fail")
+                    .expect("non-layout field num_workers should be accessible")
             }
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SCATTERCOLLECTIVEATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -1921,14 +1946,14 @@ pub mod relax {
                 "relax.attrs.DistributionAttrs",
                 "device_mesh",
             )
-            .expect("parent-range field device_mesh must be registered in TVM reflection")
+            .expect("non-layout field device_mesh must be registered in TVM reflection")
         });
         impl DistributionAttrs {
             pub fn get_device_mesh(&self) -> crate::relax::distributed::DeviceMesh {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_DISTRIBUTIONATTRS__DEVICE_MESH
                     .get(&__obj)
-                    .expect("parent-range field device_mesh access should not fail")
+                    .expect("non-layout field device_mesh should be accessible")
             }
         }
 
@@ -1968,14 +1993,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.GridSampleAttrs", "method")
-                .expect("parent-range field method must be registered in TVM reflection")
+                .expect("non-layout field method must be registered in TVM reflection")
         });
         impl GridSampleAttrs {
             pub fn get_method(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_GRIDSAMPLEATTRS__METHOD
                     .get(&__obj)
-                    .expect("parent-range field method access should not fail")
+                    .expect("non-layout field method should be accessible")
             }
         }
 
@@ -2035,14 +2060,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::FloatImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Resize2DAttrs", "roi")
-                .expect("parent-range field roi must be registered in TVM reflection")
+                .expect("non-layout field roi must be registered in TVM reflection")
         });
         impl Resize2DAttrs {
             pub fn get_roi(&self) -> tvm_ffi::Array<crate::ir::FloatImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_RESIZE2DATTRS__ROI
                     .get(&__obj)
-                    .expect("parent-range field roi access should not fail")
+                    .expect("non-layout field roi should be accessible")
             }
         }
 
@@ -2077,14 +2102,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<Option<crate::ir::FloatImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.AttentionAttrs", "scale")
-                .expect("parent-range field scale must be registered in TVM reflection")
+                .expect("non-layout field scale must be registered in TVM reflection")
         });
         impl AttentionAttrs {
             pub fn get_scale(&self) -> Option<crate::ir::FloatImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ATTENTIONATTRS__SCALE
                     .get(&__obj)
-                    .expect("parent-range field scale access should not fail")
+                    .expect("non-layout field scale should be accessible")
             }
         }
 
@@ -2140,14 +2165,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Conv1DAttrs", "strides")
-                .expect("parent-range field strides must be registered in TVM reflection")
+                .expect("non-layout field strides must be registered in TVM reflection")
         });
         impl Conv1DAttrs {
             pub fn get_strides(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CONV1DATTRS__STRIDES
                     .get(&__obj)
-                    .expect("parent-range field strides access should not fail")
+                    .expect("non-layout field strides should be accessible")
             }
         }
 
@@ -2203,14 +2228,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Conv2DAttrs", "strides")
-                .expect("parent-range field strides must be registered in TVM reflection")
+                .expect("non-layout field strides must be registered in TVM reflection")
         });
         impl Conv2DAttrs {
             pub fn get_strides(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CONV2DATTRS__STRIDES
                     .get(&__obj)
-                    .expect("parent-range field strides access should not fail")
+                    .expect("non-layout field strides should be accessible")
             }
         }
 
@@ -2266,14 +2291,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Conv3DAttrs", "strides")
-                .expect("parent-range field strides must be registered in TVM reflection")
+                .expect("non-layout field strides must be registered in TVM reflection")
         });
         impl Conv3DAttrs {
             pub fn get_strides(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CONV3DATTRS__STRIDES
                     .get(&__obj)
-                    .expect("parent-range field strides access should not fail")
+                    .expect("non-layout field strides should be accessible")
             }
         }
 
@@ -2333,14 +2358,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Conv1DTransposeAttrs", "strides")
-                .expect("parent-range field strides must be registered in TVM reflection")
+                .expect("non-layout field strides must be registered in TVM reflection")
         });
         impl Conv1DTransposeAttrs {
             pub fn get_strides(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CONV1DTRANSPOSEATTRS__STRIDES
                     .get(&__obj)
-                    .expect("parent-range field strides access should not fail")
+                    .expect("non-layout field strides should be accessible")
             }
         }
 
@@ -2400,14 +2425,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Conv2DTransposeAttrs", "strides")
-                .expect("parent-range field strides must be registered in TVM reflection")
+                .expect("non-layout field strides must be registered in TVM reflection")
         });
         impl Conv2DTransposeAttrs {
             pub fn get_strides(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CONV2DTRANSPOSEATTRS__STRIDES
                     .get(&__obj)
-                    .expect("parent-range field strides access should not fail")
+                    .expect("non-layout field strides should be accessible")
             }
         }
 
@@ -2433,14 +2458,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.SoftmaxAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl SoftmaxAttrs {
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SOFTMAXATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -2466,14 +2491,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<f64>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.LeakyReluAttrs", "alpha")
-                .expect("parent-range field alpha must be registered in TVM reflection")
+                .expect("non-layout field alpha must be registered in TVM reflection")
         });
         impl LeakyReluAttrs {
             pub fn get_alpha(&self) -> f64 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_LEAKYRELUATTRS__ALPHA
                     .get(&__obj)
-                    .expect("parent-range field alpha access should not fail")
+                    .expect("non-layout field alpha should be accessible")
             }
         }
 
@@ -2504,14 +2529,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<f64>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.SoftplusAttrs", "beta")
-                .expect("parent-range field beta must be registered in TVM reflection")
+                .expect("non-layout field beta must be registered in TVM reflection")
         });
         impl SoftplusAttrs {
             pub fn get_beta(&self) -> f64 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SOFTPLUSATTRS__BETA
                     .get(&__obj)
-                    .expect("parent-range field beta access should not fail")
+                    .expect("non-layout field beta should be accessible")
             }
         }
 
@@ -2537,14 +2562,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.PReluAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl PReluAttrs {
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_PRELUATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -2592,14 +2617,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.BatchNormAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl BatchNormAttrs {
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_BATCHNORMATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -2638,14 +2663,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.LayerNormAttrs", "axes")
-                .expect("parent-range field axes must be registered in TVM reflection")
+                .expect("non-layout field axes must be registered in TVM reflection")
         });
         impl LayerNormAttrs {
             pub fn get_axes(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_LAYERNORMATTRS__AXES
                     .get(&__obj)
-                    .expect("parent-range field axes access should not fail")
+                    .expect("non-layout field axes should be accessible")
             }
         }
 
@@ -2688,26 +2713,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.GroupNormAttrs", "num_groups")
-                .expect("parent-range field num_groups must be registered in TVM reflection")
+                .expect("non-layout field num_groups must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_GROUPNORMATTRS__CHANNEL_AXIS: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.GroupNormAttrs", "channel_axis")
-                .expect("parent-range field channel_axis must be registered in TVM reflection")
+                .expect("non-layout field channel_axis must be registered in TVM reflection")
         });
         impl GroupNormAttrs {
             pub fn get_num_groups(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_GROUPNORMATTRS__NUM_GROUPS
                     .get(&__obj)
-                    .expect("parent-range field num_groups access should not fail")
+                    .expect("non-layout field num_groups should be accessible")
             }
             pub fn get_channel_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_GROUPNORMATTRS__CHANNEL_AXIS
                     .get(&__obj)
-                    .expect("parent-range field channel_axis access should not fail")
+                    .expect("non-layout field channel_axis should be accessible")
             }
         }
 
@@ -2753,14 +2778,14 @@ pub mod relax {
                 "relax.attrs.InstanceNormAttrs",
                 "channel_axis",
             )
-            .expect("parent-range field channel_axis must be registered in TVM reflection")
+            .expect("non-layout field channel_axis must be registered in TVM reflection")
         });
         impl InstanceNormAttrs {
             pub fn get_channel_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_INSTANCENORMATTRS__CHANNEL_AXIS
                     .get(&__obj)
-                    .expect("parent-range field channel_axis access should not fail")
+                    .expect("non-layout field channel_axis should be accessible")
             }
         }
 
@@ -2791,14 +2816,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.RMSNormAttrs", "axes")
-                .expect("parent-range field axes must be registered in TVM reflection")
+                .expect("non-layout field axes must be registered in TVM reflection")
         });
         impl RMSNormAttrs {
             pub fn get_axes(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_RMSNORMATTRS__AXES
                     .get(&__obj)
-                    .expect("parent-range field axes access should not fail")
+                    .expect("non-layout field axes should be accessible")
             }
         }
 
@@ -2830,14 +2855,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.NLLLossAttrs", "reduction")
-                .expect("parent-range field reduction must be registered in TVM reflection")
+                .expect("non-layout field reduction must be registered in TVM reflection")
         });
         impl NLLLossAttrs {
             pub fn get_reduction(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_NLLLOSSATTRS__REDUCTION
                     .get(&__obj)
-                    .expect("parent-range field reduction access should not fail")
+                    .expect("non-layout field reduction should be accessible")
             }
         }
 
@@ -2863,14 +2888,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<f64>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.DropoutAttrs", "rate")
-                .expect("parent-range field rate must be registered in TVM reflection")
+                .expect("non-layout field rate must be registered in TVM reflection")
         });
         impl DropoutAttrs {
             pub fn get_rate(&self) -> f64 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_DROPOUTATTRS__RATE
                     .get(&__obj)
-                    .expect("parent-range field rate access should not fail")
+                    .expect("non-layout field rate should be accessible")
             }
         }
 
@@ -2905,14 +2930,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.PadAttrs", "pad_width")
-                .expect("parent-range field pad_width must be registered in TVM reflection")
+                .expect("non-layout field pad_width must be registered in TVM reflection")
         });
         impl PadAttrs {
             pub fn get_pad_width(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_PADATTRS__PAD_WIDTH
                     .get(&__obj)
-                    .expect("parent-range field pad_width access should not fail")
+                    .expect("non-layout field pad_width should be accessible")
             }
         }
 
@@ -2941,14 +2966,14 @@ pub mod relax {
                 "relax.attrs.PixelShuffleAttrs",
                 "upscale_factor",
             )
-            .expect("parent-range field upscale_factor must be registered in TVM reflection")
+            .expect("non-layout field upscale_factor must be registered in TVM reflection")
         });
         impl PixelShuffleAttrs {
             pub fn get_upscale_factor(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_PIXELSHUFFLEATTRS__UPSCALE_FACTOR
                     .get(&__obj)
-                    .expect("parent-range field upscale_factor access should not fail")
+                    .expect("non-layout field upscale_factor should be accessible")
             }
         }
 
@@ -3004,14 +3029,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Pool1DAttrs", "pool_size")
-                .expect("parent-range field pool_size must be registered in TVM reflection")
+                .expect("non-layout field pool_size must be registered in TVM reflection")
         });
         impl Pool1DAttrs {
             pub fn get_pool_size(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_POOL1DATTRS__POOL_SIZE
                     .get(&__obj)
-                    .expect("parent-range field pool_size access should not fail")
+                    .expect("non-layout field pool_size should be accessible")
             }
         }
 
@@ -3067,14 +3092,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Pool2DAttrs", "pool_size")
-                .expect("parent-range field pool_size must be registered in TVM reflection")
+                .expect("non-layout field pool_size must be registered in TVM reflection")
         });
         impl Pool2DAttrs {
             pub fn get_pool_size(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_POOL2DATTRS__POOL_SIZE
                     .get(&__obj)
-                    .expect("parent-range field pool_size access should not fail")
+                    .expect("non-layout field pool_size should be accessible")
             }
         }
 
@@ -3130,14 +3155,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.Pool3DAttrs", "pool_size")
-                .expect("parent-range field pool_size must be registered in TVM reflection")
+                .expect("non-layout field pool_size must be registered in TVM reflection")
         });
         impl Pool3DAttrs {
             pub fn get_pool_size(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_POOL3DATTRS__POOL_SIZE
                     .get(&__obj)
-                    .expect("parent-range field pool_size access should not fail")
+                    .expect("non-layout field pool_size should be accessible")
             }
         }
 
@@ -3175,14 +3200,14 @@ pub mod relax {
                 "relax.attrs.AdaptivePool1DAttrs",
                 "output_size",
             )
-            .expect("parent-range field output_size must be registered in TVM reflection")
+            .expect("non-layout field output_size must be registered in TVM reflection")
         });
         impl AdaptivePool1DAttrs {
             pub fn get_output_size(&self) -> Option<tvm_ffi::Array<crate::ir::IntImm>> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ADAPTIVEPOOL1DATTRS__OUTPUT_SIZE
                     .get(&__obj)
-                    .expect("parent-range field output_size access should not fail")
+                    .expect("non-layout field output_size should be accessible")
             }
         }
 
@@ -3220,14 +3245,14 @@ pub mod relax {
                 "relax.attrs.AdaptivePool2DAttrs",
                 "output_size",
             )
-            .expect("parent-range field output_size must be registered in TVM reflection")
+            .expect("non-layout field output_size must be registered in TVM reflection")
         });
         impl AdaptivePool2DAttrs {
             pub fn get_output_size(&self) -> Option<tvm_ffi::Array<crate::ir::IntImm>> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ADAPTIVEPOOL2DATTRS__OUTPUT_SIZE
                     .get(&__obj)
-                    .expect("parent-range field output_size access should not fail")
+                    .expect("non-layout field output_size should be accessible")
             }
         }
 
@@ -3265,14 +3290,14 @@ pub mod relax {
                 "relax.attrs.AdaptivePool3DAttrs",
                 "output_size",
             )
-            .expect("parent-range field output_size must be registered in TVM reflection")
+            .expect("non-layout field output_size must be registered in TVM reflection")
         });
         impl AdaptivePool3DAttrs {
             pub fn get_output_size(&self) -> Option<tvm_ffi::Array<crate::ir::IntImm>> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ADAPTIVEPOOL3DATTRS__OUTPUT_SIZE
                     .get(&__obj)
-                    .expect("parent-range field output_size access should not fail")
+                    .expect("non-layout field output_size should be accessible")
             }
         }
 
@@ -3307,14 +3332,14 @@ pub mod relax {
                 "relax.attrs.CallTIRWithGradAttrs",
                 "te_grad_name",
             )
-            .expect("parent-range field te_grad_name must be registered in TVM reflection")
+            .expect("non-layout field te_grad_name must be registered in TVM reflection")
         });
         impl CallTIRWithGradAttrs {
             pub fn get_te_grad_name(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CALLTIRWITHGRADATTRS__TE_GRAD_NAME
                     .get(&__obj)
-                    .expect("parent-range field te_grad_name access should not fail")
+                    .expect("non-layout field te_grad_name should be accessible")
             }
         }
 
@@ -3343,14 +3368,14 @@ pub mod relax {
                 "relax.attrs.CallTIRInplaceAttrs",
                 "inplace_indices",
             )
-            .expect("parent-range field inplace_indices must be registered in TVM reflection")
+            .expect("non-layout field inplace_indices must be registered in TVM reflection")
         });
         impl CallTIRInplaceAttrs {
             pub fn get_inplace_indices(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CALLTIRINPLACEATTRS__INPLACE_INDICES
                     .get(&__obj)
-                    .expect("parent-range field inplace_indices access should not fail")
+                    .expect("non-layout field inplace_indices should be accessible")
             }
         }
 
@@ -3379,14 +3404,14 @@ pub mod relax {
                 "relax.attrs.CallInplacePackedAttrs",
                 "inplace_indices",
             )
-            .expect("parent-range field inplace_indices must be registered in TVM reflection")
+            .expect("non-layout field inplace_indices must be registered in TVM reflection")
         });
         impl CallInplacePackedAttrs {
             pub fn get_inplace_indices(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_CALLINPLACEPACKEDATTRS__INPLACE_INDICES
                     .get(&__obj)
-                    .expect("parent-range field inplace_indices access should not fail")
+                    .expect("non-layout field inplace_indices should be accessible")
             }
         }
 
@@ -3412,14 +3437,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<crate::ir::VDevice>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ToVDeviceAttrs", "dst_vdevice")
-                .expect("parent-range field dst_vdevice must be registered in TVM reflection")
+                .expect("non-layout field dst_vdevice must be registered in TVM reflection")
         });
         impl ToVDeviceAttrs {
             pub fn get_dst_vdevice(&self) -> crate::ir::VDevice {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_TOVDEVICEATTRS__DST_VDEVICE
                     .get(&__obj)
-                    .expect("parent-range field dst_vdevice access should not fail")
+                    .expect("non-layout field dst_vdevice should be accessible")
             }
         }
 
@@ -3453,26 +3478,26 @@ pub mod relax {
                 "relax.attrs.HintOnDeviceAttrs",
                 "device_type",
             )
-            .expect("parent-range field device_type must be registered in TVM reflection")
+            .expect("non-layout field device_type must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_HINTONDEVICEATTRS__INDEX: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.HintOnDeviceAttrs", "index")
-                .expect("parent-range field index must be registered in TVM reflection")
+                .expect("non-layout field index must be registered in TVM reflection")
         });
         impl HintOnDeviceAttrs {
             pub fn get_device_type(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_HINTONDEVICEATTRS__DEVICE_TYPE
                     .get(&__obj)
-                    .expect("parent-range field device_type access should not fail")
+                    .expect("non-layout field device_type should be accessible")
             }
             pub fn get_index(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_HINTONDEVICEATTRS__INDEX
                     .get(&__obj)
-                    .expect("parent-range field index access should not fail")
+                    .expect("non-layout field index should be accessible")
             }
         }
 
@@ -3498,14 +3523,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.InitAttrs", "dtype")
-                .expect("parent-range field dtype must be registered in TVM reflection")
+                .expect("non-layout field dtype must be registered in TVM reflection")
         });
         impl InitAttrs {
             pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_INITATTRS__DTYPE
                     .get(&__obj)
-                    .expect("parent-range field dtype access should not fail")
+                    .expect("non-layout field dtype should be accessible")
             }
         }
 
@@ -3531,14 +3556,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.TriluAttrs", "k")
-                .expect("parent-range field k must be registered in TVM reflection")
+                .expect("non-layout field k must be registered in TVM reflection")
         });
         impl TriluAttrs {
             pub fn get_k(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_TRILUATTRS__K
                     .get(&__obj)
-                    .expect("parent-range field k access should not fail")
+                    .expect("non-layout field k should be accessible")
             }
         }
 
@@ -3564,14 +3589,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.AstypeAttrs", "dtype")
-                .expect("parent-range field dtype must be registered in TVM reflection")
+                .expect("non-layout field dtype must be registered in TVM reflection")
         });
         impl AstypeAttrs {
             pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ASTYPEATTRS__DTYPE
                     .get(&__obj)
-                    .expect("parent-range field dtype access should not fail")
+                    .expect("non-layout field dtype should be accessible")
             }
         }
 
@@ -3597,14 +3622,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.WrapParamAttrs", "dtype")
-                .expect("parent-range field dtype must be registered in TVM reflection")
+                .expect("non-layout field dtype must be registered in TVM reflection")
         });
         impl WrapParamAttrs {
             pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_WRAPPARAMATTRS__DTYPE
                     .get(&__obj)
-                    .expect("parent-range field dtype access should not fail")
+                    .expect("non-layout field dtype should be accessible")
             }
         }
 
@@ -3632,7 +3657,20 @@ pub mod relax {
             }
         }
 
-        impl TakeAttrs {}
+        static FIELD_RELAX_ATTRS_TAKEATTRS__AXIS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.TakeAttrs", "axis")
+                .expect("non-layout field axis must be registered in TVM reflection")
+        });
+        impl TakeAttrs {
+            pub fn get_axis(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_ATTRS_TAKEATTRS__AXIS
+                    .get_any(&__obj)
+                    .expect("non-layout field axis should be accessible")
+            }
+        }
 
         #[repr(C)]
         #[derive(tvm_ffi::derive::Object)]
@@ -3659,14 +3697,14 @@ pub mod relax {
                 "relax.attrs.StridedSliceAttrs",
                 "assume_inbound",
             )
-            .expect("parent-range field assume_inbound must be registered in TVM reflection")
+            .expect("non-layout field assume_inbound must be registered in TVM reflection")
         });
         impl StridedSliceAttrs {
             pub fn get_assume_inbound(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_STRIDEDSLICEATTRS__ASSUME_INBOUND
                     .get(&__obj)
-                    .expect("parent-range field assume_inbound access should not fail")
+                    .expect("non-layout field assume_inbound should be accessible")
             }
         }
 
@@ -3692,14 +3730,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.MatmulAttrs", "out_dtype")
-                .expect("parent-range field out_dtype must be registered in TVM reflection")
+                .expect("non-layout field out_dtype must be registered in TVM reflection")
         });
         impl MatmulAttrs {
             pub fn get_out_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_MATMULATTRS__OUT_DTYPE
                     .get(&__obj)
-                    .expect("parent-range field out_dtype access should not fail")
+                    .expect("non-layout field out_dtype should be accessible")
             }
         }
 
@@ -3725,14 +3763,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.EinsumAttrs", "subscripts")
-                .expect("parent-range field subscripts must be registered in TVM reflection")
+                .expect("non-layout field subscripts must be registered in TVM reflection")
         });
         impl EinsumAttrs {
             pub fn get_subscripts(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_EINSUMATTRS__SUBSCRIPTS
                     .get(&__obj)
-                    .expect("parent-range field subscripts access should not fail")
+                    .expect("non-layout field subscripts should be accessible")
             }
         }
 
@@ -3754,7 +3792,20 @@ pub mod relax {
 
         impl ConcatAttrs {}
 
-        impl ConcatAttrs {}
+        static FIELD_RELAX_ATTRS_CONCATATTRS__AXIS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ConcatAttrs", "axis")
+                .expect("non-layout field axis must be registered in TVM reflection")
+        });
+        impl ConcatAttrs {
+            pub fn get_axis(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_ATTRS_CONCATATTRS__AXIS
+                    .get_any(&__obj)
+                    .expect("non-layout field axis should be accessible")
+            }
+        }
 
         #[repr(C)]
         #[derive(tvm_ffi::derive::Object)]
@@ -3778,14 +3829,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ExpandDimsAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl ExpandDimsAttrs {
             pub fn get_axis(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_EXPANDDIMSATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -3827,14 +3878,14 @@ pub mod relax {
                 "relax.attrs.LayoutTransformAttrs",
                 "index_map",
             )
-            .expect("parent-range field index_map must be registered in TVM reflection")
+            .expect("non-layout field index_map must be registered in TVM reflection")
         });
         impl LayoutTransformAttrs {
             pub fn get_index_map(&self) -> crate::tir::IndexMap {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_LAYOUTTRANSFORMATTRS__INDEX_MAP
                     .get(&__obj)
-                    .expect("parent-range field index_map access should not fail")
+                    .expect("non-layout field index_map should be accessible")
             }
         }
 
@@ -3860,14 +3911,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<Option<tvm_ffi::Array<crate::ir::IntImm>>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.PermuteDimsAttrs", "axes")
-                .expect("parent-range field axes must be registered in TVM reflection")
+                .expect("non-layout field axes must be registered in TVM reflection")
         });
         impl PermuteDimsAttrs {
             pub fn get_axes(&self) -> Option<tvm_ffi::Array<crate::ir::IntImm>> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_PERMUTEDIMSATTRS__AXES
                     .get(&__obj)
-                    .expect("parent-range field axes access should not fail")
+                    .expect("non-layout field axes should be accessible")
             }
         }
 
@@ -3901,14 +3952,14 @@ pub mod relax {
                 "relax.attrs.SplitAttrs",
                 "indices_or_sections",
             )
-            .expect("parent-range field indices_or_sections must be registered in TVM reflection")
+            .expect("non-layout field indices_or_sections must be registered in TVM reflection")
         });
         impl SplitAttrs {
             pub fn get_indices_or_sections(&self) -> tvm_ffi::object::ObjectRef {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SPLITATTRS__INDICES_OR_SECTIONS
                     .get(&__obj)
-                    .expect("parent-range field indices_or_sections access should not fail")
+                    .expect("non-layout field indices_or_sections should be accessible")
             }
         }
 
@@ -3934,14 +3985,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<Option<tvm_ffi::Array<crate::ir::IntImm>>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.SqueezeAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl SqueezeAttrs {
             pub fn get_axis(&self) -> Option<tvm_ffi::Array<crate::ir::IntImm>> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SQUEEZEATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -3967,14 +4018,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<Option<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.StackAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl StackAttrs {
             pub fn get_axis(&self) -> Option<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_STACKATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4000,14 +4051,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.RepeatAttrs", "repeats")
-                .expect("parent-range field repeats must be registered in TVM reflection")
+                .expect("non-layout field repeats must be registered in TVM reflection")
+        });
+        static FIELD_RELAX_ATTRS_REPEATATTRS__AXIS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.RepeatAttrs", "axis")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl RepeatAttrs {
             pub fn get_repeats(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_REPEATATTRS__REPEATS
                     .get(&__obj)
-                    .expect("parent-range field repeats access should not fail")
+                    .expect("non-layout field repeats should be accessible")
+            }
+            pub fn get_axis(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_ATTRS_REPEATATTRS__AXIS
+                    .get_any(&__obj)
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4033,14 +4096,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::IntImm>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.TileAttrs", "repeats")
-                .expect("parent-range field repeats must be registered in TVM reflection")
+                .expect("non-layout field repeats must be registered in TVM reflection")
         });
         impl TileAttrs {
             pub fn get_repeats(&self) -> tvm_ffi::Array<crate::ir::IntImm> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_TILEATTRS__REPEATS
                     .get(&__obj)
-                    .expect("parent-range field repeats access should not fail")
+                    .expect("non-layout field repeats should be accessible")
             }
         }
 
@@ -4066,14 +4129,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<crate::ir::IntImm>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.FlipAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl FlipAttrs {
             pub fn get_axis(&self) -> crate::ir::IntImm {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_FLIPATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4099,14 +4162,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<crate::ir::IntImm>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.GatherElementsAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl GatherElementsAttrs {
             pub fn get_axis(&self) -> crate::ir::IntImm {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_GATHERELEMENTSATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4132,14 +4195,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<crate::ir::IntImm>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.GatherNDAttrs", "batch_dims")
-                .expect("parent-range field batch_dims must be registered in TVM reflection")
+                .expect("non-layout field batch_dims must be registered in TVM reflection")
         });
         impl GatherNDAttrs {
             pub fn get_batch_dims(&self) -> crate::ir::IntImm {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_GATHERNDATTRS__BATCH_DIMS
                     .get(&__obj)
-                    .expect("parent-range field batch_dims access should not fail")
+                    .expect("non-layout field batch_dims should be accessible")
             }
         }
 
@@ -4165,14 +4228,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.IndexPutAttrs", "accumulate")
-                .expect("parent-range field accumulate must be registered in TVM reflection")
+                .expect("non-layout field accumulate must be registered in TVM reflection")
         });
         impl IndexPutAttrs {
             pub fn get_accumulate(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_INDEXPUTATTRS__ACCUMULATE
                     .get(&__obj)
-                    .expect("parent-range field accumulate access should not fail")
+                    .expect("non-layout field accumulate should be accessible")
             }
         }
 
@@ -4198,14 +4261,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<Option<tvm_ffi::String>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.MeshgridAttrs", "indexing")
-                .expect("parent-range field indexing must be registered in TVM reflection")
+                .expect("non-layout field indexing must be registered in TVM reflection")
         });
         impl MeshgridAttrs {
             pub fn get_indexing(&self) -> Option<tvm_ffi::String> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_MESHGRIDATTRS__INDEXING
                     .get(&__obj)
-                    .expect("parent-range field indexing access should not fail")
+                    .expect("non-layout field indexing should be accessible")
             }
         }
 
@@ -4236,14 +4299,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<crate::ir::IntImm>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ScatterElementsAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl ScatterElementsAttrs {
             pub fn get_axis(&self) -> crate::ir::IntImm {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SCATTERELEMENTSATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4269,14 +4332,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ScatterNDAttrs", "reduction")
-                .expect("parent-range field reduction must be registered in TVM reflection")
+                .expect("non-layout field reduction must be registered in TVM reflection")
         });
         impl ScatterNDAttrs {
             pub fn get_reduction(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SCATTERNDATTRS__REDUCTION
                     .get(&__obj)
-                    .expect("parent-range field reduction access should not fail")
+                    .expect("non-layout field reduction should be accessible")
             }
         }
 
@@ -4302,14 +4365,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.SliceScatterAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl SliceScatterAttrs {
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SLICESCATTERATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4335,26 +4398,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.OneHotAttrs", "depth")
-                .expect("parent-range field depth must be registered in TVM reflection")
+                .expect("non-layout field depth must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_ONEHOTATTRS__AXIS: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.OneHotAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl OneHotAttrs {
             pub fn get_depth(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ONEHOTATTRS__DEPTH
                     .get(&__obj)
-                    .expect("parent-range field depth access should not fail")
+                    .expect("non-layout field depth should be accessible")
             }
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ONEHOTATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4380,26 +4443,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.QuantizeAttrs", "out_dtype")
-                .expect("parent-range field out_dtype must be registered in TVM reflection")
+                .expect("non-layout field out_dtype must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_QUANTIZEATTRS__AXIS: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.QuantizeAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl QuantizeAttrs {
             pub fn get_out_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_QUANTIZEATTRS__OUT_DTYPE
                     .get(&__obj)
-                    .expect("parent-range field out_dtype access should not fail")
+                    .expect("non-layout field out_dtype should be accessible")
             }
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_QUANTIZEATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4428,14 +4491,14 @@ pub mod relax {
                 "relax.attrs.MultinomialFromUniformAttrs",
                 "dtype",
             )
-            .expect("parent-range field dtype must be registered in TVM reflection")
+            .expect("non-layout field dtype must be registered in TVM reflection")
         });
         impl MultinomialFromUniformAttrs {
             pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_MULTINOMIALFROMUNIFORMATTRS__DTYPE
                     .get(&__obj)
-                    .expect("parent-range field dtype access should not fail")
+                    .expect("non-layout field dtype should be accessible")
             }
         }
 
@@ -4463,7 +4526,20 @@ pub mod relax {
             }
         }
 
-        impl ArgmaxArgminAttrs {}
+        static FIELD_RELAX_ATTRS_ARGMAXARGMINATTRS__AXIS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ArgmaxArgminAttrs", "axis")
+                .expect("non-layout field axis must be registered in TVM reflection")
+        });
+        impl ArgmaxArgminAttrs {
+            pub fn get_axis(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_ATTRS_ARGMAXARGMINATTRS__AXIS
+                    .get_any(&__obj)
+                    .expect("non-layout field axis should be accessible")
+            }
+        }
 
         #[repr(C)]
         #[derive(tvm_ffi::derive::Object)]
@@ -4487,26 +4563,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.BucketizeAttrs", "out_int32")
-                .expect("parent-range field out_int32 must be registered in TVM reflection")
+                .expect("non-layout field out_int32 must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_BUCKETIZEATTRS__RIGHT: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.BucketizeAttrs", "right")
-                .expect("parent-range field right must be registered in TVM reflection")
+                .expect("non-layout field right must be registered in TVM reflection")
         });
         impl BucketizeAttrs {
             pub fn get_out_int32(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_BUCKETIZEATTRS__OUT_INT32
                     .get(&__obj)
-                    .expect("parent-range field out_int32 access should not fail")
+                    .expect("non-layout field out_int32 should be accessible")
             }
             pub fn get_right(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_BUCKETIZEATTRS__RIGHT
                     .get(&__obj)
-                    .expect("parent-range field right access should not fail")
+                    .expect("non-layout field right should be accessible")
             }
         }
 
@@ -4532,26 +4608,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.SortAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_SORTATTRS__DESCENDING: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.SortAttrs", "descending")
-                .expect("parent-range field descending must be registered in TVM reflection")
+                .expect("non-layout field descending must be registered in TVM reflection")
         });
         impl SortAttrs {
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SORTATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
             pub fn get_descending(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_SORTATTRS__DESCENDING
                     .get(&__obj)
-                    .expect("parent-range field descending access should not fail")
+                    .expect("non-layout field descending should be accessible")
             }
         }
 
@@ -4577,38 +4653,38 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ArgsortAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_ARGSORTATTRS__DESCENDING: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ArgsortAttrs", "descending")
-                .expect("parent-range field descending must be registered in TVM reflection")
+                .expect("non-layout field descending must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_ARGSORTATTRS__DTYPE: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::DLDataType>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ArgsortAttrs", "dtype")
-                .expect("parent-range field dtype must be registered in TVM reflection")
+                .expect("non-layout field dtype must be registered in TVM reflection")
         });
         impl ArgsortAttrs {
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ARGSORTATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
             pub fn get_descending(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ARGSORTATTRS__DESCENDING
                     .get(&__obj)
-                    .expect("parent-range field descending access should not fail")
+                    .expect("non-layout field descending should be accessible")
             }
             pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ARGSORTATTRS__DTYPE
                     .get(&__obj)
-                    .expect("parent-range field dtype access should not fail")
+                    .expect("non-layout field dtype should be accessible")
             }
         }
 
@@ -4648,26 +4724,26 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.TopKAttrs", "k")
-                .expect("parent-range field k must be registered in TVM reflection")
+                .expect("non-layout field k must be registered in TVM reflection")
         });
         static FIELD_RELAX_ATTRS_TOPKATTRS__AXIS: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.TopKAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl TopKAttrs {
             pub fn get_k(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_TOPKATTRS__K
                     .get(&__obj)
-                    .expect("parent-range field k access should not fail")
+                    .expect("non-layout field k should be accessible")
             }
             pub fn get_axis(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_TOPKATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4698,14 +4774,14 @@ pub mod relax {
             tvm_ffi::object_wrapper::FieldGetter<Option<tvm_ffi::Array<crate::ir::IntImm>>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.StatisticalAttrs", "axis")
-                .expect("parent-range field axis must be registered in TVM reflection")
+                .expect("non-layout field axis must be registered in TVM reflection")
         });
         impl StatisticalAttrs {
             pub fn get_axis(&self) -> Option<tvm_ffi::Array<crate::ir::IntImm>> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_STATISTICALATTRS__AXIS
                     .get(&__obj)
-                    .expect("parent-range field axis access should not fail")
+                    .expect("non-layout field axis should be accessible")
             }
         }
 
@@ -4738,7 +4814,20 @@ pub mod relax {
             }
         }
 
-        impl ScanopAttrs {}
+        static FIELD_RELAX_ATTRS_SCANOPATTRS__AXIS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new("relax.attrs.ScanopAttrs", "axis")
+                .expect("non-layout field axis must be registered in TVM reflection")
+        });
+        impl ScanopAttrs {
+            pub fn get_axis(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_ATTRS_SCANOPATTRS__AXIS
+                    .get_any(&__obj)
+                    .expect("non-layout field axis should be accessible")
+            }
+        }
 
         #[repr(C)]
         #[derive(tvm_ffi::derive::Object)]
@@ -4765,14 +4854,14 @@ pub mod relax {
                     "relax.attrs.AllClassNonMaximumSuppressionAttrs",
                     "output_format",
                 )
-                .expect("parent-range field output_format must be registered in TVM reflection")
+                .expect("non-layout field output_format must be registered in TVM reflection")
             });
         impl AllClassNonMaximumSuppressionAttrs {
             pub fn get_output_format(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_RELAX_ATTRS_ALLCLASSNONMAXIMUMSUPPRESSIONATTRS__OUTPUT_FORMAT
                     .get(&__obj)
-                    .expect("parent-range field output_format access should not fail")
+                    .expect("non-layout field output_format should be accessible")
             }
         }
     }
@@ -6232,7 +6321,38 @@ pub mod relax {
             }
         }
 
-        impl InferLayoutOutput {}
+        static FIELD_RELAX_TRANSFORM_INFERLAYOUTOUTPUT__INPUT_LAYOUTS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new(
+                "relax.transform.InferLayoutOutput",
+                "input_layouts",
+            )
+            .expect("non-layout field input_layouts must be registered in TVM reflection")
+        });
+        static FIELD_RELAX_TRANSFORM_INFERLAYOUTOUTPUT__OUTPUT_LAYOUTS: std::sync::LazyLock<
+            tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+        > = std::sync::LazyLock::new(|| {
+            tvm_ffi::object_wrapper::FieldGetter::new(
+                "relax.transform.InferLayoutOutput",
+                "output_layouts",
+            )
+            .expect("non-layout field output_layouts must be registered in TVM reflection")
+        });
+        impl InferLayoutOutput {
+            pub fn get_input_layouts(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_TRANSFORM_INFERLAYOUTOUTPUT__INPUT_LAYOUTS
+                    .get_any(&__obj)
+                    .expect("non-layout field input_layouts should be accessible")
+            }
+            pub fn get_output_layouts(&self) -> tvm_ffi::Any {
+                let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+                FIELD_RELAX_TRANSFORM_INFERLAYOUTOUTPUT__OUTPUT_LAYOUTS
+                    .get_any(&__obj)
+                    .expect("non-layout field output_layouts should be accessible")
+            }
+        }
     }
 }
 pub mod script {
@@ -6442,14 +6562,14 @@ pub mod script {
                 "script.ir_builder.IRModuleFrame",
                 "global_vars",
             )
-            .expect("parent-range field global_vars must be registered in TVM reflection")
+            .expect("non-layout field global_vars must be registered in TVM reflection")
         });
         impl IRModuleFrame {
             pub fn get_global_vars(&self) -> tvm_ffi::Map<tvm_ffi::String, crate::ir::GlobalVar> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_IR_BUILDER_IRMODULEFRAME__GLOBAL_VARS
                     .get(&__obj)
-                    .expect("parent-range field global_vars access should not fail")
+                    .expect("non-layout field global_vars should be accessible")
             }
         }
 
@@ -6510,7 +6630,7 @@ pub mod script {
                     "script.ir_builder.relax.SeqExprFrame",
                     "binding_blocks",
                 )
-                .expect("parent-range field binding_blocks must be registered in TVM reflection")
+                .expect("non-layout field binding_blocks must be registered in TVM reflection")
             });
             impl SeqExprFrame {
                 pub fn get_binding_blocks(
@@ -6519,7 +6639,7 @@ pub mod script {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_RELAX_SEQEXPRFRAME__BINDING_BLOCKS
                         .get(&__obj)
-                        .expect("parent-range field binding_blocks access should not fail")
+                        .expect("non-layout field binding_blocks should be accessible")
                 }
             }
 
@@ -6567,7 +6687,7 @@ pub mod script {
                     "script.ir_builder.relax.FunctionFrame",
                     "name",
                 )
-                .expect("parent-range field name must be registered in TVM reflection")
+                .expect("non-layout field name must be registered in TVM reflection")
             });
             static FIELD_SCRIPT_IR_BUILDER_RELAX_FUNCTIONFRAME__BINDING_BLOCKS:
                 std::sync::LazyLock<
@@ -6579,7 +6699,7 @@ pub mod script {
                     "script.ir_builder.relax.FunctionFrame",
                     "binding_blocks",
                 )
-                .expect("parent-range field binding_blocks must be registered in TVM reflection")
+                .expect("non-layout field binding_blocks must be registered in TVM reflection")
             });
             static FIELD_SCRIPT_IR_BUILDER_RELAX_FUNCTIONFRAME__OUTPUT: std::sync::LazyLock<
                 tvm_ffi::object_wrapper::FieldGetter<Option<crate::ir::RelaxExpr>>,
@@ -6588,14 +6708,14 @@ pub mod script {
                     "script.ir_builder.relax.FunctionFrame",
                     "output",
                 )
-                .expect("parent-range field output must be registered in TVM reflection")
+                .expect("non-layout field output must be registered in TVM reflection")
             });
             impl FunctionFrame {
                 pub fn get_name(&self) -> Option<tvm_ffi::String> {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_RELAX_FUNCTIONFRAME__NAME
                         .get(&__obj)
-                        .expect("parent-range field name access should not fail")
+                        .expect("non-layout field name should be accessible")
                 }
                 pub fn get_binding_blocks(
                     &self,
@@ -6603,13 +6723,13 @@ pub mod script {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_RELAX_FUNCTIONFRAME__BINDING_BLOCKS
                         .get(&__obj)
-                        .expect("parent-range field binding_blocks access should not fail")
+                        .expect("non-layout field binding_blocks should be accessible")
                 }
                 pub fn get_output(&self) -> Option<crate::ir::RelaxExpr> {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_RELAX_FUNCTIONFRAME__OUTPUT
                         .get(&__obj)
-                        .expect("parent-range field output access should not fail")
+                        .expect("non-layout field output should be accessible")
                 }
             }
 
@@ -6649,14 +6769,14 @@ pub mod script {
                     "script.ir_builder.relax.BlockFrame",
                     "is_dataflow",
                 )
-                .expect("parent-range field is_dataflow must be registered in TVM reflection")
+                .expect("non-layout field is_dataflow must be registered in TVM reflection")
             });
             impl BlockFrame {
                 pub fn get_is_dataflow(&self) -> bool {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_RELAX_BLOCKFRAME__IS_DATAFLOW
                         .get(&__obj)
-                        .expect("parent-range field is_dataflow access should not fail")
+                        .expect("non-layout field is_dataflow should be accessible")
                 }
             }
 
@@ -6703,14 +6823,14 @@ pub mod script {
                     "script.ir_builder.relax.IfFrame",
                     "condition",
                 )
-                .expect("parent-range field condition must be registered in TVM reflection")
+                .expect("non-layout field condition must be registered in TVM reflection")
             });
             impl IfFrame {
                 pub fn get_condition(&self) -> crate::ir::RelaxExpr {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_RELAX_IFFRAME__CONDITION
                         .get(&__obj)
-                        .expect("parent-range field condition access should not fail")
+                        .expect("non-layout field condition should be accessible")
                 }
             }
 
@@ -6779,14 +6899,14 @@ pub mod script {
                 tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::tir::Stmt>>,
             > = std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("script.ir_builder.tir.TIRFrame", "stmts")
-                    .expect("parent-range field stmts must be registered in TVM reflection")
+                    .expect("non-layout field stmts must be registered in TVM reflection")
             });
             impl TIRFrame {
                 pub fn get_stmts(&self) -> tvm_ffi::Array<crate::tir::Stmt> {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_TIRFRAME__STMTS
                         .get(&__obj)
-                        .expect("parent-range field stmts access should not fail")
+                        .expect("non-layout field stmts should be accessible")
                 }
             }
 
@@ -6849,14 +6969,14 @@ pub mod script {
                     "script.ir_builder.tir.PrimFuncFrame",
                     "name",
                 )
-                .expect("parent-range field name must be registered in TVM reflection")
+                .expect("non-layout field name must be registered in TVM reflection")
             });
             impl PrimFuncFrame {
                 pub fn get_name(&self) -> Option<tvm_ffi::String> {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_PRIMFUNCFRAME__NAME
                         .get(&__obj)
-                        .expect("parent-range field name access should not fail")
+                        .expect("non-layout field name should be accessible")
                 }
             }
 
@@ -6930,14 +7050,14 @@ pub mod script {
                     "script.ir_builder.tir.BlockFrame",
                     "name",
                 )
-                .expect("parent-range field name must be registered in TVM reflection")
+                .expect("non-layout field name must be registered in TVM reflection")
             });
             impl BlockFrame {
                 pub fn get_name(&self) -> tvm_ffi::String {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_BLOCKFRAME__NAME
                         .get(&__obj)
-                        .expect("parent-range field name access should not fail")
+                        .expect("non-layout field name should be accessible")
                 }
             }
 
@@ -6989,14 +7109,14 @@ pub mod script {
                 tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::tir::Var>>,
             > = std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("script.ir_builder.tir.ForFrame", "vars")
-                    .expect("parent-range field vars must be registered in TVM reflection")
+                    .expect("non-layout field vars must be registered in TVM reflection")
             });
             impl ForFrame {
                 pub fn get_vars(&self) -> tvm_ffi::Array<crate::tir::Var> {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_FORFRAME__VARS
                         .get(&__obj)
-                        .expect("parent-range field vars access should not fail")
+                        .expect("non-layout field vars should be accessible")
                 }
             }
 
@@ -7031,14 +7151,14 @@ pub mod script {
                     "script.ir_builder.tir.AssertFrame",
                     "condition",
                 )
-                .expect("parent-range field condition must be registered in TVM reflection")
+                .expect("non-layout field condition must be registered in TVM reflection")
             });
             impl AssertFrame {
                 pub fn get_condition(&self) -> crate::ir::PrimExpr {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_ASSERTFRAME__CONDITION
                         .get(&__obj)
-                        .expect("parent-range field condition access should not fail")
+                        .expect("non-layout field condition should be accessible")
                 }
             }
 
@@ -7070,14 +7190,14 @@ pub mod script {
                 tvm_ffi::object_wrapper::FieldGetter<crate::tir::Var>,
             > = std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("script.ir_builder.tir.LetFrame", "var")
-                    .expect("parent-range field var must be registered in TVM reflection")
+                    .expect("non-layout field var must be registered in TVM reflection")
             });
             impl LetFrame {
                 pub fn get_var(&self) -> crate::tir::Var {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_LETFRAME__VAR
                         .get(&__obj)
-                        .expect("parent-range field var access should not fail")
+                        .expect("non-layout field var should be accessible")
                 }
             }
 
@@ -7116,14 +7236,14 @@ pub mod script {
                     "script.ir_builder.tir.LaunchThreadFrame",
                     "extent",
                 )
-                .expect("parent-range field extent must be registered in TVM reflection")
+                .expect("non-layout field extent must be registered in TVM reflection")
             });
             impl LaunchThreadFrame {
                 pub fn get_extent(&self) -> crate::ir::PrimExpr {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_LAUNCHTHREADFRAME__EXTENT
                         .get(&__obj)
-                        .expect("parent-range field extent access should not fail")
+                        .expect("non-layout field extent should be accessible")
                 }
             }
 
@@ -7162,14 +7282,14 @@ pub mod script {
                     "script.ir_builder.tir.RealizeFrame",
                     "buffer_slice",
                 )
-                .expect("parent-range field buffer_slice must be registered in TVM reflection")
+                .expect("non-layout field buffer_slice must be registered in TVM reflection")
             });
             impl RealizeFrame {
                 pub fn get_buffer_slice(&self) -> crate::tir::BufferRegion {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_REALIZEFRAME__BUFFER_SLICE
                         .get(&__obj)
-                        .expect("parent-range field buffer_slice access should not fail")
+                        .expect("non-layout field buffer_slice should be accessible")
                 }
             }
 
@@ -7221,14 +7341,14 @@ pub mod script {
                     "script.ir_builder.tir.AllocateFrame",
                     "extents",
                 )
-                .expect("parent-range field extents must be registered in TVM reflection")
+                .expect("non-layout field extents must be registered in TVM reflection")
             });
             impl AllocateFrame {
                 pub fn get_extents(&self) -> tvm_ffi::Array<crate::ir::PrimExpr> {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_ALLOCATEFRAME__EXTENTS
                         .get(&__obj)
-                        .expect("parent-range field extents access should not fail")
+                        .expect("non-layout field extents should be accessible")
                 }
             }
 
@@ -7275,14 +7395,14 @@ pub mod script {
                     "script.ir_builder.tir.AllocateConstFrame",
                     "dtype",
                 )
-                .expect("parent-range field dtype must be registered in TVM reflection")
+                .expect("non-layout field dtype must be registered in TVM reflection")
             });
             impl AllocateConstFrame {
                 pub fn get_dtype(&self) -> tvm_ffi::DLDataType {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_ALLOCATECONSTFRAME__DTYPE
                         .get(&__obj)
-                        .expect("parent-range field dtype access should not fail")
+                        .expect("non-layout field dtype should be accessible")
                 }
             }
 
@@ -7319,14 +7439,14 @@ pub mod script {
                 tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::AnyValue>,
             > = std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("script.ir_builder.tir.AttrFrame", "node")
-                    .expect("parent-range field node must be registered in TVM reflection")
+                    .expect("non-layout field node must be registered in TVM reflection")
             });
             impl AttrFrame {
                 pub fn get_node(&self) -> tvm_ffi::AnyValue {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_ATTRFRAME__NODE
                         .get(&__obj)
-                        .expect("parent-range field node access should not fail")
+                        .expect("non-layout field node should be accessible")
                 }
             }
 
@@ -7356,14 +7476,14 @@ pub mod script {
                     "script.ir_builder.tir.WhileFrame",
                     "condition",
                 )
-                .expect("parent-range field condition must be registered in TVM reflection")
+                .expect("non-layout field condition must be registered in TVM reflection")
             });
             impl WhileFrame {
                 pub fn get_condition(&self) -> crate::ir::PrimExpr {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_WHILEFRAME__CONDITION
                         .get(&__obj)
-                        .expect("parent-range field condition access should not fail")
+                        .expect("non-layout field condition should be accessible")
                 }
             }
 
@@ -7402,14 +7522,14 @@ pub mod script {
                     "script.ir_builder.tir.IfFrame",
                     "condition",
                 )
-                .expect("parent-range field condition must be registered in TVM reflection")
+                .expect("non-layout field condition must be registered in TVM reflection")
             });
             impl IfFrame {
                 pub fn get_condition(&self) -> crate::ir::PrimExpr {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_IFFRAME__CONDITION
                         .get(&__obj)
-                        .expect("parent-range field condition access should not fail")
+                        .expect("non-layout field condition should be accessible")
                 }
             }
 
@@ -7484,14 +7604,14 @@ pub mod script {
                     "script.ir_builder.tir.DeclBufferFrame",
                     "buffer",
                 )
-                .expect("parent-range field buffer must be registered in TVM reflection")
+                .expect("non-layout field buffer must be registered in TVM reflection")
             });
             impl DeclBufferFrame {
                 pub fn get_buffer(&self) -> crate::tir::Buffer {
                     let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                     FIELD_SCRIPT_IR_BUILDER_TIR_DECLBUFFERFRAME__BUFFER
                         .get(&__obj)
-                        .expect("parent-range field buffer access should not fail")
+                        .expect("non-layout field buffer should be accessible")
                 }
             }
         }
@@ -7566,14 +7686,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<Option<tvm_ffi::String>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.StmtDoc", "comment")
-                .expect("parent-range field comment must be registered in TVM reflection")
+                .expect("non-layout field comment must be registered in TVM reflection")
         });
         impl StmtDoc {
             pub fn get_comment(&self) -> Option<tvm_ffi::String> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_STMTDOC__COMMENT
                     .get(&__obj)
-                    .expect("parent-range field comment access should not fail")
+                    .expect("non-layout field comment should be accessible")
             }
         }
 
@@ -7599,14 +7719,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::script::printer::StmtDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.StmtBlockDoc", "stmts")
-                .expect("parent-range field stmts must be registered in TVM reflection")
+                .expect("non-layout field stmts must be registered in TVM reflection")
         });
         impl StmtBlockDoc {
             pub fn get_stmts(&self) -> tvm_ffi::Array<crate::script::printer::StmtDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_STMTBLOCKDOC__STMTS
                     .get(&__obj)
-                    .expect("parent-range field stmts access should not fail")
+                    .expect("non-layout field stmts should be accessible")
             }
         }
 
@@ -7633,14 +7753,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::AnyValue>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.LiteralDoc", "value")
-                .expect("parent-range field value must be registered in TVM reflection")
+                .expect("non-layout field value must be registered in TVM reflection")
         });
         impl LiteralDoc {
             pub fn get_value(&self) -> tvm_ffi::AnyValue {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_LITERALDOC__VALUE
                     .get(&__obj)
-                    .expect("parent-range field value access should not fail")
+                    .expect("non-layout field value should be accessible")
             }
         }
 
@@ -7667,14 +7787,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::String>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.IdDoc", "name")
-                .expect("parent-range field name must be registered in TVM reflection")
+                .expect("non-layout field name must be registered in TVM reflection")
         });
         impl IdDoc {
             pub fn get_name(&self) -> tvm_ffi::String {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_IDDOC__NAME
                     .get(&__obj)
-                    .expect("parent-range field name access should not fail")
+                    .expect("non-layout field name should be accessible")
             }
         }
 
@@ -7706,14 +7826,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.AttrAccessDoc", "value")
-                .expect("parent-range field value must be registered in TVM reflection")
+                .expect("non-layout field value must be registered in TVM reflection")
         });
         impl AttrAccessDoc {
             pub fn get_value(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_ATTRACCESSDOC__VALUE
                     .get(&__obj)
-                    .expect("parent-range field value access should not fail")
+                    .expect("non-layout field value should be accessible")
             }
         }
 
@@ -7745,14 +7865,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.IndexDoc", "value")
-                .expect("parent-range field value must be registered in TVM reflection")
+                .expect("non-layout field value must be registered in TVM reflection")
         });
         impl IndexDoc {
             pub fn get_value(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_INDEXDOC__VALUE
                     .get(&__obj)
-                    .expect("parent-range field value access should not fail")
+                    .expect("non-layout field value should be accessible")
             }
         }
 
@@ -7792,14 +7912,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.CallDoc", "callee")
-                .expect("parent-range field callee must be registered in TVM reflection")
+                .expect("non-layout field callee must be registered in TVM reflection")
         });
         impl CallDoc {
             pub fn get_callee(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_CALLDOC__CALLEE
                     .get(&__obj)
-                    .expect("parent-range field callee access should not fail")
+                    .expect("non-layout field callee should be accessible")
             }
         }
 
@@ -7831,14 +7951,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<i32>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.OperationDoc", "kind")
-                .expect("parent-range field kind must be registered in TVM reflection")
+                .expect("non-layout field kind must be registered in TVM reflection")
         });
         impl OperationDoc {
             pub fn get_kind(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_OPERATIONDOC__KIND
                     .get(&__obj)
-                    .expect("parent-range field kind access should not fail")
+                    .expect("non-layout field kind should be accessible")
             }
         }
 
@@ -7870,14 +7990,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::script::printer::IdDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.LambdaDoc", "args")
-                .expect("parent-range field args must be registered in TVM reflection")
+                .expect("non-layout field args must be registered in TVM reflection")
         });
         impl LambdaDoc {
             pub fn get_args(&self) -> tvm_ffi::Array<crate::script::printer::IdDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_LAMBDADOC__ARGS
                     .get(&__obj)
-                    .expect("parent-range field args access should not fail")
+                    .expect("non-layout field args should be accessible")
             }
         }
 
@@ -7904,14 +8024,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::script::printer::ExprDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.TupleDoc", "elements")
-                .expect("parent-range field elements must be registered in TVM reflection")
+                .expect("non-layout field elements must be registered in TVM reflection")
         });
         impl TupleDoc {
             pub fn get_elements(&self) -> tvm_ffi::Array<crate::script::printer::ExprDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_TUPLEDOC__ELEMENTS
                     .get(&__obj)
-                    .expect("parent-range field elements access should not fail")
+                    .expect("non-layout field elements should be accessible")
             }
         }
 
@@ -7938,14 +8058,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::script::printer::ExprDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.ListDoc", "elements")
-                .expect("parent-range field elements must be registered in TVM reflection")
+                .expect("non-layout field elements must be registered in TVM reflection")
         });
         impl ListDoc {
             pub fn get_elements(&self) -> tvm_ffi::Array<crate::script::printer::ExprDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_LISTDOC__ELEMENTS
                     .get(&__obj)
-                    .expect("parent-range field elements access should not fail")
+                    .expect("non-layout field elements should be accessible")
             }
         }
 
@@ -7977,14 +8097,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::script::printer::ExprDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.DictDoc", "keys")
-                .expect("parent-range field keys must be registered in TVM reflection")
+                .expect("non-layout field keys must be registered in TVM reflection")
         });
         impl DictDoc {
             pub fn get_keys(&self) -> tvm_ffi::Array<crate::script::printer::ExprDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_DICTDOC__KEYS
                     .get(&__obj)
-                    .expect("parent-range field keys access should not fail")
+                    .expect("non-layout field keys should be accessible")
             }
         }
 
@@ -8019,14 +8139,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<Option<crate::script::printer::ExprDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.SliceDoc", "start")
-                .expect("parent-range field start must be registered in TVM reflection")
+                .expect("non-layout field start must be registered in TVM reflection")
         });
         impl SliceDoc {
             pub fn get_start(&self) -> Option<crate::script::printer::ExprDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_SLICEDOC__START
                     .get(&__obj)
-                    .expect("parent-range field start access should not fail")
+                    .expect("non-layout field start should be accessible")
             }
         }
 
@@ -8062,14 +8182,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.AssignDoc", "lhs")
-                .expect("parent-range field lhs must be registered in TVM reflection")
+                .expect("non-layout field lhs must be registered in TVM reflection")
         });
         impl AssignDoc {
             pub fn get_lhs(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_ASSIGNDOC__LHS
                     .get(&__obj)
-                    .expect("parent-range field lhs access should not fail")
+                    .expect("non-layout field lhs should be accessible")
             }
         }
 
@@ -8105,14 +8225,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.IfDoc", "predicate")
-                .expect("parent-range field predicate must be registered in TVM reflection")
+                .expect("non-layout field predicate must be registered in TVM reflection")
         });
         impl IfDoc {
             pub fn get_predicate(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_IFDOC__PREDICATE
                     .get(&__obj)
-                    .expect("parent-range field predicate access should not fail")
+                    .expect("non-layout field predicate should be accessible")
             }
         }
 
@@ -8144,14 +8264,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.WhileDoc", "predicate")
-                .expect("parent-range field predicate must be registered in TVM reflection")
+                .expect("non-layout field predicate must be registered in TVM reflection")
         });
         impl WhileDoc {
             pub fn get_predicate(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_WHILEDOC__PREDICATE
                     .get(&__obj)
-                    .expect("parent-range field predicate access should not fail")
+                    .expect("non-layout field predicate should be accessible")
             }
         }
 
@@ -8187,14 +8307,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.ForDoc", "lhs")
-                .expect("parent-range field lhs must be registered in TVM reflection")
+                .expect("non-layout field lhs must be registered in TVM reflection")
         });
         impl ForDoc {
             pub fn get_lhs(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_FORDOC__LHS
                     .get(&__obj)
-                    .expect("parent-range field lhs access should not fail")
+                    .expect("non-layout field lhs should be accessible")
             }
         }
 
@@ -8230,14 +8350,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<Option<crate::script::printer::ExprDoc>>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.ScopeDoc", "lhs")
-                .expect("parent-range field lhs must be registered in TVM reflection")
+                .expect("non-layout field lhs must be registered in TVM reflection")
         });
         impl ScopeDoc {
             pub fn get_lhs(&self) -> Option<crate::script::printer::ExprDoc> {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_SCOPEDOC__LHS
                     .get(&__obj)
-                    .expect("parent-range field lhs access should not fail")
+                    .expect("non-layout field lhs should be accessible")
             }
         }
 
@@ -8264,14 +8384,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.ExprStmtDoc", "expr")
-                .expect("parent-range field expr must be registered in TVM reflection")
+                .expect("non-layout field expr must be registered in TVM reflection")
         });
         impl ExprStmtDoc {
             pub fn get_expr(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_EXPRSTMTDOC__EXPR
                     .get(&__obj)
-                    .expect("parent-range field expr access should not fail")
+                    .expect("non-layout field expr should be accessible")
             }
         }
 
@@ -8303,14 +8423,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.AssertDoc", "test")
-                .expect("parent-range field test must be registered in TVM reflection")
+                .expect("non-layout field test must be registered in TVM reflection")
         });
         impl AssertDoc {
             pub fn get_test(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_ASSERTDOC__TEST
                     .get(&__obj)
-                    .expect("parent-range field test access should not fail")
+                    .expect("non-layout field test should be accessible")
             }
         }
 
@@ -8337,14 +8457,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::ExprDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.ReturnDoc", "value")
-                .expect("parent-range field value must be registered in TVM reflection")
+                .expect("non-layout field value must be registered in TVM reflection")
         });
         impl ReturnDoc {
             pub fn get_value(&self) -> crate::script::printer::ExprDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_RETURNDOC__VALUE
                     .get(&__obj)
-                    .expect("parent-range field value access should not fail")
+                    .expect("non-layout field value should be accessible")
             }
         }
 
@@ -8388,14 +8508,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::IdDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.FunctionDoc", "name")
-                .expect("parent-range field name must be registered in TVM reflection")
+                .expect("non-layout field name must be registered in TVM reflection")
         });
         impl FunctionDoc {
             pub fn get_name(&self) -> crate::script::printer::IdDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_FUNCTIONDOC__NAME
                     .get(&__obj)
-                    .expect("parent-range field name access should not fail")
+                    .expect("non-layout field name should be accessible")
             }
         }
 
@@ -8431,14 +8551,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<crate::script::printer::IdDoc>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.ClassDoc", "name")
-                .expect("parent-range field name must be registered in TVM reflection")
+                .expect("non-layout field name must be registered in TVM reflection")
         });
         impl ClassDoc {
             pub fn get_name(&self) -> crate::script::printer::IdDoc {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_CLASSDOC__NAME
                     .get(&__obj)
-                    .expect("parent-range field name access should not fail")
+                    .expect("non-layout field name should be accessible")
             }
         }
 
@@ -8560,7 +8680,7 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.RelaxFrame", "is_func")
-                .expect("parent-range field is_func must be registered in TVM reflection")
+                .expect("non-layout field is_func must be registered in TVM reflection")
         });
         static FIELD_SCRIPT_PRINTER_RELAXFRAME__MODULE_ALIAS_PRINTED: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<bool>,
@@ -8569,20 +8689,20 @@ pub mod script {
                 "script.printer.RelaxFrame",
                 "module_alias_printed",
             )
-            .expect("parent-range field module_alias_printed must be registered in TVM reflection")
+            .expect("non-layout field module_alias_printed must be registered in TVM reflection")
         });
         impl RelaxFrame {
             pub fn get_is_func(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_RELAXFRAME__IS_FUNC
                     .get(&__obj)
-                    .expect("parent-range field is_func access should not fail")
+                    .expect("non-layout field is_func should be accessible")
             }
             pub fn get_module_alias_printed(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_RELAXFRAME__MODULE_ALIAS_PRINTED
                     .get(&__obj)
-                    .expect("parent-range field module_alias_printed access should not fail")
+                    .expect("non-layout field module_alias_printed should be accessible")
             }
         }
 
@@ -8614,14 +8734,14 @@ pub mod script {
             tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::object::ObjectRef>,
         > = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("script.printer.TIRFrame", "tir")
-                .expect("parent-range field tir must be registered in TVM reflection")
+                .expect("non-layout field tir must be registered in TVM reflection")
         });
         impl TIRFrame {
             pub fn get_tir(&self) -> tvm_ffi::object::ObjectRef {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_SCRIPT_PRINTER_TIRFRAME__TIR
                     .get(&__obj)
-                    .expect("parent-range field tir access should not fail")
+                    .expect("non-layout field tir should be accessible")
             }
         }
     }
@@ -8805,26 +8925,26 @@ pub mod target {
         tvm_ffi::object_wrapper::FieldGetter<i32>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("target.VirtualDevice", "device_type_int")
-            .expect("parent-range field device_type_int must be registered in TVM reflection")
+            .expect("non-layout field device_type_int must be registered in TVM reflection")
     });
     static FIELD_TARGET_VIRTUALDEVICE__VIRTUAL_DEVICE_ID: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<i32>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("target.VirtualDevice", "virtual_device_id")
-            .expect("parent-range field virtual_device_id must be registered in TVM reflection")
+            .expect("non-layout field virtual_device_id must be registered in TVM reflection")
     });
     impl VirtualDevice {
         pub fn get_device_type_int(&self) -> i32 {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TARGET_VIRTUALDEVICE__DEVICE_TYPE_INT
                 .get(&__obj)
-                .expect("parent-range field device_type_int access should not fail")
+                .expect("non-layout field device_type_int should be accessible")
         }
         pub fn get_virtual_device_id(&self) -> i32 {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TARGET_VIRTUALDEVICE__VIRTUAL_DEVICE_ID
                 .get(&__obj)
-                .expect("parent-range field virtual_device_id access should not fail")
+                .expect("non-layout field virtual_device_id should be accessible")
         }
     }
 }
@@ -8892,14 +9012,14 @@ pub mod te {
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::PrimExpr>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("te.PlaceholderOp", "shape")
-            .expect("parent-range field shape must be registered in TVM reflection")
+            .expect("non-layout field shape must be registered in TVM reflection")
     });
     impl PlaceholderOp {
         pub fn get_shape(&self) -> tvm_ffi::Array<crate::ir::PrimExpr> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TE_PLACEHOLDEROP__SHAPE
                 .get(&__obj)
-                .expect("parent-range field shape access should not fail")
+                .expect("non-layout field shape should be accessible")
         }
     }
 
@@ -8930,14 +9050,14 @@ pub mod te {
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::tir::IterVar>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("te.BaseComputeOp", "axis")
-            .expect("parent-range field axis must be registered in TVM reflection")
+            .expect("non-layout field axis must be registered in TVM reflection")
     });
     impl BaseComputeOp {
         pub fn get_axis(&self) -> tvm_ffi::Array<crate::tir::IterVar> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TE_BASECOMPUTEOP__AXIS
                 .get(&__obj)
-                .expect("parent-range field axis access should not fail")
+                .expect("non-layout field axis should be accessible")
         }
     }
 
@@ -8963,14 +9083,14 @@ pub mod te {
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::ir::PrimExpr>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("te.ComputeOp", "body")
-            .expect("parent-range field body must be registered in TVM reflection")
+            .expect("non-layout field body must be registered in TVM reflection")
     });
     impl ComputeOp {
         pub fn get_body(&self) -> tvm_ffi::Array<crate::ir::PrimExpr> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TE_COMPUTEOP__BODY
                 .get(&__obj)
-                .expect("parent-range field body access should not fail")
+                .expect("non-layout field body should be accessible")
         }
     }
 
@@ -9009,14 +9129,14 @@ pub mod te {
         tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Array<crate::te::Tensor>>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("te.ExternOp", "inputs")
-            .expect("parent-range field inputs must be registered in TVM reflection")
+            .expect("non-layout field inputs must be registered in TVM reflection")
     });
     impl ExternOp {
         pub fn get_inputs(&self) -> tvm_ffi::Array<crate::te::Tensor> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TE_EXTERNOP__INPUTS
                 .get(&__obj)
-                .expect("parent-range field inputs access should not fail")
+                .expect("non-layout field inputs should be accessible")
         }
     }
 
@@ -9063,14 +9183,14 @@ pub mod te {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::IterVar>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("te.ScanOp", "scan_axis")
-            .expect("parent-range field scan_axis must be registered in TVM reflection")
+            .expect("non-layout field scan_axis must be registered in TVM reflection")
     });
     impl ScanOp {
         pub fn get_scan_axis(&self) -> crate::tir::IterVar {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TE_SCANOP__SCAN_AXIS
                 .get(&__obj)
-                .expect("parent-range field scan_axis access should not fail")
+                .expect("non-layout field scan_axis should be accessible")
         }
     }
 
@@ -11454,14 +11574,14 @@ pub mod tir {
                 "tir.transform.InjectDoubleBufferConfig",
                 "split_loop",
             )
-            .expect("parent-range field split_loop must be registered in TVM reflection")
+            .expect("non-layout field split_loop must be registered in TVM reflection")
         });
         impl InjectDoubleBufferConfig {
             pub fn get_split_loop(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_INJECTDOUBLEBUFFERCONFIG__SPLIT_LOOP
                     .get(&__obj)
-                    .expect("parent-range field split_loop access should not fail")
+                    .expect("non-layout field split_loop should be accessible")
             }
         }
 
@@ -11490,36 +11610,34 @@ pub mod tir {
                 "tir.transform.LoopPartitionConfig",
                 "partition_const_loop",
             )
-            .expect("parent-range field partition_const_loop must be registered in TVM reflection")
+            .expect("non-layout field partition_const_loop must be registered in TVM reflection")
         });
         static FIELD_TIR_TRANSFORM_LOOPPARTITIONCONFIG__NO_UNROLL_LOOP_WITH_EXTENT_ONE:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.LoopPartitionConfig", "no_unroll_loop_with_extent_one")
-                .expect("parent-range field no_unroll_loop_with_extent_one must be registered in TVM reflection")
+                .expect("non-layout field no_unroll_loop_with_extent_one must be registered in TVM reflection")
             });
         static FIELD_TIR_TRANSFORM_LOOPPARTITIONCONFIG__UNROLL_LOOP_WITH_PARTITION_HINT_NO_INTERVAL: std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.LoopPartitionConfig", "unroll_loop_with_partition_hint_no_interval")
-                .expect("parent-range field unroll_loop_with_partition_hint_no_interval must be registered in TVM reflection")
+                .expect("non-layout field unroll_loop_with_partition_hint_no_interval must be registered in TVM reflection")
         });
         impl LoopPartitionConfig {
             pub fn get_partition_const_loop(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_LOOPPARTITIONCONFIG__PARTITION_CONST_LOOP
                     .get(&__obj)
-                    .expect("parent-range field partition_const_loop access should not fail")
+                    .expect("non-layout field partition_const_loop should be accessible")
             }
             pub fn get_no_unroll_loop_with_extent_one(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_LOOPPARTITIONCONFIG__NO_UNROLL_LOOP_WITH_EXTENT_ONE
                     .get(&__obj)
-                    .expect(
-                        "parent-range field no_unroll_loop_with_extent_one access should not fail",
-                    )
+                    .expect("non-layout field no_unroll_loop_with_extent_one should be accessible")
             }
             pub fn get_unroll_loop_with_partition_hint_no_interval(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TIR_TRANSFORM_LOOPPARTITIONCONFIG__UNROLL_LOOP_WITH_PARTITION_HINT_NO_INTERVAL.get(&__obj).expect("parent-range field unroll_loop_with_partition_hint_no_interval access should not fail")
+                FIELD_TIR_TRANSFORM_LOOPPARTITIONCONFIG__UNROLL_LOOP_WITH_PARTITION_HINT_NO_INTERVAL.get(&__obj).expect("non-layout field unroll_loop_with_partition_hint_no_interval should be accessible")
             }
         }
 
@@ -11543,14 +11661,14 @@ pub mod tir {
 
         static FIELD_TIR_TRANSFORM_REDUCEBRANCHINGTHROUGHOVERCOMPUTECONFIG__USE_DATAFLOW_ANALYSIS: std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> = std::sync::LazyLock::new(|| {
             tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.ReduceBranchingThroughOvercomputeConfig", "use_dataflow_analysis")
-                .expect("parent-range field use_dataflow_analysis must be registered in TVM reflection")
+                .expect("non-layout field use_dataflow_analysis must be registered in TVM reflection")
         });
         impl ReduceBranchingThroughOvercomputeConfig {
             pub fn get_use_dataflow_analysis(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_REDUCEBRANCHINGTHROUGHOVERCOMPUTECONFIG__USE_DATAFLOW_ANALYSIS
                     .get(&__obj)
-                    .expect("parent-range field use_dataflow_analysis access should not fail")
+                    .expect("non-layout field use_dataflow_analysis should be accessible")
             }
         }
 
@@ -11584,14 +11702,14 @@ pub mod tir {
                 "tir.transform.RemoveNoOpConfig",
                 "use_dataflow_analysis",
             )
-            .expect("parent-range field use_dataflow_analysis must be registered in TVM reflection")
+            .expect("non-layout field use_dataflow_analysis must be registered in TVM reflection")
         });
         impl RemoveNoOpConfig {
             pub fn get_use_dataflow_analysis(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_REMOVENOOPCONFIG__USE_DATAFLOW_ANALYSIS
                     .get(&__obj)
-                    .expect("parent-range field use_dataflow_analysis access should not fail")
+                    .expect("non-layout field use_dataflow_analysis should be accessible")
             }
         }
 
@@ -11617,60 +11735,56 @@ pub mod tir {
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.SimplifyConfig", "transitively_prove_inequalities")
-                .expect("parent-range field transitively_prove_inequalities must be registered in TVM reflection")
+                .expect("non-layout field transitively_prove_inequalities must be registered in TVM reflection")
             });
         static FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_PROVE_CONDITIONAL:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.SimplifyConfig", "propagate_knowns_to_prove_conditional")
-                .expect("parent-range field propagate_knowns_to_prove_conditional must be registered in TVM reflection")
+                .expect("non-layout field propagate_knowns_to_prove_conditional must be registered in TVM reflection")
             });
         static FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_SIMPLIFY_EXPRESSIONS:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.SimplifyConfig", "propagate_knowns_to_simplify_expressions")
-                .expect("parent-range field propagate_knowns_to_simplify_expressions must be registered in TVM reflection")
+                .expect("non-layout field propagate_knowns_to_simplify_expressions must be registered in TVM reflection")
             });
         static FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__CONVERT_BOOLEAN_TO_AND_OF_ORS:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.SimplifyConfig", "convert_boolean_to_and_of_ors")
-                .expect("parent-range field convert_boolean_to_and_of_ors must be registered in TVM reflection")
+                .expect("non-layout field convert_boolean_to_and_of_ors must be registered in TVM reflection")
             });
         static FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__APPLY_CONSTRAINTS_TO_BOOLEAN_BRANCHES:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tir.transform.SimplifyConfig", "apply_constraints_to_boolean_branches")
-                .expect("parent-range field apply_constraints_to_boolean_branches must be registered in TVM reflection")
+                .expect("non-layout field apply_constraints_to_boolean_branches must be registered in TVM reflection")
             });
         impl SimplifyConfig {
             pub fn get_transitively_prove_inequalities(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__TRANSITIVELY_PROVE_INEQUALITIES
                     .get(&__obj)
-                    .expect(
-                        "parent-range field transitively_prove_inequalities access should not fail",
-                    )
+                    .expect("non-layout field transitively_prove_inequalities should be accessible")
             }
             pub fn get_propagate_knowns_to_prove_conditional(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_PROVE_CONDITIONAL.get(&__obj).expect("parent-range field propagate_knowns_to_prove_conditional access should not fail")
+                FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_PROVE_CONDITIONAL.get(&__obj).expect("non-layout field propagate_knowns_to_prove_conditional should be accessible")
             }
             pub fn get_propagate_knowns_to_simplify_expressions(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_SIMPLIFY_EXPRESSIONS.get(&__obj).expect("parent-range field propagate_knowns_to_simplify_expressions access should not fail")
+                FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_SIMPLIFY_EXPRESSIONS.get(&__obj).expect("non-layout field propagate_knowns_to_simplify_expressions should be accessible")
             }
             pub fn get_convert_boolean_to_and_of_ors(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__CONVERT_BOOLEAN_TO_AND_OF_ORS
                     .get(&__obj)
-                    .expect(
-                        "parent-range field convert_boolean_to_and_of_ors access should not fail",
-                    )
+                    .expect("non-layout field convert_boolean_to_and_of_ors should be accessible")
             }
             pub fn get_apply_constraints_to_boolean_branches(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__APPLY_CONSTRAINTS_TO_BOOLEAN_BRANCHES.get(&__obj).expect("parent-range field apply_constraints_to_boolean_branches access should not fail")
+                FIELD_TIR_TRANSFORM_SIMPLIFYCONFIG__APPLY_CONSTRAINTS_TO_BOOLEAN_BRANCHES.get(&__obj).expect("non-layout field apply_constraints_to_boolean_branches should be accessible")
             }
         }
 
@@ -11712,7 +11826,7 @@ pub mod tir {
                 "tir.transform.UnrollLoopConfig",
                 "auto_max_step",
             )
-            .expect("parent-range field auto_max_step must be registered in TVM reflection")
+            .expect("non-layout field auto_max_step must be registered in TVM reflection")
         });
         static FIELD_TIR_TRANSFORM_UNROLLLOOPCONFIG__AUTO_MAX_DEPTH: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
@@ -11721,20 +11835,20 @@ pub mod tir {
                 "tir.transform.UnrollLoopConfig",
                 "auto_max_depth",
             )
-            .expect("parent-range field auto_max_depth must be registered in TVM reflection")
+            .expect("non-layout field auto_max_depth must be registered in TVM reflection")
         });
         impl UnrollLoopConfig {
             pub fn get_auto_max_step(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_UNROLLLOOPCONFIG__AUTO_MAX_STEP
                     .get(&__obj)
-                    .expect("parent-range field auto_max_step access should not fail")
+                    .expect("non-layout field auto_max_step should be accessible")
             }
             pub fn get_auto_max_depth(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TIR_TRANSFORM_UNROLLLOOPCONFIG__AUTO_MAX_DEPTH
                     .get(&__obj)
-                    .expect("parent-range field auto_max_depth access should not fail")
+                    .expect("non-layout field auto_max_depth should be accessible")
             }
         }
     }
@@ -11768,14 +11882,14 @@ pub mod tl {
         >,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.KernelLaunchFrame", "frames")
-            .expect("parent-range field frames must be registered in TVM reflection")
+            .expect("non-layout field frames must be registered in TVM reflection")
     });
     impl KernelLaunchFrame {
         pub fn get_frames(&self) -> tvm_ffi::Array<crate::script::ir_builder::tir::TIRFrame> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_KERNELLAUNCHFRAME__FRAMES
                 .get(&__obj)
-                .expect("parent-range field frames access should not fail")
+                .expect("non-layout field frames should be accessible")
         }
     }
 
@@ -11804,14 +11918,14 @@ pub mod tl {
         >,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.WarpSpecializeFrame", "frames")
-            .expect("parent-range field frames must be registered in TVM reflection")
+            .expect("non-layout field frames must be registered in TVM reflection")
     });
     impl WarpSpecializeFrame {
         pub fn get_frames(&self) -> tvm_ffi::Array<crate::script::ir_builder::tir::TIRFrame> {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_WARPSPECIALIZEFRAME__FRAMES
                 .get(&__obj)
-                .expect("parent-range field frames access should not fail")
+                .expect("non-layout field frames should be accessible")
         }
     }
 
@@ -11960,14 +12074,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::PrimExpr>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.AtomicAdd", "src_value")
-            .expect("parent-range field src_value must be registered in TVM reflection")
+            .expect("non-layout field src_value must be registered in TVM reflection")
     });
     impl AtomicAdd {
         pub fn get_src_value(&self) -> crate::ir::PrimExpr {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_ATOMICADD__SRC_VALUE
                 .get(&__obj)
-                .expect("parent-range field src_value access should not fail")
+                .expect("non-layout field src_value should be accessible")
         }
     }
 
@@ -12014,14 +12128,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::PrimExpr>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.AtomicMax", "src_value")
-            .expect("parent-range field src_value must be registered in TVM reflection")
+            .expect("non-layout field src_value must be registered in TVM reflection")
     });
     impl AtomicMax {
         pub fn get_src_value(&self) -> crate::ir::PrimExpr {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_ATOMICMAX__SRC_VALUE
                 .get(&__obj)
-                .expect("parent-range field src_value access should not fail")
+                .expect("non-layout field src_value should be accessible")
         }
     }
 
@@ -12068,14 +12182,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::ir::PrimExpr>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.AtomicMin", "src_value")
-            .expect("parent-range field src_value must be registered in TVM reflection")
+            .expect("non-layout field src_value must be registered in TVM reflection")
     });
     impl AtomicMin {
         pub fn get_src_value(&self) -> crate::ir::PrimExpr {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_ATOMICMIN__SRC_VALUE
                 .get(&__obj)
-                .expect("parent-range field src_value access should not fail")
+                .expect("non-layout field src_value should be accessible")
         }
     }
 
@@ -12118,14 +12232,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.Copy", "src")
-            .expect("parent-range field src must be registered in TVM reflection")
+            .expect("non-layout field src must be registered in TVM reflection")
     });
     impl Copy {
         pub fn get_src(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_COPY__SRC
                 .get(&__obj)
-                .expect("parent-range field src access should not fail")
+                .expect("non-layout field src should be accessible")
         }
     }
 
@@ -12184,14 +12298,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::BufferRegion>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.Conv2DIm2Col", "srcRegion")
-            .expect("parent-range field srcRegion must be registered in TVM reflection")
+            .expect("non-layout field srcRegion must be registered in TVM reflection")
     });
     impl Conv2DIm2Col {
         pub fn get_srcRegion(&self) -> crate::tir::BufferRegion {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_CONV2DIM2COL__SRCREGION
                 .get(&__obj)
-                .expect("parent-range field srcRegion access should not fail")
+                .expect("non-layout field srcRegion should be accessible")
         }
     }
 
@@ -12226,14 +12340,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.Fill", "dst")
-            .expect("parent-range field dst must be registered in TVM reflection")
+            .expect("non-layout field dst must be registered in TVM reflection")
     });
     impl Fill {
         pub fn get_dst(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_FILL__DST
                 .get(&__obj)
-                .expect("parent-range field dst access should not fail")
+                .expect("non-layout field dst should be accessible")
         }
     }
 
@@ -12264,14 +12378,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.FinalizeReducerOp", "reducer")
-            .expect("parent-range field reducer must be registered in TVM reflection")
+            .expect("non-layout field reducer must be registered in TVM reflection")
     });
     impl FinalizeReducerOp {
         pub fn get_reducer(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_FINALIZEREDUCEROP__REDUCER
                 .get(&__obj)
-                .expect("parent-range field reducer access should not fail")
+                .expect("non-layout field reducer should be accessible")
         }
     }
 
@@ -12372,14 +12486,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.Gemm", "a")
-            .expect("parent-range field a must be registered in TVM reflection")
+            .expect("non-layout field a must be registered in TVM reflection")
     });
     impl Gemm {
         pub fn get_a(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMM__A
                 .get(&__obj)
-                .expect("parent-range field a access should not fail")
+                .expect("non-layout field a should be accessible")
         }
     }
 
@@ -12524,14 +12638,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.GemmPy", "a")
-            .expect("parent-range field a must be registered in TVM reflection")
+            .expect("non-layout field a must be registered in TVM reflection")
     });
     impl GemmPy {
         pub fn get_a(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMMPY__A
                 .get(&__obj)
-                .expect("parent-range field a access should not fail")
+                .expect("non-layout field a should be accessible")
         }
     }
 
@@ -12625,14 +12739,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::BufferRegion>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.GemmSP", "aRegion")
-            .expect("parent-range field aRegion must be registered in TVM reflection")
+            .expect("non-layout field aRegion must be registered in TVM reflection")
     });
     impl GemmSP {
         pub fn get_aRegion(&self) -> crate::tir::BufferRegion {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMMSP__AREGION
                 .get(&__obj)
-                .expect("parent-range field aRegion access should not fail")
+                .expect("non-layout field aRegion should be accessible")
         }
     }
 
@@ -12657,38 +12771,38 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<i32>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.GemmSPWarpPolicy", "policy_type")
-            .expect("parent-range field policy_type must be registered in TVM reflection")
+            .expect("non-layout field policy_type must be registered in TVM reflection")
     });
     static FIELD_TL_GEMMSPWARPPOLICY__M_WARP: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<i32>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.GemmSPWarpPolicy", "m_warp")
-            .expect("parent-range field m_warp must be registered in TVM reflection")
+            .expect("non-layout field m_warp must be registered in TVM reflection")
     });
     static FIELD_TL_GEMMSPWARPPOLICY__N_WARP: std::sync::LazyLock<
         tvm_ffi::object_wrapper::FieldGetter<i32>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.GemmSPWarpPolicy", "n_warp")
-            .expect("parent-range field n_warp must be registered in TVM reflection")
+            .expect("non-layout field n_warp must be registered in TVM reflection")
     });
     impl GemmSPWarpPolicy {
         pub fn get_policy_type(&self) -> i32 {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMMSPWARPPOLICY__POLICY_TYPE
                 .get(&__obj)
-                .expect("parent-range field policy_type access should not fail")
+                .expect("non-layout field policy_type should be accessible")
         }
         pub fn get_m_warp(&self) -> i32 {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMMSPWARPPOLICY__M_WARP
                 .get(&__obj)
-                .expect("parent-range field m_warp access should not fail")
+                .expect("non-layout field m_warp should be accessible")
         }
         pub fn get_n_warp(&self) -> i32 {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMMSPWARPPOLICY__N_WARP
                 .get(&__obj)
-                .expect("parent-range field n_warp access should not fail")
+                .expect("non-layout field n_warp should be accessible")
         }
     }
 
@@ -12800,14 +12914,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.GemmSPPy", "A")
-            .expect("parent-range field A must be registered in TVM reflection")
+            .expect("non-layout field A must be registered in TVM reflection")
     });
     impl GemmSPPy {
         pub fn get_A(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_GEMMSPPY__A
                 .get(&__obj)
-                .expect("parent-range field A access should not fail")
+                .expect("non-layout field A should be accessible")
         }
     }
 
@@ -12843,14 +12957,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::For>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.ParallelOp", "root")
-            .expect("parent-range field root must be registered in TVM reflection")
+            .expect("non-layout field root must be registered in TVM reflection")
     });
     impl ParallelOp {
         pub fn get_root(&self) -> crate::tir::For {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_PARALLELOP__ROOT
                 .get(&__obj)
-                .expect("parent-range field root access should not fail")
+                .expect("non-layout field root should be accessible")
         }
     }
 
@@ -12902,14 +13016,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.ReduceOp", "src")
-            .expect("parent-range field src must be registered in TVM reflection")
+            .expect("non-layout field src must be registered in TVM reflection")
     });
     impl ReduceOp {
         pub fn get_src(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_REDUCEOP__SRC
                 .get(&__obj)
-                .expect("parent-range field src access should not fail")
+                .expect("non-layout field src should be accessible")
         }
     }
 
@@ -12956,14 +13070,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.CumSumOp", "src")
-            .expect("parent-range field src must be registered in TVM reflection")
+            .expect("non-layout field src must be registered in TVM reflection")
     });
     impl CumSumOp {
         pub fn get_src(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_CUMSUMOP__SRC
                 .get(&__obj)
-                .expect("parent-range field src access should not fail")
+                .expect("non-layout field src should be accessible")
         }
     }
 
@@ -13023,14 +13137,14 @@ pub mod tl {
         tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
     > = std::sync::LazyLock::new(|| {
         tvm_ffi::object_wrapper::FieldGetter::new("tl.RegionOp", "buffer")
-            .expect("parent-range field buffer must be registered in TVM reflection")
+            .expect("non-layout field buffer must be registered in TVM reflection")
     });
     impl RegionOp {
         pub fn get_buffer(&self) -> crate::tir::Buffer {
             let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
             FIELD_TL_REGIONOP__BUFFER
                 .get(&__obj)
-                .expect("parent-range field buffer access should not fail")
+                .expect("non-layout field buffer should be accessible")
         }
     }
 
@@ -13060,72 +13174,73 @@ pub mod tl {
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tl.transform.SimplifyConfig", "transitively_prove_inequalities")
-                .expect("parent-range field transitively_prove_inequalities must be registered in TVM reflection")
+                .expect("non-layout field transitively_prove_inequalities must be registered in TVM reflection")
             });
         static FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_PROVE_CONDITIONAL:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tl.transform.SimplifyConfig", "propagate_knowns_to_prove_conditional")
-                .expect("parent-range field propagate_knowns_to_prove_conditional must be registered in TVM reflection")
+                .expect("non-layout field propagate_knowns_to_prove_conditional must be registered in TVM reflection")
             });
         static FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_SIMPLIFY_EXPRESSIONS:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tl.transform.SimplifyConfig", "propagate_knowns_to_simplify_expressions")
-                .expect("parent-range field propagate_knowns_to_simplify_expressions must be registered in TVM reflection")
+                .expect("non-layout field propagate_knowns_to_simplify_expressions must be registered in TVM reflection")
             });
         static FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__CONVERT_BOOLEAN_TO_AND_OF_ORS:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tl.transform.SimplifyConfig", "convert_boolean_to_and_of_ors")
-                .expect("parent-range field convert_boolean_to_and_of_ors must be registered in TVM reflection")
+                .expect("non-layout field convert_boolean_to_and_of_ors must be registered in TVM reflection")
             });
         static FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__APPLY_CONSTRAINTS_TO_BOOLEAN_BRANCHES:
             std::sync::LazyLock<tvm_ffi::object_wrapper::FieldGetter<bool>> =
             std::sync::LazyLock::new(|| {
                 tvm_ffi::object_wrapper::FieldGetter::new("tl.transform.SimplifyConfig", "apply_constraints_to_boolean_branches")
-                .expect("parent-range field apply_constraints_to_boolean_branches must be registered in TVM reflection")
+                .expect("non-layout field apply_constraints_to_boolean_branches must be registered in TVM reflection")
             });
         static FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__ENABLE_SIMPLIFY_LET_INLINE: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<bool>,
         > = std::sync::LazyLock::new(|| {
-            tvm_ffi::object_wrapper::FieldGetter::new("tl.transform.SimplifyConfig", "enable_simplify_let_inline")
-                .expect("parent-range field enable_simplify_let_inline must be registered in TVM reflection")
+            tvm_ffi::object_wrapper::FieldGetter::new(
+                "tl.transform.SimplifyConfig",
+                "enable_simplify_let_inline",
+            )
+            .expect(
+                "non-layout field enable_simplify_let_inline must be registered in TVM reflection",
+            )
         });
         impl SimplifyConfig {
             pub fn get_transitively_prove_inequalities(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__TRANSITIVELY_PROVE_INEQUALITIES
                     .get(&__obj)
-                    .expect(
-                        "parent-range field transitively_prove_inequalities access should not fail",
-                    )
+                    .expect("non-layout field transitively_prove_inequalities should be accessible")
             }
             pub fn get_propagate_knowns_to_prove_conditional(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_PROVE_CONDITIONAL.get(&__obj).expect("parent-range field propagate_knowns_to_prove_conditional access should not fail")
+                FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_PROVE_CONDITIONAL.get(&__obj).expect("non-layout field propagate_knowns_to_prove_conditional should be accessible")
             }
             pub fn get_propagate_knowns_to_simplify_expressions(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_SIMPLIFY_EXPRESSIONS.get(&__obj).expect("parent-range field propagate_knowns_to_simplify_expressions access should not fail")
+                FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__PROPAGATE_KNOWNS_TO_SIMPLIFY_EXPRESSIONS.get(&__obj).expect("non-layout field propagate_knowns_to_simplify_expressions should be accessible")
             }
             pub fn get_convert_boolean_to_and_of_ors(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__CONVERT_BOOLEAN_TO_AND_OF_ORS
                     .get(&__obj)
-                    .expect(
-                        "parent-range field convert_boolean_to_and_of_ors access should not fail",
-                    )
+                    .expect("non-layout field convert_boolean_to_and_of_ors should be accessible")
             }
             pub fn get_apply_constraints_to_boolean_branches(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
-                FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__APPLY_CONSTRAINTS_TO_BOOLEAN_BRANCHES.get(&__obj).expect("parent-range field apply_constraints_to_boolean_branches access should not fail")
+                FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__APPLY_CONSTRAINTS_TO_BOOLEAN_BRANCHES.get(&__obj).expect("non-layout field apply_constraints_to_boolean_branches should be accessible")
             }
             pub fn get_enable_simplify_let_inline(&self) -> bool {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TL_TRANSFORM_SIMPLIFYCONFIG__ENABLE_SIMPLIFY_LET_INLINE
                     .get(&__obj)
-                    .expect("parent-range field enable_simplify_let_inline access should not fail")
+                    .expect("non-layout field enable_simplify_let_inline should be accessible")
             }
         }
 
@@ -13167,7 +13282,7 @@ pub mod tl {
                 "tl.transform.UnrollLoopConfig",
                 "auto_max_step",
             )
-            .expect("parent-range field auto_max_step must be registered in TVM reflection")
+            .expect("non-layout field auto_max_step must be registered in TVM reflection")
         });
         static FIELD_TL_TRANSFORM_UNROLLLOOPCONFIG__AUTO_MAX_DEPTH: std::sync::LazyLock<
             tvm_ffi::object_wrapper::FieldGetter<i32>,
@@ -13176,20 +13291,20 @@ pub mod tl {
                 "tl.transform.UnrollLoopConfig",
                 "auto_max_depth",
             )
-            .expect("parent-range field auto_max_depth must be registered in TVM reflection")
+            .expect("non-layout field auto_max_depth must be registered in TVM reflection")
         });
         impl UnrollLoopConfig {
             pub fn get_auto_max_step(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TL_TRANSFORM_UNROLLLOOPCONFIG__AUTO_MAX_STEP
                     .get(&__obj)
-                    .expect("parent-range field auto_max_step access should not fail")
+                    .expect("non-layout field auto_max_step should be accessible")
             }
             pub fn get_auto_max_depth(&self) -> i32 {
                 let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
                 FIELD_TL_TRANSFORM_UNROLLLOOPCONFIG__AUTO_MAX_DEPTH
                     .get(&__obj)
-                    .expect("parent-range field auto_max_depth access should not fail")
+                    .expect("non-layout field auto_max_depth should be accessible")
             }
         }
     }
@@ -13238,7 +13353,20 @@ pub mod transform {
         }
     }
 
-    impl PassContext {}
+    static FIELD_TRANSFORM_PASSCONTEXT__DIAG_CTX: std::sync::LazyLock<
+        tvm_ffi::object_wrapper::FieldGetter<tvm_ffi::Any>,
+    > = std::sync::LazyLock::new(|| {
+        tvm_ffi::object_wrapper::FieldGetter::new("transform.PassContext", "diag_ctx")
+            .expect("non-layout field diag_ctx must be registered in TVM reflection")
+    });
+    impl PassContext {
+        pub fn get_diag_ctx(&self) -> tvm_ffi::Any {
+            let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+            FIELD_TRANSFORM_PASSCONTEXT__DIAG_CTX
+                .get_any(&__obj)
+                .expect("non-layout field diag_ctx should be accessible")
+        }
+    }
 
     #[repr(C)]
     #[derive(tvm_ffi::derive::Object)]
