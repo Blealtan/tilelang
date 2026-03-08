@@ -1,0 +1,6 @@
+error: TLRS001: #[tl_ir] 中禁止 let mut。
+       help: 改用 alloc_var/load/store 或 select，避免 host 可变状态。
+ --> tests/ui/let_mut.rs:5:9
+  |
+5 |     let mut acc = 0;
+  |         ^^^
