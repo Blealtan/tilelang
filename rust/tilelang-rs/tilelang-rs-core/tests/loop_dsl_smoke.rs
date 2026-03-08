@@ -1,33 +1,6 @@
-use std::path::PathBuf;
-
 use tilelang_rs_core::{
     debug_print, ffi, language as T, BuilderContext, FromLoopVars, IntoPrimExpr, Result,
 };
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("tilelang-rs-core should live under rust/tilelang-rs")
-        .parent()
-        .expect("tilelang-rs workspace should live under rust/")
-        .parent()
-        .expect("rust/ should live under repository root")
-        .to_path_buf()
-}
-
-fn load_tilelang_runtime() -> Result<()> {
-    let lib_dir = repo_root().join("build/lib");
-    let tvm_path = lib_dir.join("libtvm.so");
-    let tilelang_path = lib_dir.join("libtilelang_module.so");
-
-    ffi::load_library(tvm_path.to_str().expect("library path must be valid UTF-8"))?;
-    ffi::load_library(
-        tilelang_path
-            .to_str()
-            .expect("library path must be valid UTF-8"),
-    )?;
-    Ok(())
-}
 
 fn emit_eval(var: ffi::tir::Var) -> Result<()> {
     ffi::script::ir_builder::tir::Evaluate(var.into_prim_expr()?)
@@ -35,8 +8,6 @@ fn emit_eval(var: ffi::tir::Var) -> Result<()> {
 
 #[test]
 fn loop_dsl_smoke_prints_all_loop_kinds() -> Result<()> {
-    load_tilelang_runtime()?;
-
     let ctx = BuilderContext::new("loop_dsl_smoke")?;
 
     ctx.with_tir_prim_func("serial_loop", false, |_prim_func| {

@@ -1,32 +1,5 @@
-use std::path::PathBuf;
-
 use tilelang_rs_core::{debug_print, ffi, BuilderContext, Result};
 use tvm_ffi::{AnyValue, Array, DLDataTypeExt, Map, String as FfiString};
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("tilelang-rs-core should live under rust/tilelang-rs")
-        .parent()
-        .expect("tilelang-rs workspace should live under rust/")
-        .parent()
-        .expect("rust/ should live under repository root")
-        .to_path_buf()
-}
-
-fn load_tilelang_runtime() -> Result<()> {
-    let lib_dir = repo_root().join("build/lib");
-    let tvm_path = lib_dir.join("libtvm.so");
-    let tilelang_path = lib_dir.join("libtilelang_module.so");
-
-    ffi::load_library(tvm_path.to_str().expect("library path must be valid UTF-8"))?;
-    ffi::load_library(
-        tilelang_path
-            .to_str()
-            .expect("library path must be valid UTF-8"),
-    )?;
-    Ok(())
-}
 
 fn make_span() -> Result<ffi::ir::Span> {
     let source = ffi::ir::SourceName(FfiString::from("tilelang_rs_manual_ir_smoke"))?;
@@ -45,8 +18,6 @@ fn prim_expr_from_int(value: i64, span: &ffi::ir::Span) -> Result<ffi::ir::PrimE
 
 #[test]
 fn manual_ir_smoke_prints_valid_module() -> Result<()> {
-    load_tilelang_runtime()?;
-
     let ctx = BuilderContext::new("manual_ir_smoke")?;
     ctx.with_tir_prim_func("add", false, |_prim_func| {
         let span = make_span()?;
