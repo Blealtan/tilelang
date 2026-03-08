@@ -1,0 +1,7 @@
+[dependencies.tvm-ffi]
+path = "../../../3rdparty/tvm/3rdparty/tvm-ffi/rust/tvm-ffi"
+
+[package]
+edition = "2021"
+name = "tilelang-rs-ffi"
+version = "0.1.0"
