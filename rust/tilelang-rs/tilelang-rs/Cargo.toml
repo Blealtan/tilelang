@@ -8,3 +8,6 @@ license.workspace = true
 tilelang-rs-core = { path = "../tilelang-rs-core" }
 tilelang-rs-ffi = { path = "../tilelang-rs-ffi" }
 tilelang-rs-macros = { path = "../tilelang-rs-macros" }
+
+[dev-dependencies]
+tvm-ffi.workspace = true
