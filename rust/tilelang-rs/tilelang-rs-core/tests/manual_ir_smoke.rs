@@ -1,19 +1,15 @@
-use tilelang_rs_core::{debug_print, ffi, BuilderContext, Result};
-use tvm_ffi::{AnyValue, Array, DLDataTypeExt, Map, String as FfiString};
+use tilelang_rs_core::{debug_print, ffi, language as T, BuilderContext, FromLoopVars, Result};
+use tvm_ffi::{Array, DLDataTypeExt, String as FfiString};
 
 fn make_span() -> Result<ffi::ir::Span> {
     let source = ffi::ir::SourceName(FfiString::from("tilelang_rs_manual_ir_smoke"))?;
     ffi::ir::Span(source, 0, 0, 0, 0)
 }
 
-fn int_imm(value: i64, span: &ffi::ir::Span) -> Result<ffi::ir::IntImm> {
+fn prim_expr_i64(value: i64, span: &ffi::ir::Span) -> Result<ffi::ir::PrimExpr> {
     let dtype = tvm_ffi::DLDataType::try_from_str("int64")?;
-    ffi::ir::IntImm(dtype, value, span.clone())
-}
-
-fn prim_expr_from_int(value: i64, span: &ffi::ir::Span) -> Result<ffi::ir::PrimExpr> {
-    let imm = int_imm(value, span)?;
-    Ok(ffi::ir::PrimExpr::from_object(imm.as_object_ref().clone()))
+    let imm = ffi::ir::IntImm(dtype, value, span.clone())?;
+    Ok(imm.into())
 }
 
 #[test]
@@ -21,7 +17,7 @@ fn manual_ir_smoke_prints_valid_module() -> Result<()> {
     let ctx = BuilderContext::new("manual_ir_smoke")?;
     ctx.with_tir_prim_func("add", false, |_prim_func| {
         let span = make_span().expect("make_span should not fail");
-        let extent = prim_expr_from_int(1024, &span).expect("prim_expr_from_int should not fail");
+        let extent = prim_expr_i64(1024, &span).expect("prim_expr_i64 should not fail");
         let shape = Array::new(vec![extent.clone(), extent.clone()]);
         let float32 = tvm_ffi::DLDataType::try_from_str("float32").expect("float32 dtype");
 
@@ -59,46 +55,15 @@ fn manual_ir_smoke_prints_valid_module() -> Result<()> {
         ffi::script::ir_builder::tir::Arg(FfiString::from("b"), buffer_b.clone().into())
             .expect("Arg b");
 
-        let grid = Array::new(vec![extent.clone()]);
-        let threads = Array::new(vec![
-            prim_expr_from_int(128, &span).expect("thread dim 0"),
-            prim_expr_from_int(1, &span).expect("thread dim 1"),
-            prim_expr_from_int(1, &span).expect("thread dim 2"),
-        ]);
-        let empty_attrs: Map<FfiString, AnyValue> = Map::new(Vec::new()).expect("empty map");
-        let kernel_frame =
-            ffi::tl::KernelLaunch(grid, Some(threads), empty_attrs).expect("KernelLaunch");
-        let kernel_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-            kernel_frame.as_object_ref().clone(),
-        );
+        // Use serial outer loop + parallel inner loop to test manual BufferLoad/Add/BufferStore.
+        ctx.for_each(T::serial(0i64, 1024i64), |ctx, outer_vars| {
+            let x_var = FromLoopVars::bind1(outer_vars);
 
-        ctx.with_frame(kernel_base, || {
-            let frames_any = kernel_frame.frames().expect("kernel frames");
-            let frames: Array<ffi::script::ir_builder::tir::TIRFrame> =
-                frames_any.try_into().expect("frames cast");
-            let block_frame = frames.get(0).expect("block frame at 0");
-            let launch_frame = ffi::script::ir_builder::tir::LaunchThreadFrame::from_object(
-                block_frame.as_object_ref().clone(),
-            );
-            let iter_any = launch_frame.iter_var().expect("iter_var");
-            let iter_var: ffi::tir::IterVar = iter_any.try_into().expect("IterVar cast");
-            let x_var = iter_var.var().expect("x var");
+            ctx.for_each(T::parallel([1024i64]), |_ctx, inner_vars| {
+                let y_var = FromLoopVars::bind1(inner_vars);
 
-            let parallel_extents = Array::new(vec![extent.clone()]);
-            let empty_loop_attrs: Map<FfiString, AnyValue> =
-                Map::new(Vec::new()).expect("empty loop attrs");
-            let parallel_frame =
-                ffi::tl::Parallel(parallel_extents, empty_loop_attrs).expect("Parallel frame");
-            let parallel_base = ffi::script::ir_builder::IRBuilderFrame::from_object(
-                parallel_frame.as_object_ref().clone(),
-            );
-
-            ctx.with_frame(parallel_base, || {
-                let y_vars = parallel_frame.vars().expect("parallel vars");
-                let y_var = y_vars.get(0).expect("y_var at 0");
-
-                let x_expr = ffi::ir::PrimExpr::from_object(x_var.as_object_ref().clone());
-                let y_expr = ffi::ir::PrimExpr::from_object(y_var.as_object_ref().clone());
+                let x_expr: ffi::ir::PrimExpr = x_var.clone().into();
+                let y_expr: ffi::ir::PrimExpr = y_var.clone().into();
                 let indices = Array::new(vec![x_expr.clone(), y_expr.clone()]);
 
                 let load_a =
@@ -108,16 +73,15 @@ fn manual_ir_smoke_prints_valid_module() -> Result<()> {
                     ffi::tir::BufferLoad(buffer_b.clone(), indices.clone(), None, span.clone())
                         .expect("BufferLoad b");
                 let add_expr = ffi::tir::Add(
-                    ffi::ir::PrimExpr::from_object(load_a.as_object_ref().clone()),
-                    ffi::ir::PrimExpr::from_object(load_b.as_object_ref().clone()),
+                    ffi::ir::PrimExpr::from(load_a),
+                    ffi::ir::PrimExpr::from(load_b),
                     span.clone(),
                 )
                 .expect("Add");
-                let value_expr = ffi::ir::PrimExpr::from_object(add_expr.as_object_ref().clone());
 
                 ffi::script::ir_builder::tir::BufferStore(
                     buffer_a.clone(),
-                    value_expr,
+                    ffi::ir::PrimExpr::from(add_expr),
                     indices,
                     None,
                 )
