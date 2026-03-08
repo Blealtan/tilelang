@@ -42,9 +42,21 @@ impl IntoPrimExpr for ffi::ir::PrimExpr {
     }
 }
 
+impl IntoPrimExpr for &ffi::ir::PrimExpr {
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self.clone()
+    }
+}
+
 impl IntoPrimExpr for ffi::tir::Var {
     fn into_prim_expr(self) -> ffi::ir::PrimExpr {
         self.into()
+    }
+}
+
+impl IntoPrimExpr for &ffi::tir::Var {
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self.clone().into()
     }
 }
 
@@ -67,6 +79,120 @@ macro_rules! impl_into_prim_expr_for_int {
 }
 
 impl_into_prim_expr_for_int!(i32, i64, isize, u32, u64, usize);
+
+/// Newtype wrapping `PrimExpr` to support arithmetic operator overloads.
+///
+/// Converts via `From<ffi::tir::Var>`, `From<ffi::ir::PrimExpr>`, and `From<i64>` etc.
+#[derive(Clone)]
+pub struct Expr(pub ffi::ir::PrimExpr);
+
+impl std::fmt::Debug for Expr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Expr").field(&"<PrimExpr>").finish()
+    }
+}
+
+impl Expr {
+    pub fn into_inner(self) -> ffi::ir::PrimExpr {
+        self.0
+    }
+}
+
+impl From<ffi::ir::PrimExpr> for Expr {
+    fn from(expr: ffi::ir::PrimExpr) -> Self {
+        Self(expr)
+    }
+}
+
+impl From<ffi::tir::Var> for Expr {
+    fn from(var: ffi::tir::Var) -> Self {
+        Self(var.into())
+    }
+}
+
+impl From<&ffi::tir::Var> for Expr {
+    fn from(var: &ffi::tir::Var) -> Self {
+        Self(var.clone().into())
+    }
+}
+
+impl IntoPrimExpr for Expr {
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self.0
+    }
+}
+
+impl IntoPrimExpr for &Expr {
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self.0.clone()
+    }
+}
+
+macro_rules! impl_arith_for_expr {
+    ($trait:ident, $method:ident, $ffi_fn:path) => {
+        impl<R: IntoPrimExpr> std::ops::$trait<R> for Expr {
+            type Output = Expr;
+            fn $method(self, rhs: R) -> Expr {
+                binary_arith_expr(self.0, rhs.into_prim_expr(), $ffi_fn)
+            }
+        }
+    };
+}
+
+impl_arith_for_expr!(Add, add, ffi::tir::Add);
+impl_arith_for_expr!(Sub, sub, ffi::tir::Sub);
+impl_arith_for_expr!(Mul, mul, ffi::tir::Mul);
+impl_arith_for_expr!(Div, div, ffi::tir::Div);
+
+/// Converts one or more DSL values into a TVM `Array<PrimExpr>`.
+///
+/// - Scalar types (`T: IntoPrimExpr`) become a 1-element array.
+/// - `[T; N]` arrays become an N-element array.
+/// - Tuples `(A, B)`, `(A, B, C)`, `(A, B, C, D)` become 2/3/4-element arrays.
+pub trait IntoPrimExprs {
+    fn into_prim_exprs(self) -> Array<ffi::ir::PrimExpr>;
+}
+
+impl<T: IntoPrimExpr> IntoPrimExprs for T {
+    fn into_prim_exprs(self) -> Array<ffi::ir::PrimExpr> {
+        Array::new(vec![self.into_prim_expr()])
+    }
+}
+
+impl<T: IntoPrimExpr, const N: usize> IntoPrimExprs for [T; N] {
+    fn into_prim_exprs(self) -> Array<ffi::ir::PrimExpr> {
+        Array::new(self.into_iter().map(|e| e.into_prim_expr()).collect())
+    }
+}
+
+impl<A: IntoPrimExpr, B: IntoPrimExpr> IntoPrimExprs for (A, B) {
+    fn into_prim_exprs(self) -> Array<ffi::ir::PrimExpr> {
+        Array::new(vec![self.0.into_prim_expr(), self.1.into_prim_expr()])
+    }
+}
+
+impl<A: IntoPrimExpr, B: IntoPrimExpr, C: IntoPrimExpr> IntoPrimExprs for (A, B, C) {
+    fn into_prim_exprs(self) -> Array<ffi::ir::PrimExpr> {
+        Array::new(vec![
+            self.0.into_prim_expr(),
+            self.1.into_prim_expr(),
+            self.2.into_prim_expr(),
+        ])
+    }
+}
+
+impl<A: IntoPrimExpr, B: IntoPrimExpr, C: IntoPrimExpr, D: IntoPrimExpr> IntoPrimExprs
+    for (A, B, C, D)
+{
+    fn into_prim_exprs(self) -> Array<ffi::ir::PrimExpr> {
+        Array::new(vec![
+            self.0.into_prim_expr(),
+            self.1.into_prim_expr(),
+            self.2.into_prim_expr(),
+            self.3.into_prim_expr(),
+        ])
+    }
+}
 
 pub struct FrameGuard {
     frame: Option<ffi::script::ir_builder::IRBuilderFrame>,
@@ -828,6 +954,16 @@ fn bool_imm(value: bool) -> Result<ffi::ir::PrimExpr> {
     let span = empty_span()?;
     let imm = ffi::ir::IntImm(dtype, if value { 1 } else { 0 }, span)?;
     Ok(imm.into())
+}
+
+fn binary_arith_expr<F, O>(lhs: ffi::ir::PrimExpr, rhs: ffi::ir::PrimExpr, op: F) -> Expr
+where
+    F: FnOnce(ffi::ir::PrimExpr, ffi::ir::PrimExpr, ffi::ir::Span) -> Result<O>,
+    O: Into<ffi::ir::PrimExpr>,
+{
+    let span = empty_span().expect("empty_span should not fail");
+    let result = op(lhs, rhs, span).expect("binary arithmetic should not fail");
+    Expr(result.into())
 }
 
 fn binary_pred<L, R, F, O>(lhs: L, rhs: R, op: F) -> PredExpr
