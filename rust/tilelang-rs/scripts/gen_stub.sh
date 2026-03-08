@@ -82,6 +82,35 @@ cargo_toml.write_text(updated)
 PY
 }
 
+sync_generated_dependency_path_from_target() {
+  local target_cargo_toml="$1"
+  local generated_cargo_toml="$2"
+
+  python3 - "$target_cargo_toml" "$generated_cargo_toml" <<'PY'
+from pathlib import Path
+import re
+import sys
+
+target = Path(sys.argv[1]).read_text()
+generated_path = Path(sys.argv[2])
+generated = generated_path.read_text()
+
+match = re.search(r'(\[dependencies\.tvm-ffi\]\s*path\s*=\s*")([^"]+)(")', target, re.MULTILINE)
+if not match:
+    raise SystemExit("failed to extract target tvm-ffi path")
+
+replacement = match.group(2)
+updated = re.sub(
+    r'(\[dependencies\.tvm-ffi\]\s*path\s*=\s*")[^"]+(")',
+    rf'\1{replacement}\2',
+    generated,
+    count=1,
+    flags=re.MULTILINE,
+)
+generated_path.write_text(updated)
+PY
+}
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 WORKSPACE_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 REPO_ROOT="$(cd -- "${WORKSPACE_ROOT}/../.." && pwd)"
@@ -185,6 +214,7 @@ gen_log "Generating stub crate into ${WORK_OUT_DIR}"
 rewrite_generated_cargo_toml "${WORK_OUT_DIR}/Cargo.toml" "${TVM_FFI_PATH}"
 
 if [[ "${CHECK_MODE}" == "1" ]]; then
+  sync_generated_dependency_path_from_target "${TARGET_OUT_DIR}/Cargo.toml" "${WORK_OUT_DIR}/Cargo.toml"
   if ! diff -ruN "${TARGET_OUT_DIR}" "${WORK_OUT_DIR}" >/dev/null; then
     gen_log "Generated output is stale; diff follows"
     diff -ruN "${TARGET_OUT_DIR}" "${WORK_OUT_DIR}" || true
