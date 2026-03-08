@@ -1,6 +1,5 @@
 use std::string::String as StdString;
 
-use std::sync::LazyLock;
 pub use tilelang_rs_ffi as ffi;
 
 use tvm_ffi::{AnyValue, Array, DLDataTypeExt, Map, String as FfiString};
@@ -139,7 +138,7 @@ where
             self.step,
         )
         .expect("Serial frame construction should not fail");
-        let vars = for_frame_vars(&frame);
+        let vars = frame.get_vars();
         (frame.into(), vars)
     }
 }
@@ -176,7 +175,7 @@ where
             self.step,
         )
         .expect("Vectorized frame construction should not fail");
-        let vars = for_frame_vars(&frame);
+        let vars = frame.get_vars();
         (frame.into(), vars)
     }
 }
@@ -213,7 +212,7 @@ where
             self.step,
         )
         .expect("Unroll frame construction should not fail");
-        let vars = for_frame_vars(&frame);
+        let vars = frame.get_vars();
         (frame.into(), vars)
     }
 }
@@ -247,7 +246,7 @@ where
             .collect();
         let frame = ffi::tl::Parallel(Array::new(extents), self.annotations)
             .expect("Parallel frame construction should not fail");
-        let vars = for_frame_vars(&frame);
+        let vars = frame.get_vars();
         (frame.into(), vars)
     }
 }
@@ -290,7 +289,7 @@ where
             self.group,
         )
         .expect("Pipelined frame construction should not fail");
-        let vars = for_frame_vars(&frame);
+        let vars = frame.get_vars();
         (frame.into(), vars)
     }
 }
@@ -790,19 +789,6 @@ pub mod pred {
             }
         }
     }
-}
-
-static FORFRAME_VARS_GETTER: LazyLock<tvm_ffi::object_wrapper::FieldGetter<Array<ffi::tir::Var>>> =
-    LazyLock::new(|| {
-        tvm_ffi::object_wrapper::FieldGetter::new("script.ir_builder.tir.ForFrame", "vars")
-            .expect("ForFrame.vars field must be registered in TVM reflection")
-    });
-
-fn for_frame_vars(frame: &ffi::script::ir_builder::tir::ForFrame) -> Array<ffi::tir::Var> {
-    let obj_ref: tvm_ffi::object::ObjectRef = frame.clone().into();
-    FORFRAME_VARS_GETTER
-        .get(&obj_ref)
-        .expect("ForFrame.vars must be accessible")
 }
 
 fn empty_annotations() -> Result<Map<FfiString, AnyValue>> {
