@@ -15,6 +15,28 @@ pub trait IntoPrimExpr {
     fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr>;
 }
 
+pub trait IntoDType {
+    fn into_dtype(self) -> Result<tvm_ffi::DLDataType>;
+}
+
+impl IntoDType for tvm_ffi::DLDataType {
+    fn into_dtype(self) -> Result<tvm_ffi::DLDataType> {
+        Ok(self)
+    }
+}
+
+impl IntoDType for &str {
+    fn into_dtype(self) -> Result<tvm_ffi::DLDataType> {
+        tvm_ffi::DLDataType::try_from_str(self)
+    }
+}
+
+impl IntoDType for String {
+    fn into_dtype(self) -> Result<tvm_ffi::DLDataType> {
+        tvm_ffi::DLDataType::try_from_str(&self)
+    }
+}
+
 impl IntoPrimExpr for ffi::ir::PrimExpr {
     fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr> {
         Ok(self)
@@ -267,6 +289,39 @@ impl PredExpr {
             Self::Const(value) => Some(*value),
             Self::Expr(_) => None,
         }
+    }
+}
+
+#[derive(Clone)]
+pub struct LocalVar {
+    buffer: ffi::tir::Buffer,
+}
+
+impl LocalVar {
+    pub fn new(buffer: ffi::tir::Buffer) -> Self {
+        Self { buffer }
+    }
+
+    pub fn buffer(&self) -> &ffi::tir::Buffer {
+        &self.buffer
+    }
+
+    pub fn load(&self) -> Result<ffi::ir::PrimExpr> {
+        let span = empty_span()?;
+        let load = ffi::tir::BufferLoad(self.buffer.clone(), scalar_index(), None, span)?;
+        Ok(ffi::ir::PrimExpr::from_object(load.as_object_ref().clone()))
+    }
+
+    pub fn store<V>(&self, value: V) -> Result<()>
+    where
+        V: IntoPrimExpr,
+    {
+        ffi::script::ir_builder::tir::BufferStore(
+            self.buffer.clone(),
+            value.into_prim_expr()?,
+            scalar_index(),
+            None,
+        )
     }
 }
 
@@ -530,6 +585,37 @@ pub mod language {
         }
     }
 
+    pub fn int32() -> tvm_ffi::DLDataType {
+        tvm_ffi::DLDataType::try_from_str("int32").expect("int32 should be a valid dtype")
+    }
+
+    pub fn float32() -> tvm_ffi::DLDataType {
+        tvm_ffi::DLDataType::try_from_str("float32").expect("float32 should be a valid dtype")
+    }
+
+    pub fn alloc_var<D, I>(dtype: D, init: I) -> Result<LocalVar>
+    where
+        D: IntoDType,
+        I: IntoPrimExpr,
+    {
+        let dtype = dtype.into_dtype()?;
+        let buffer = ffi::script::ir_builder::tir::AllocBuffer(
+            scalar_index(),
+            dtype,
+            None,
+            Array::new(vec![]),
+            int64_imm(0)?,
+            FfiString::from("local.var"),
+            -1,
+            0,
+            FfiString::from("default"),
+            None,
+        )?;
+        let local_var = LocalVar::new(buffer);
+        local_var.store(init)?;
+        Ok(local_var)
+    }
+
     pub fn select<C, T, E>(cond: C, then_value: T, else_value: E) -> Result<ffi::ir::PrimExpr>
     where
         C: IntoPredExpr,
@@ -679,6 +765,12 @@ pub mod pred {
 
 fn empty_annotations() -> Result<Map<FfiString, AnyValue>> {
     Map::new(Vec::<(FfiString, AnyValue)>::new())
+}
+
+fn scalar_index() -> Array<ffi::ir::PrimExpr> {
+    Array::new(vec![
+        int64_imm(0).expect("scalar index construction should succeed")
+    ])
 }
 
 fn empty_span() -> Result<ffi::ir::Span> {
