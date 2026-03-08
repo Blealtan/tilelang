@@ -1,32 +1,5 @@
-use std::path::PathBuf;
-
-use tilelang_rs_core::{debug_print, ffi, language as T, Result};
+use tilelang_rs_core::{debug_print, language as T, Result};
 use tilelang_rs_macros::tl_ir;
-
-fn repo_root() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .parent()
-        .expect("tilelang-rs-macros should live under rust/tilelang-rs")
-        .parent()
-        .expect("tilelang-rs workspace should live under rust/")
-        .parent()
-        .expect("rust/ should live under repository root")
-        .to_path_buf()
-}
-
-fn load_tilelang_runtime() -> Result<()> {
-    let lib_dir = repo_root().join("build/lib");
-    let tvm_path = lib_dir.join("libtvm.so");
-    let tilelang_path = lib_dir.join("libtilelang_module.so");
-
-    ffi::load_library(tvm_path.to_str().expect("library path must be valid UTF-8"))?;
-    ffi::load_library(
-        tilelang_path
-            .to_str()
-            .expect("library path must be valid UTF-8"),
-    )?;
-    Ok(())
-}
 
 #[tl_ir]
 fn loops_if_kernel() {
@@ -61,8 +34,6 @@ fn logic_if_kernel() {
 
 #[test]
 fn tl_ir_runtime_prints_loop_and_if_ir() -> Result<()> {
-    load_tilelang_runtime()?;
-
     let printed = debug_print(loops_if_kernel()?)?;
     println!("{}", printed);
 
@@ -82,8 +53,6 @@ fn tl_ir_runtime_prints_loop_and_if_ir() -> Result<()> {
 
 #[test]
 fn tl_ir_runtime_prints_logic_predicates() -> Result<()> {
-    load_tilelang_runtime()?;
-
     let printed = debug_print(logic_if_kernel()?)?;
     println!("{}", printed);
 

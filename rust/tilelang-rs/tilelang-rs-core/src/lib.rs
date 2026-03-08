@@ -11,6 +11,8 @@ pub type Result<T> = tvm_ffi::Result<T>;
 
 pub const PHASE: &str = "phase4";
 
+pub mod runtime;
+
 pub trait IntoPrimExpr {
     fn into_prim_expr(self) -> Result<ffi::ir::PrimExpr>;
 }
@@ -361,6 +363,7 @@ pub struct BuilderContext {
 
 impl BuilderContext {
     pub fn new(name: impl Into<StdString>) -> Result<Self> {
+        runtime::ensure_runtime_loaded()?;
         let name = name.into();
         let builder = ffi::script::ir_builder::IRBuilder()?;
         ffi::script::ir_builder::IRBuilderEnter(builder.clone())?;
