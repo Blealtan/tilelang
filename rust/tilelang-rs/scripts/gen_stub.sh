@@ -207,6 +207,10 @@ gen_log "Generating stub crate into ${WORK_OUT_DIR}"
   --init-prefix ir \
   --init-prefix tir \
   --init-prefix script \
+  --init-prefix relax \
+  --init-prefix transform \
+  --init-prefix target \
+  --init-prefix te \
   --init-crate "${INIT_CRATE}" \
   --tvm-ffi-path "${TVM_FFI_PATH}" \
   --overwrite)

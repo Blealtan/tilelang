@@ -81,6 +81,10 @@ public:
 
   virtual TileOperator Clone() const = 0;
 
+  static void RegisterReflection() {
+    ffi::reflection::ObjectDef<TileOperatorNode>();
+  }
+
   TVM_FFI_DECLARE_OBJECT_INFO("tl.TileOperator", TileOperatorNode, Object);
 };
 
