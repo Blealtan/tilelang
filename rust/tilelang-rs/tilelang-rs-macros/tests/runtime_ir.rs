@@ -5,11 +5,11 @@ use tilelang_rs_macros::tl_ir;
 fn loops_if_kernel() {
     for i in T::serial(0i64, 4i64) {
         if i < 2i64 {
-            let _v = T::select(true, 1i64, 0i64)?;
+            let _v = T::select(true, 1i64, 0i64);
         } else {
-            let acc = T::alloc_var(T::int32(), 0i64)?;
-            acc.store(1i64)?;
-            let _out = acc.load()?;
+            let acc = T::alloc_var(T::int32(), 0i64);
+            acc.store(1i64);
+            let _out = acc.load();
         }
     }
 
@@ -24,17 +24,17 @@ fn loops_if_kernel() {
 
 #[tl_ir]
 fn logic_if_kernel() {
-    let out = T::alloc_var(T::int32(), 0i64)?;
+    let out = T::alloc_var(T::int32(), 0i64);
     if (1i64 < 2i64) && (!false || 3i64 == 3i64) {
-        out.store(T::select(true, 7i64, 9i64)?)?;
+        out.store(T::select(true, 7i64, 9i64));
     } else {
-        out.store(T::select(false, 1i64, 2i64)?)?;
+        out.store(T::select(false, 1i64, 2i64));
     }
 }
 
 #[test]
 fn tl_ir_runtime_prints_loop_and_if_ir() -> Result<()> {
-    let printed = debug_print(loops_if_kernel()?)?;
+    let printed = debug_print(loops_if_kernel()?);
     println!("{}", printed);
 
     assert!(printed.contains("@T.prim_func"));
@@ -53,7 +53,7 @@ fn tl_ir_runtime_prints_loop_and_if_ir() -> Result<()> {
 
 #[test]
 fn tl_ir_runtime_prints_logic_predicates() -> Result<()> {
-    let printed = debug_print(logic_if_kernel()?)?;
+    let printed = debug_print(logic_if_kernel()?);
     println!("{}", printed);
 
     assert!(printed.contains("@T.prim_func"));

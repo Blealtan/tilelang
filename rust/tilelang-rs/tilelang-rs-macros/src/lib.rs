@@ -253,9 +253,8 @@ fn expand_tl_ir(input: &ItemFn) -> syn::Result<TokenStream2> {
             let #ctx_ident = ::tilelang_rs_core::BuilderContext::new(stringify!(#fn_name))?;
             #ctx_ident.with_tir_prim_func(stringify!(#fn_name), false, |_prim_func| {
                 #body
-                Ok(())
-            })?;
-            #ctx_ident.finish_ir_module()
+            });
+            Ok(#ctx_ident.finish_ir_module())
         }
     })
 }
@@ -332,15 +331,14 @@ fn transform_for_loop(for_loop: &ExprForLoop, ctx_ident: &syn::Ident) -> syn::Re
         #ctx_ident.for_each(#dsl, |#inner_ctx_ident, #vars_ident| {
             #binding
             #body
-            Ok(())
-        })?;
+        });
     })
 }
 
 fn loop_binding(pat: &Pat, vars_ident: &syn::Ident) -> syn::Result<TokenStream2> {
     match pat {
         Pat::Ident(_) => Ok(quote! {
-            let #pat = ::tilelang_rs_core::FromLoopVars::bind1(#vars_ident)?;
+            let #pat = ::tilelang_rs_core::FromLoopVars::bind1(#vars_ident);
         }),
         Pat::Tuple(tuple) => {
             let arity = tuple.elems.len();
@@ -356,7 +354,7 @@ fn loop_binding(pat: &Pat, vars_ident: &syn::Ident) -> syn::Result<TokenStream2>
                 }
             };
             Ok(quote! {
-                let #pat = ::tilelang_rs_core::FromLoopVars::#bind_fn(#vars_ident)?;
+                let #pat = ::tilelang_rs_core::FromLoopVars::#bind_fn(#vars_ident);
             })
         }
         _ => Err(syn::Error::new(
@@ -373,10 +371,9 @@ fn transform_if_stmt(expr_if: &ExprIf, ctx_ident: &syn::Ident) -> syn::Result<To
         let else_tokens = transform_else_expr(else_expr, ctx_ident)?;
         quote!(Some(|| {
             #else_tokens
-            Ok(())
         }))
     } else {
-        quote!(None::<fn() -> ::tilelang_rs_core::Result<()>>)
+        quote!(None::<fn()>)
     };
 
     Ok(quote! {
@@ -384,10 +381,9 @@ fn transform_if_stmt(expr_if: &ExprIf, ctx_ident: &syn::Ident) -> syn::Result<To
             #cond,
             || {
                 #then_body
-                Ok(())
             },
             #else_body,
-        )?;
+        );
     })
 }
 
@@ -407,23 +403,23 @@ fn lower_predicate(expr: &Expr) -> syn::Result<TokenStream2> {
         Expr::Binary(ExprBinary {
             left, op, right, ..
         }) => match op {
-            BinOp::Eq(_) => Ok(quote!(::tilelang_rs_core::pred::eq(#left, #right)?)),
-            BinOp::Ne(_) => Ok(quote!(::tilelang_rs_core::pred::ne(#left, #right)?)),
-            BinOp::Lt(_) => Ok(quote!(::tilelang_rs_core::pred::lt(#left, #right)?)),
-            BinOp::Le(_) => Ok(quote!(::tilelang_rs_core::pred::le(#left, #right)?)),
-            BinOp::Gt(_) => Ok(quote!(::tilelang_rs_core::pred::gt(#left, #right)?)),
-            BinOp::Ge(_) => Ok(quote!(::tilelang_rs_core::pred::ge(#left, #right)?)),
+            BinOp::Eq(_) => Ok(quote!(::tilelang_rs_core::pred::eq(#left, #right))),
+            BinOp::Ne(_) => Ok(quote!(::tilelang_rs_core::pred::ne(#left, #right))),
+            BinOp::Lt(_) => Ok(quote!(::tilelang_rs_core::pred::lt(#left, #right))),
+            BinOp::Le(_) => Ok(quote!(::tilelang_rs_core::pred::le(#left, #right))),
+            BinOp::Gt(_) => Ok(quote!(::tilelang_rs_core::pred::gt(#left, #right))),
+            BinOp::Ge(_) => Ok(quote!(::tilelang_rs_core::pred::ge(#left, #right))),
             BinOp::And(_) => {
                 let lhs = lower_predicate(left)?;
                 let rhs = lower_predicate(right)?;
-                Ok(quote!(::tilelang_rs_core::pred::and(#lhs, || { Ok(#rhs) })?))
+                Ok(quote!(::tilelang_rs_core::pred::and(#lhs, || { #rhs })))
             }
             BinOp::Or(_) => {
                 let lhs = lower_predicate(left)?;
                 let rhs = lower_predicate(right)?;
-                Ok(quote!(::tilelang_rs_core::pred::or(#lhs, || { Ok(#rhs) })?))
+                Ok(quote!(::tilelang_rs_core::pred::or(#lhs, || { #rhs })))
             }
-            _ => Ok(quote!(::tilelang_rs_core::pred::to_ir_bool(#expr)?)),
+            _ => Ok(quote!(::tilelang_rs_core::pred::to_ir_bool(#expr))),
         },
         Expr::Unary(ExprUnary {
             op: UnOp::Not(_),
@@ -431,11 +427,11 @@ fn lower_predicate(expr: &Expr) -> syn::Result<TokenStream2> {
             ..
         }) => {
             let inner = lower_predicate(expr)?;
-            Ok(quote!(::tilelang_rs_core::pred::not(#inner)?))
+            Ok(quote!(::tilelang_rs_core::pred::not(#inner)))
         }
         Expr::Paren(ExprParen { expr, .. }) | Expr::Group(ExprGroup { expr, .. }) => {
             lower_predicate(expr)
         }
-        _ => Ok(quote!(::tilelang_rs_core::pred::to_ir_bool(#expr)?)),
+        _ => Ok(quote!(::tilelang_rs_core::pred::to_ir_bool(#expr))),
     }
 }
