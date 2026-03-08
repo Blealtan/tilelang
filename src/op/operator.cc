@@ -77,5 +77,7 @@ Var GetVarFromAccessPtr(const PrimExpr &expr) {
   return tvm::ffi::GetRef<Var>(var);
 }
 
+TVM_FFI_STATIC_INIT_BLOCK() { TileOperatorNode::RegisterReflection(); }
+
 } // namespace tl
 } // namespace tvm
