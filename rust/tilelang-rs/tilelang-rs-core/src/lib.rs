@@ -60,7 +60,7 @@ macro_rules! impl_into_prim_expr_for_int {
         $(
             impl IntoPrimExpr for $ty {
                 fn into_prim_expr(self) -> ffi::ir::PrimExpr {
-                    int64_imm(self as i64).expect("int literal to PrimExpr should never fail")
+                    int64_imm(self as i64)
                 }
             }
         )*
@@ -440,7 +440,7 @@ impl IntoPredExpr for ffi::ir::PrimExpr {
 impl PredExpr {
     pub fn to_prim_expr(self) -> ffi::ir::PrimExpr {
         match self {
-            Self::Const(value) => bool_imm(value).expect("bool_imm should not fail"),
+            Self::Const(value) => bool_imm(value),
             Self::Expr(expr) => expr,
         }
     }
@@ -468,7 +468,7 @@ impl LocalVar {
     }
 
     pub fn load(&self) -> ffi::ir::PrimExpr {
-        let span = empty_span().expect("empty_span should not fail");
+        let span = empty_span();
         let load = ffi::tir::BufferLoad(self.buffer.clone(), scalar_index(), None, span)
             .expect("BufferLoad should not fail");
         load.into()
@@ -639,7 +639,9 @@ impl BuilderContext {
         let module_obj = ffi::script::ir_builder::IRBuilderGet(builder.clone())
             .expect("IRBuilderGet should not fail");
         ffi::script::ir_builder::IRBuilderExit(builder).expect("IRBuilderExit should not fail");
-        downcast_ir_module(module_obj).expect("IRBuilder should produce an ir.IRModule")
+        module_obj
+            .try_into()
+            .unwrap_or_else(|_| panic!("IRBuilder should produce an ir.IRModule"))
     }
 }
 
@@ -708,7 +710,7 @@ pub mod language {
     {
         ParallelDsl {
             extents,
-            annotations: empty_annotations().expect("failed to create empty loop annotations"),
+            annotations: empty_annotations(),
         }
     }
 
@@ -788,7 +790,7 @@ pub mod language {
             dtype,
             None,
             Array::new(vec![]),
-            int64_imm(0).expect("int64_imm(0) should not fail"),
+            int64_imm(0),
             FfiString::from("local.var"),
             -1,
             0,
@@ -808,7 +810,7 @@ pub mod language {
         E: IntoPrimExpr,
     {
         let cond = cond.into_pred_expr().to_prim_expr();
-        let span = empty_span().expect("empty_span should not fail");
+        let span = empty_span();
         let expr = ffi::tir::Select(
             cond,
             then_value.into_prim_expr(),
@@ -885,7 +887,7 @@ pub mod pred {
         match cond.into_pred_expr() {
             PredExpr::Const(value) => PredExpr::Const(!value),
             PredExpr::Expr(expr) => {
-                let span = empty_span().expect("empty_span should not fail");
+                let span = empty_span();
                 let not = ffi::tir::Not(expr, span).expect("Not should not fail");
                 PredExpr::Expr(not.into())
             }
@@ -908,7 +910,7 @@ pub mod pred {
                     PredExpr::Const(false) => PredExpr::Const(false),
                     PredExpr::Const(true) => PredExpr::Expr(lhs_expr),
                     PredExpr::Expr(rhs_expr) => {
-                        let span = empty_span().expect("empty_span should not fail");
+                        let span = empty_span();
                         let and =
                             ffi::tir::And(lhs_expr, rhs_expr, span).expect("And should not fail");
                         PredExpr::Expr(and.into())
@@ -934,7 +936,7 @@ pub mod pred {
                     PredExpr::Const(true) => PredExpr::Const(true),
                     PredExpr::Const(false) => PredExpr::Expr(lhs_expr),
                     PredExpr::Expr(rhs_expr) => {
-                        let span = empty_span().expect("empty_span should not fail");
+                        let span = empty_span();
                         let or =
                             ffi::tir::Or(lhs_expr, rhs_expr, span).expect("Or should not fail");
                         PredExpr::Expr(or.into())
@@ -945,30 +947,30 @@ pub mod pred {
     }
 }
 
-fn empty_annotations() -> Result<Map<FfiString, AnyValue>> {
-    Map::new(Vec::<(FfiString, AnyValue)>::new())
+fn empty_annotations() -> Map<FfiString, AnyValue> {
+    Map::new(Vec::<(FfiString, AnyValue)>::new()).expect("empty Map construction should not fail")
 }
 
 fn scalar_index() -> Array<ffi::ir::PrimExpr> {
-    Array::new(vec![
-        int64_imm(0).expect("scalar index construction should succeed")
-    ])
+    Array::new(vec![int64_imm(0)])
 }
 
-fn empty_span() -> Result<ffi::ir::Span> {
-    let source = ffi::ir::SourceName(FfiString::from("tilelang-rs-core"))?;
-    ffi::ir::Span(source, 0, 0, 0, 0)
+fn empty_span() -> ffi::ir::Span {
+    let source = ffi::ir::SourceName(FfiString::from("tilelang-rs-core"))
+        .expect("SourceName construction should not fail");
+    ffi::ir::Span(source, 0, 0, 0, 0).expect("Span construction should not fail")
 }
 
-fn int64_imm(value: i64) -> Result<ffi::ir::PrimExpr> {
+fn int64_imm(value: i64) -> ffi::ir::PrimExpr {
     let dtype = tvm_ffi::DLDataType {
         code: tvm_ffi::DLDataTypeCode::kDLInt as u8,
         bits: 64,
         lanes: 1,
     };
-    let span = empty_span()?;
-    let imm = ffi::ir::IntImm(dtype, value, span)?;
-    Ok(imm.into())
+    let span = empty_span();
+    ffi::ir::IntImm(dtype, value, span)
+        .expect("IntImm construction should not fail")
+        .into()
 }
 
 fn assert_loop_vars(vars: Array<ffi::tir::Var>, expected: usize) {
@@ -981,15 +983,16 @@ fn assert_loop_vars(vars: Array<ffi::tir::Var>, expected: usize) {
     );
 }
 
-fn bool_imm(value: bool) -> Result<ffi::ir::PrimExpr> {
+fn bool_imm(value: bool) -> ffi::ir::PrimExpr {
     let dtype = tvm_ffi::DLDataType {
         code: tvm_ffi::DLDataTypeCode::kDLBool as u8,
         bits: 1,
         lanes: 1,
     };
-    let span = empty_span()?;
-    let imm = ffi::ir::IntImm(dtype, if value { 1 } else { 0 }, span)?;
-    Ok(imm.into())
+    let span = empty_span();
+    ffi::ir::IntImm(dtype, if value { 1 } else { 0 }, span)
+        .expect("BoolImm construction should not fail")
+        .into()
 }
 
 fn binary_arith_expr<F, O>(lhs: ffi::ir::PrimExpr, rhs: ffi::ir::PrimExpr, op: F) -> Expr
@@ -997,7 +1000,7 @@ where
     F: FnOnce(ffi::ir::PrimExpr, ffi::ir::PrimExpr, ffi::ir::Span) -> Result<O>,
     O: Into<ffi::ir::PrimExpr>,
 {
-    let span = empty_span().expect("empty_span should not fail");
+    let span = empty_span();
     let result = op(lhs, rhs, span).expect("binary arithmetic should not fail");
     Expr(result.into())
 }
@@ -1009,17 +1012,8 @@ where
     F: FnOnce(ffi::ir::PrimExpr, ffi::ir::PrimExpr, ffi::ir::Span) -> Result<O>,
     O: Into<ffi::ir::PrimExpr>,
 {
-    let span = empty_span().expect("empty_span should not fail");
+    let span = empty_span();
     let expr = op(lhs.into_prim_expr(), rhs.into_prim_expr(), span)
         .expect("binary predicate construction should not fail");
     PredExpr::Expr(expr.into())
-}
-
-fn downcast_ir_module(object: tvm_ffi::object::ObjectRef) -> Result<ffi::ir::IRModule> {
-    use tvm_ffi::error::TYPE_ERROR;
-    object
-        .try_into()
-        .map_err(|_object: tvm_ffi::object::ObjectRef| {
-            tvm_ffi::Error::new(TYPE_ERROR, "IRBuilder did not produce an ir.IRModule", "")
-        })
 }
