@@ -2,7 +2,7 @@ use std::string::String as StdString;
 
 pub use tilelang_rs_ffi as ffi;
 
-use tvm_ffi::{AnyValue, Array, DLDataTypeExt, Map, String as FfiString};
+use tvm_ffi::{AnyValue, Array, Map, String as FfiString};
 
 pub type Result<T> = tvm_ffi::Result<T>;
 
@@ -10,30 +10,19 @@ pub const PHASE: &str = "phase4";
 
 pub mod runtime;
 
+pub trait DLDataTypeExt {
+    /// Return a vector variant with `lanes` lanes, e.g. `T::INT8.with_lanes(4)` → `int8x4`.
+    fn with_lanes(self, lanes: u16) -> tvm_ffi::DLDataType;
+}
+
+impl DLDataTypeExt for tvm_ffi::DLDataType {
+    fn with_lanes(self, lanes: u16) -> tvm_ffi::DLDataType {
+        tvm_ffi::DLDataType { lanes, ..self }
+    }
+}
+
 pub trait IntoPrimExpr {
     fn into_prim_expr(self) -> ffi::ir::PrimExpr;
-}
-
-pub trait IntoDType {
-    fn into_dtype(self) -> Result<tvm_ffi::DLDataType>;
-}
-
-impl IntoDType for tvm_ffi::DLDataType {
-    fn into_dtype(self) -> Result<tvm_ffi::DLDataType> {
-        Ok(self)
-    }
-}
-
-impl IntoDType for &str {
-    fn into_dtype(self) -> Result<tvm_ffi::DLDataType> {
-        tvm_ffi::DLDataType::try_from_str(self)
-    }
-}
-
-impl IntoDType for String {
-    fn into_dtype(self) -> Result<tvm_ffi::DLDataType> {
-        tvm_ffi::DLDataType::try_from_str(&self)
-    }
 }
 
 impl IntoPrimExpr for ffi::ir::PrimExpr {
@@ -739,22 +728,61 @@ pub mod language {
         }
     }
 
-    pub fn int32() -> tvm_ffi::DLDataType {
-        tvm_ffi::DLDataType::try_from_str("int32").expect("int32 should be a valid dtype")
+    const fn dl(code: tvm_ffi::DLDataTypeCode, bits: u8) -> tvm_ffi::DLDataType {
+        tvm_ffi::DLDataType {
+            code: code as u8,
+            bits,
+            lanes: 1,
+        }
     }
 
-    pub fn float32() -> tvm_ffi::DLDataType {
-        tvm_ffi::DLDataType::try_from_str("float32").expect("float32 should be a valid dtype")
-    }
+    // ── bool ─────────────────────────────────────────────────────────────────
+    pub const BOOL: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLBool, 1);
 
-    pub fn alloc_var<D, I>(dtype: D, init: I) -> LocalVar
+    // ── signed integers ───────────────────────────────────────────────────────
+    pub const INT4: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLInt, 4);
+    pub const INT8: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLInt, 8);
+    pub const INT16: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLInt, 16);
+    pub const INT32: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLInt, 32);
+    pub const INT64: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLInt, 64);
+
+    // ── unsigned integers ─────────────────────────────────────────────────────
+    pub const UINT8: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLUInt, 8);
+    pub const UINT16: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLUInt, 16);
+    pub const UINT32: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLUInt, 32);
+    pub const UINT64: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLUInt, 64);
+
+    // ── standard floats ───────────────────────────────────────────────────────
+    pub const FLOAT16: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat, 16);
+    pub const FLOAT32: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat, 32);
+    pub const FLOAT64: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat, 64);
+    pub const BFLOAT16: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLBfloat, 16);
+
+    // ── float8 variants ───────────────────────────────────────────────────────
+    pub const FLOAT8_E3M4: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e3m4, 8);
+    pub const FLOAT8_E4M3: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e4m3, 8);
+    pub const FLOAT8_E4M3B11FNUZ: tvm_ffi::DLDataType =
+        dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e4m3b11fnuz, 8);
+    pub const FLOAT8_E4M3FN: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e4m3fn, 8);
+    pub const FLOAT8_E4M3FNUZ: tvm_ffi::DLDataType =
+        dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e4m3fnuz, 8);
+    pub const FLOAT8_E5M2: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e5m2, 8);
+    pub const FLOAT8_E5M2FNUZ: tvm_ffi::DLDataType =
+        dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e5m2fnuz, 8);
+    pub const FLOAT8_E8M0FNU: tvm_ffi::DLDataType =
+        dl(tvm_ffi::DLDataTypeCode::kDLFloat8_e8m0fnu, 8);
+
+    // ── float6 variants ───────────────────────────────────────────────────────
+    pub const FLOAT6_E2M3FN: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat6_e2m3fn, 6);
+    pub const FLOAT6_E3M2FN: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat6_e3m2fn, 6);
+
+    // ── float4 variants ───────────────────────────────────────────────────────
+    pub const FLOAT4_E2M1FN: tvm_ffi::DLDataType = dl(tvm_ffi::DLDataTypeCode::kDLFloat4_e2m1fn, 4);
+
+    pub fn alloc_var<I>(dtype: tvm_ffi::DLDataType, init: I) -> LocalVar
     where
-        D: IntoDType,
         I: IntoPrimExpr,
     {
-        let dtype = dtype
-            .into_dtype()
-            .expect("alloc_var: dtype conversion should not fail");
         let buffer = ffi::script::ir_builder::tir::AllocBuffer(
             scalar_index(),
             dtype,
@@ -933,7 +961,11 @@ fn empty_span() -> Result<ffi::ir::Span> {
 }
 
 fn int64_imm(value: i64) -> Result<ffi::ir::PrimExpr> {
-    let dtype = tvm_ffi::DLDataType::try_from_str("int64")?;
+    let dtype = tvm_ffi::DLDataType {
+        code: tvm_ffi::DLDataTypeCode::kDLInt as u8,
+        bits: 64,
+        lanes: 1,
+    };
     let span = empty_span()?;
     let imm = ffi::ir::IntImm(dtype, value, span)?;
     Ok(imm.into())
@@ -950,7 +982,11 @@ fn assert_loop_vars(vars: Array<ffi::tir::Var>, expected: usize) {
 }
 
 fn bool_imm(value: bool) -> Result<ffi::ir::PrimExpr> {
-    let dtype = tvm_ffi::DLDataType::try_from_str("bool")?;
+    let dtype = tvm_ffi::DLDataType {
+        code: tvm_ffi::DLDataTypeCode::kDLBool as u8,
+        bits: 1,
+        lanes: 1,
+    };
     let span = empty_span()?;
     let imm = ffi::ir::IntImm(dtype, if value { 1 } else { 0 }, span)?;
     Ok(imm.into())

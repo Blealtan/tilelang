@@ -2,7 +2,7 @@ use tilelang_rs::{debug_print, language as T, tl_ir, Result};
 
 #[tl_ir]
 fn macro_kernel() {
-    let acc = T::alloc_var(T::int32(), 0i64);
+    let acc = T::alloc_var(T::INT32, 0i64);
 
     for i in T::serial(0i64, 4i64) {
         if i < 2i64 {
