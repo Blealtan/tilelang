@@ -17,7 +17,7 @@ fn kernel() {
         if i < 2i64 {
             let _v = T::select(true, 1i64, 0i64);
         } else {
-            let acc = T::alloc_var(T::int32(), 0i64);
+            let acc = T::alloc_var(T::INT32, 0i64);
             acc.store(1i64);
             let _out = acc.load();
         }
