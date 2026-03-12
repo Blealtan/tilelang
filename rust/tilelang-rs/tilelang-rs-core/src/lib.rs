@@ -185,12 +185,13 @@ impl<A: IntoPrimExpr, B: IntoPrimExpr, C: IntoPrimExpr, D: IntoPrimExpr> IntoPri
 
 /// Zero-sized placeholder for a buffer parameter that has not yet been declared.
 ///
-/// Call `.declare(shape, dtype, name)` on a `Tensor` to get a [`Buffer`] and register it
-/// as a function argument inside a `with_tir_prim_func` context.
+/// Call `.declare(shape, dtype)` on a `Tensor` to get a [`PendingBuffer`] that will be
+/// automatically named by the `#[tl_ir]` macro's `named_let` transform.
+/// Call `.declare_named(shape, dtype, name)` to register with an explicit name immediately.
 ///
 /// ```ignore
 /// let a = Tensor::new();
-/// let a: Buffer = a.declare(&n, T::FLOAT32, "A");
+/// let a = a.declare(&n, T::FLOAT32);   // #[tl_ir] injects name "a" → Arg("a", buffer)
 /// ```
 pub struct Tensor;
 
@@ -199,15 +200,43 @@ impl Tensor {
         Tensor
     }
 
-    /// Declare this tensor as a function buffer argument with the given shape and dtype.
+    /// Declare this tensor as a buffer without registering its name yet.
     ///
-    /// The `name` parameter is a **Phase-2 temporary**: once Phase-3 `named_let` is
-    /// implemented the name will be injected automatically from the binding variable
-    /// (`let a = t.declare(shape, dtype)` → IR name `"a"`), and this parameter will
-    /// be removed.
+    /// Returns a [`PendingBuffer`] whose `Arg` registration is deferred.  When used
+    /// inside a `#[tl_ir]` function, the `named_let` macro transform fires and calls
+    /// [`NameableKind::apply`] to register the correct name automatically.
+    ///
+    /// ```ignore
+    /// let a = Tensor::new().declare(&n, T::FLOAT32);  // macro injects Arg("a", buf)
+    /// ```
     ///
     /// Must be called inside a `with_tir_prim_func` context.
-    pub fn declare(
+    pub fn declare(self, shape: impl IntoPrimExprs, dtype: tvm_ffi::DLDataType) -> PendingBuffer {
+        let shape_exprs = shape.into_prim_exprs();
+        let buffer = ffi::script::ir_builder::tir::Buffer(
+            shape_exprs,
+            dtype,
+            FfiString::from("_"),
+            None,
+            None,
+            None,
+            FfiString::from("global"),
+            0i64,
+            0i64,
+            FfiString::from(""),
+            None,
+        )
+        .expect("Buffer declaration should not fail");
+        PendingBuffer { inner: buffer }
+    }
+
+    /// Declare with an explicit name (Phase-2 compatibility).
+    ///
+    /// Registers `Arg(name, buffer)` immediately. Prefer the no-name variant
+    /// [`declare`][Tensor::declare] with `#[tl_ir]` for automatic naming.
+    ///
+    /// Must be called inside a `with_tir_prim_func` context.
+    pub fn declare_named(
         self,
         shape: impl IntoPrimExprs,
         dtype: tvm_ffi::DLDataType,
@@ -222,6 +251,96 @@ impl Default for Tensor {
         Tensor
     }
 }
+
+/// Types that can receive an IR name from the `#[tl_ir]` `named_let` transform.
+///
+/// Implement this trait (plus an inherent `__tl_named_tag(&self) -> NameableKind` method)
+/// to make a type participate in automatic name injection.  The associated type `Named`
+/// is the fully-named output — often the same type or a richer variant.
+///
+/// # Extending named_let to new types
+///
+/// 1. Define an inherent method `pub fn __tl_named_tag(&self) -> NameableKind { NameableKind }`.
+/// 2. Implement `Nameable` and set `type Named` to whatever the post-naming type should be.
+/// 3. Put the naming logic in `apply_name`.
+///
+/// No changes to [`NameableKind`] or the macro are required.
+pub trait Nameable {
+    /// The type produced after the name has been applied.
+    type Named;
+    /// Consume `self`, record `name` in the IR, and return the named variant.
+    fn apply_name(self, name: &str) -> Self::Named;
+}
+
+/// A buffer that has been allocated but not yet registered as a function argument.
+///
+/// Obtained via [`Tensor::declare`] (no-name variant).  The `#[tl_ir]` macro's
+/// `named_let` transform will call [`NameableKind::apply`] to register the correct
+/// name and return a [`Buffer`].
+pub struct PendingBuffer {
+    inner: ffi::tir::Buffer,
+}
+
+impl PendingBuffer {
+    /// Autoref tag method for named_let specialization.
+    ///
+    /// Returns [`NameableKind`], causing the macro-generated `apply` call to invoke
+    /// [`Nameable::apply_name`] with the binding variable's name.
+    #[doc(hidden)]
+    pub fn __tl_named_tag(&self) -> NameableKind {
+        NameableKind
+    }
+}
+
+impl Nameable for PendingBuffer {
+    type Named = Buffer;
+
+    fn apply_name(self, name: &str) -> Buffer {
+        ffi::script::ir_builder::tir::Arg(FfiString::from(name), self.inner.clone().into())
+            .expect("Arg registration should not fail");
+        Buffer { inner: self.inner }
+    }
+}
+
+/// Autoref specialization tag for types that implement [`Nameable`].
+///
+/// Returned by the **inherent** `__tl_named_tag` method on nameable types.
+/// [`NameableKind::apply`] delegates to [`Nameable::apply_name`] — no changes here
+/// are needed when adding new nameable types.
+pub struct NameableKind;
+
+/// Autoref specialization tag (passthrough) for types that do not implement [`Nameable`].
+///
+/// Returned by the blanket [`PassthroughTag`] trait impl for all non-nameable types.
+pub struct PassthroughKind;
+
+impl NameableKind {
+    /// Delegate to [`Nameable::apply_name`] — open for extension without modification.
+    pub fn apply<T: Nameable>(self, val: T, name: &str) -> T::Named {
+        val.apply_name(name)
+    }
+}
+
+impl PassthroughKind {
+    /// Passthrough: return `val` unchanged.
+    pub fn apply<T>(self, val: T, _name: &str) -> T {
+        val
+    }
+}
+
+/// Fallback trait for named_let autoref specialization.
+///
+/// Blanket-implemented for all types.  Types that want named_let injection define an
+/// **inherent** `__tl_named_tag` method instead (inherent methods take priority over
+/// trait methods in Rust method resolution, providing the specialization effect).
+pub trait PassthroughTag {
+    #[doc(hidden)]
+    fn __tl_named_tag(&self) -> PassthroughKind {
+        PassthroughKind
+    }
+}
+
+impl<T> PassthroughTag for T {}
 
 /// A declared buffer parameter with load/store operations.
 ///
