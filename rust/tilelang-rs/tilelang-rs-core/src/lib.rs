@@ -183,6 +183,113 @@ impl<A: IntoPrimExpr, B: IntoPrimExpr, C: IntoPrimExpr, D: IntoPrimExpr> IntoPri
     }
 }
 
+/// Zero-sized placeholder for a buffer parameter that has not yet been declared.
+///
+/// Call `.declare(shape, dtype, name)` on a `Tensor` to get a [`Buffer`] and register it
+/// as a function argument inside a `with_tir_prim_func` context.
+///
+/// ```ignore
+/// let a = Tensor::new();
+/// let a: Buffer = a.declare(&n, T::FLOAT32, "A");
+/// ```
+pub struct Tensor;
+
+impl Tensor {
+    pub fn new() -> Self {
+        Tensor
+    }
+
+    /// Declare this tensor as a function buffer argument with the given shape and dtype.
+    ///
+    /// The `name` parameter is a **Phase-2 temporary**: once Phase-3 `named_let` is
+    /// implemented the name will be injected automatically from the binding variable
+    /// (`let a = t.declare(shape, dtype)` → IR name `"a"`), and this parameter will
+    /// be removed.
+    ///
+    /// Must be called inside a `with_tir_prim_func` context.
+    pub fn declare(
+        self,
+        shape: impl IntoPrimExprs,
+        dtype: tvm_ffi::DLDataType,
+        name: &str,
+    ) -> Buffer {
+        Buffer::from_declaration(shape, dtype, name)
+    }
+}
+
+impl Default for Tensor {
+    fn default() -> Self {
+        Tensor
+    }
+}
+
+/// A declared buffer parameter with load/store operations.
+///
+/// Obtained by calling [`Tensor::declare`].
+#[derive(Clone)]
+pub struct Buffer {
+    inner: ffi::tir::Buffer,
+}
+
+impl Buffer {
+    pub fn new(inner: ffi::tir::Buffer) -> Self {
+        Self { inner }
+    }
+
+    pub fn inner(&self) -> &ffi::tir::Buffer {
+        &self.inner
+    }
+
+    /// Internal constructor — shared by `Tensor::declare`.
+    fn from_declaration(
+        shape: impl IntoPrimExprs,
+        dtype: tvm_ffi::DLDataType,
+        name: &str,
+    ) -> Buffer {
+        let shape_exprs = shape.into_prim_exprs();
+        let buffer = ffi::script::ir_builder::tir::Buffer(
+            shape_exprs,
+            dtype,
+            FfiString::from(name),
+            None,
+            None,
+            None,
+            FfiString::from("global"),
+            0i64,
+            0i64,
+            FfiString::from(""),
+            None,
+        )
+        .expect("Buffer declaration should not fail");
+
+        ffi::script::ir_builder::tir::Arg(FfiString::from(name), buffer.clone().into())
+            .expect("Arg registration should not fail");
+
+        Buffer { inner: buffer }
+    }
+
+    /// Load a scalar or indexed value from this buffer.
+    pub fn load_at(&self, indices: impl IntoPrimExprs) -> Expr {
+        let span = empty_span();
+        let indices = indices.into_prim_exprs();
+        let load = ffi::tir::BufferLoad(self.inner.clone(), indices, None, span)
+            .expect("BufferLoad should not fail");
+        Expr(load.into())
+    }
+
+    /// Store a value into this buffer at the given indices.
+    pub fn store_at(&self, indices: impl IntoPrimExprs, value: impl IntoPrimExpr) {
+        let indices = indices.into_prim_exprs();
+        ffi::script::ir_builder::tir::BufferStore(
+            self.inner.clone(),
+            value.into_prim_expr(),
+            indices,
+            None,
+        )
+        .expect("BufferStore should not fail");
+    }
+}
+
 pub struct FrameGuard {
     frame: Option<ffi::script::ir_builder::IRBuilderFrame>,
 }
@@ -332,37 +439,73 @@ where
     }
 }
 
-pub struct ParallelDsl<E, const N: usize> {
-    extents: [E; N],
+pub struct ParallelDsl {
+    extents: Array<ffi::ir::PrimExpr>,
     annotations: Map<FfiString, AnyValue>,
 }
 
-impl<E, const N: usize> ParallelDsl<E, N> {
+impl ParallelDsl {
     pub fn with_annotations(mut self, annotations: Map<FfiString, AnyValue>) -> Self {
         self.annotations = annotations;
         self
     }
 }
 
-impl<E, const N: usize> ForDsl for ParallelDsl<E, N>
-where
-    E: IntoPrimExpr,
-{
+impl ForDsl for ParallelDsl {
     fn enter(
         self,
     ) -> (
         ffi::script::ir_builder::IRBuilderFrame,
         Array<ffi::tir::Var>,
     ) {
-        let extents: Vec<ffi::ir::PrimExpr> = self
-            .extents
-            .into_iter()
-            .map(|e| e.into_prim_expr())
-            .collect();
-        let frame = ffi::tl::Parallel(Array::new(extents), self.annotations)
+        let frame = ffi::tl::Parallel(self.extents, self.annotations)
             .expect("Parallel frame construction should not fail");
         let vars = frame.get_vars();
         (frame.into(), vars)
+    }
+}
+
+/// DSL builder for `tl.KernelLaunch`. Construct via `T::kernel(grid)` and call
+/// `.threads(n)` to set the thread count.
+pub struct KernelDsl {
+    grid: Array<ffi::ir::PrimExpr>,
+    thread_extents: Array<ffi::ir::PrimExpr>,
+}
+
+impl KernelDsl {
+    /// Set the 1-D thread count (blockDim.x). Defaults to 128.
+    pub fn threads<E: IntoPrimExpr>(mut self, n: E) -> Self {
+        self.thread_extents = Array::new(vec![n.into_prim_expr(), int64_imm(1), int64_imm(1)]);
+        self
+    }
+}
+
+impl ForDsl for KernelDsl {
+    fn enter(
+        self,
+    ) -> (
+        ffi::script::ir_builder::IRBuilderFrame,
+        Array<ffi::tir::Var>,
+    ) {
+        let frame =
+            ffi::tl::KernelLaunch(self.grid, Some(self.thread_extents), empty_annotations())
+                .expect("KernelLaunch should not fail");
+
+        // frames[0..(len-4)] are the block-dimension LaunchThreadFrames;
+        // the last 4 are threadIdx.x/y/z plus the attr/block frame.
+        let all_frames = frame.get_frames();
+        let n_frames = all_frames.len();
+        let n_block = n_frames.saturating_sub(4);
+
+        let mut block_vars = Vec::new();
+        for i in 0..n_block {
+            let tir_frame = all_frames.get(i).expect("frame index must be valid");
+            let launch_frame = ffi::script::ir_builder::tir::LaunchThreadFrame::try_from(tir_frame)
+                .unwrap_or_else(|_| panic!("block frame should be a LaunchThreadFrame"));
+            block_vars.push(launch_frame.get_iter_var().get_var());
+        }
+
+        (frame.into(), Array::new(block_vars))
     }
 }
 
@@ -704,14 +847,42 @@ pub mod language {
         }
     }
 
-    pub fn parallel<E, const N: usize>(extents: [E; N]) -> ParallelDsl<E, N>
-    where
-        E: IntoPrimExpr,
-    {
+    pub fn parallel(extents: impl IntoPrimExprs) -> ParallelDsl {
         ParallelDsl {
-            extents,
+            extents: extents.into_prim_exprs(),
             annotations: empty_annotations(),
         }
+    }
+
+    /// Construct a `KernelDsl` that maps to `tl.KernelLaunch`.
+    ///
+    /// `grid` is the block-grid extent (scalar for 1-D, array/tuple for N-D).
+    /// Call `.threads(n)` to set the thread count (default 128).
+    ///
+    /// ```ignore
+    /// for bx in T::kernel(T::ceildiv(&n, block_n)).threads(128) { ... }
+    /// ```
+    pub fn kernel(grid: impl IntoPrimExprs) -> KernelDsl {
+        KernelDsl {
+            grid: grid.into_prim_exprs(),
+            thread_extents: Array::new(vec![int64_imm(128), int64_imm(1), int64_imm(1)]),
+        }
+    }
+
+    /// Create a dynamic (symbolic) integer variable, e.g. `T::dynamic("n", T::INT64)`.
+    pub fn dynamic(name: impl Into<StdString>, dtype: tvm_ffi::DLDataType) -> ffi::tir::Var {
+        let span = empty_span();
+        let name_ffi = FfiString::from(name.into().as_str());
+        let dtype_any = tvm_ffi::AnyValue::from(tvm_ffi::Any::from(dtype));
+        ffi::tir::Var(name_ffi, dtype_any, span).expect("Var construction should not fail")
+    }
+
+    /// Ceiling division: `ceildiv(a, b)` → `(a + b - 1) / b`.
+    pub fn ceildiv<A: IntoPrimExpr, B: IntoPrimExpr>(a: A, b: B) -> Expr {
+        let span = empty_span();
+        let result = ffi::tir::_OpCeilDiv(a.into_prim_expr(), b.into_prim_expr(), span)
+            .expect("CeilDiv should not fail");
+        Expr(result)
     }
 
     pub fn pipelined<S, E>(start: S, stop: E) -> PipelinedDsl<S, E>

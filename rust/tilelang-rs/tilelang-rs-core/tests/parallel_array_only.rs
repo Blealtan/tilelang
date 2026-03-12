@@ -1,6 +1,5 @@
 #[test]
-fn parallel_requires_array_input() {
+fn parallel_rejects_variadic_args() {
     let t = trybuild::TestCases::new();
-    t.compile_fail("tests/ui/parallel_tuple.rs");
     t.compile_fail("tests/ui/parallel_variadic.rs");
 }
