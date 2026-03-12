@@ -6,7 +6,8 @@ use syn::visit::{self, Visit};
 use syn::{
     parse_macro_input, parse_quote, Arm, BinOp, Block, Expr, ExprAssign, ExprBinary, ExprBlock,
     ExprClosure, ExprForLoop, ExprGroup, ExprIf, ExprLet, ExprParen, ExprReference, ExprUnary,
-    FnArg, ItemFn, Local, Pat, PatIdent, PatReference, ReturnType, Stmt, TypeReference, UnOp,
+    FnArg, ItemFn, Local, Pat, PatIdent, PatReference, PatType, ReturnType, Stmt, TypeReference,
+    UnOp,
 };
 
 #[proc_macro_attribute]
@@ -269,11 +270,100 @@ fn transform_block(block: &Block, ctx_ident: &syn::Ident) -> syn::Result<TokenSt
 
 fn transform_stmt(stmt: &Stmt, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
     match stmt {
-        Stmt::Local(local) => Ok(quote!(#local)),
+        Stmt::Local(local) => {
+            if let Some(tokens) = try_named_let_transform(local) {
+                Ok(tokens)
+            } else {
+                Ok(quote!(#local))
+            }
+        }
         Stmt::Item(item) => Ok(quote!(#item)),
         Stmt::Macro(mac) => Ok(quote!(#mac)),
         Stmt::Expr(expr, semi) => transform_stmt_expr(expr, semi.is_some(), ctx_ident),
     }
+}
+
+/// Attempt to transform `let x = expr;` into the autoref named_let pattern.
+///
+/// Matches `Pat::Ident` and `Pat::Type(Pat::Ident, ...)` bindings that have an init
+/// expression and no diverge clause (`let x = expr else { ... }`).  Ignored bindings
+/// (`let _ = …`) and `mut` bindings are left unchanged (the precheck already rejects
+/// the latter, but we guard here for safety).
+///
+/// The generated expansion is:
+/// ```ignore
+/// let x = {
+///     #[allow(unused_imports)]
+///     use ::tilelang_rs_core::PassthroughTag as _;
+///     let __val = expr;
+///     (&__val).__tl_named_tag().apply(__val, "x")
+/// };
+/// ```
+///
+/// For nameable types (e.g. `PendingBuffer`) the inherent `__tl_named_tag` takes
+/// priority and returns `NameableKind`, whose `apply` registers `Arg("x", buffer)` and
+/// returns a `Buffer`.  For all other types the blanket `PassthroughTag` impl returns
+/// `PassthroughKind`, whose generic `apply` is a no-op passthrough.
+fn try_named_let_transform(local: &Local) -> Option<TokenStream2> {
+    // Only transform if there is an init expression with no `else` diverge clause.
+    let init = local.init.as_ref()?;
+    if init.diverge.is_some() {
+        return None;
+    }
+    let expr = &init.expr;
+
+    // Extract the binding identifier and (optional) type annotation from the pattern.
+    let (var_ident, opt_ty) = match &local.pat {
+        Pat::Ident(PatIdent {
+            ident,
+            mutability: None,
+            subpat: None,
+            ..
+        }) => {
+            if ident == "_" {
+                return None;
+            }
+            (ident.clone(), None)
+        }
+        Pat::Type(PatType { pat, ty, .. }) => {
+            if let Pat::Ident(PatIdent {
+                ident,
+                mutability: None,
+                subpat: None,
+                ..
+            }) = pat.as_ref()
+            {
+                if ident == "_" {
+                    return None;
+                }
+                (ident.clone(), Some(ty.as_ref()))
+            } else {
+                return None;
+            }
+        }
+        _ => return None,
+    };
+
+    let attrs = &local.attrs;
+    let var_name = var_ident.to_string();
+    let val_ident = format_ident!("__val");
+
+    // Reconstruct the left-hand side pattern (with optional type annotation).
+    let lhs = if let Some(ty) = opt_ty {
+        quote!(#var_ident: #ty)
+    } else {
+        quote!(#var_ident)
+    };
+
+    Some(quote! {
+        #(#attrs)*
+        let #lhs = {
+            #[allow(unused_imports)]
+            use ::tilelang_rs_core::PassthroughTag as _;
+            let #val_ident = #expr;
+            (&#val_ident).__tl_named_tag().apply(#val_ident, #var_name)
+        };
+    })
 }
 
 fn transform_stmt_expr(

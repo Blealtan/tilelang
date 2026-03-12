@@ -34,16 +34,33 @@ fn logic_if_kernel() {
     }
 }
 
-/// 1-D vector_add using all Phase-2 APIs through the `#[tl_ir]` macro frontend.
-///
-/// `Tensor::new().declare(...)` is used directly in the body until Phase-3 adds
-/// automatic macro support for `T::Tensor` function parameters.
+/// 1-D vector_add using Phase-2 explicit-name APIs through the `#[tl_ir]` macro frontend.
 #[tl_ir]
 fn vector_add_kernel() {
     let n = T::dynamic("n", T::INT64);
-    let a = Tensor::new().declare(&n, T::FLOAT32, "A");
-    let b = Tensor::new().declare(&n, T::FLOAT32, "B");
-    let c = Tensor::new().declare(&n, T::FLOAT32, "C");
+    let a = Tensor::new().declare_named(&n, T::FLOAT32, "A");
+    let b = Tensor::new().declare_named(&n, T::FLOAT32, "B");
+    let c = Tensor::new().declare_named(&n, T::FLOAT32, "C");
+
+    for bx in T::kernel(T::ceildiv(&n, 2048i64)).threads(128i64) {
+        let start_x = Expr::from(&bx) * 2048i64;
+        for ix in T::parallel(2048i64) {
+            let x = start_x.clone() + &ix;
+            c.store_at(&x, a.load_at(&x) + b.load_at(&x));
+        }
+    }
+}
+
+/// 1-D vector_add using Phase-3 named_let API through the `#[tl_ir]` macro frontend.
+///
+/// `Tensor::new().declare(shape, dtype)` (no explicit name) relies on the macro's
+/// `named_let` transform to inject the binding variable's name into the IR.
+#[tl_ir]
+fn vector_add_named_let() {
+    let n = T::dynamic("n", T::INT64);
+    let a = Tensor::new().declare(&n, T::FLOAT32);
+    let b = Tensor::new().declare(&n, T::FLOAT32);
+    let c = Tensor::new().declare(&n, T::FLOAT32);
 
     for bx in T::kernel(T::ceildiv(&n, 2048i64)).threads(128i64) {
         let start_x = Expr::from(&bx) * 2048i64;
@@ -86,7 +103,7 @@ fn tl_ir_runtime_ir() -> Result<()> {
         assert!(printed.contains("T.Select"));
     }
 
-    // Phase-2 end-to-end: T::dynamic + T::ceildiv + Tensor::declare +
+    // Phase-2 end-to-end: T::dynamic + T::ceildiv + Tensor::declare_named +
     //                     T::kernel + T::parallel + Buffer::load_at/store_at
     {
         let printed = debug_print(vector_add_kernel()?);
@@ -101,6 +118,25 @@ fn tl_ir_runtime_ir() -> Result<()> {
         assert!(
             printed.contains("= A[") || printed.contains("+ B["),
             "missing load expressions"
+        );
+    }
+
+    // Phase-3 named_let: Tensor::declare without name — variable binding name
+    //                    is injected automatically by the macro transform.
+    {
+        let printed = debug_print(vector_add_named_let()?);
+        println!("{}", printed);
+        assert!(printed.contains("def vector_add_named_let("));
+        assert!(
+            printed.contains("T.match_buffer") || printed.contains("T.Buffer"),
+            "missing buffer declarations"
+        );
+        assert!(printed.contains("blockIdx.x"), "missing kernel block var");
+        assert!(printed.contains("T.parallel"), "missing parallel loop");
+        // The buffers should be named by the binding variable (a, b, c).
+        assert!(
+            printed.contains(": a") || printed.contains("\"a\"") || printed.contains("a["),
+            "buffer 'a' name not injected into IR"
         );
     }
 

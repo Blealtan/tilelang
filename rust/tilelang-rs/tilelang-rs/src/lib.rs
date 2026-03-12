@@ -25,8 +25,9 @@
 pub use tilelang_rs_core as core;
 pub use tilelang_rs_core::{
     debug_print, language, pred, runtime, Buffer, BuilderContext, DLDataTypeExt, Expr, ForDsl,
-    FromLoopVars, IntoPredExpr, IntoPrimExpr, IntoPrimExprs, KernelDsl, LocalVar, ParallelDsl,
-    PredExpr, Result, Tensor,
+    FromLoopVars, IntoPredExpr, IntoPrimExpr, IntoPrimExprs, KernelDsl, LocalVar, Nameable,
+    NameableKind, ParallelDsl, PassthroughKind, PassthroughTag, PendingBuffer, PredExpr, Result,
+    Tensor,
 };
 pub use tilelang_rs_ffi as ffi;
 pub use tilelang_rs_macros::tl_ir;

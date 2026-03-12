@@ -20,9 +20,9 @@ fn buffer_kernel_smoke_all() -> Result<()> {
         let ctx = BuilderContext::new("vector_add")?;
         ctx.with_tir_prim_func("vector_add", false, |_pf| {
             let n = T::dynamic("n", T::INT64);
-            let a = Tensor::new().declare(&n, T::FLOAT32, "A");
-            let b = Tensor::new().declare(&n, T::FLOAT32, "B");
-            let c = Tensor::new().declare(&n, T::FLOAT32, "C");
+            let a = Tensor::new().declare_named(&n, T::FLOAT32, "A");
+            let b = Tensor::new().declare_named(&n, T::FLOAT32, "B");
+            let c = Tensor::new().declare_named(&n, T::FLOAT32, "C");
 
             let grid = T::ceildiv(&n, block_n);
             ctx.for_each(T::kernel(grid).threads(128i64), |ctx, bvars| {
