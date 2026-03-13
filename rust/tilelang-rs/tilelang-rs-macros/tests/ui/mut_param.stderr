@@ -3,4 +3,4 @@ error: TLRS002: #[tl_ir] 中禁止 mut 参数与 mut 模式绑定。
  --> tests/ui/mut_param.rs:4:8
   |
 4 | fn bad(mut x: i32) {
-  |        ^^^
+  |        ^^^^^

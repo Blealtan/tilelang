@@ -1183,14 +1183,10 @@ pub mod target {
     pub use crate::_tvm_ffi_stubgen_detail::types::target::VirtualDevice;
     pub mod build {
         pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::c;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::cuda;
         pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::metal;
         pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::opencl;
         pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_c;
         pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cpp;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cuda;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cuda_without_compile;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::tilelang_cutedsl_without_compile;
         pub use crate::_tvm_ffi_stubgen_detail::functions::target::build::webgpu;
     }
 }
@@ -1215,6 +1211,32 @@ pub mod te {
     pub use crate::_tvm_ffi_stubgen_detail::types::te::Tensor;
 }
 pub mod tir {
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpAdd;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpAnd;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpCeilDiv;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpDiv;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpEQ;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpFloorDiv;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpFloorMod;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpGE;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpGT;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpIfThenElse;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpIndexDiv;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpIndexMod;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpLE;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpLT;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpLogAddExp;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMax;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMin;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMod;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMul;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpNE;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpOr;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpPow;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpSub;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpTruncDiv;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpTruncMod;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_cast;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::abs;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::bitwise_and;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::bitwise_not;
@@ -1338,32 +1360,6 @@ pub mod tir {
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::TensorIntrinRegister;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::Var;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::While;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpAdd;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpAnd;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpCeilDiv;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpDiv;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpEQ;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpFloorDiv;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpFloorMod;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpGE;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpGT;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpIfThenElse;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpIndexDiv;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpIndexMod;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpLE;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpLT;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpLogAddExp;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMax;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMin;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMod;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpMul;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpNE;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpOr;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpPow;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpSub;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpTruncDiv;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_OpTruncMod;
-    pub use crate::_tvm_ffi_stubgen_detail::functions::tir::_cast;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::EQ;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::GE;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tir::GT;
@@ -1443,20 +1439,20 @@ pub mod tir {
     pub use crate::_tvm_ffi_stubgen_detail::types::tir::LT;
     pub use crate::_tvm_ffi_stubgen_detail::types::tir::NE;
     pub mod analysis {
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::_identify_memcpy;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::calculate_allocated_bytes;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::detect_buffer_access_lca;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::detect_buffer_var_access_lca;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::expr_deep_equal;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::get_vtcm_compaction_passes;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::EstimateTIRFlops;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::GetBlockAccessRegion;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::GetBlockReadWriteRegion;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::_identify_memcpy;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::find_anchor_block;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::get_vtcm_compaction_passes;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::is_pure_function;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::verify_gpu_code;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::verify_memory;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::verify_ssa;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::EstimateTIRFlops;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::GetBlockAccessRegion;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::GetBlockReadWriteRegion;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::OOBChecker;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::UndefinedVars;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tir::analysis::VerifyWellFormed;
@@ -1756,7 +1752,6 @@ pub mod tl {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LoopUnswitching;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerDeviceKernelLaunch;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerDeviceStorageAccessInfo;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerHopperIntrin;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerIntrin;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerL2Persistent;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerLDGSTG;

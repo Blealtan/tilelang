@@ -3,4 +3,4 @@ error: TLRS004: #[tl_ir] 中禁止 host 赋值/复合赋值。
  --> tests/ui/assign.rs:6:5
   |
 6 |     x = 2;
-  |     ^
+  |     ^^^^^

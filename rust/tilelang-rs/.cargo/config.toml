@@ -1,0 +1,4 @@
+[env]
+# Pin locale so trybuild stderr snapshots are deterministic
+# regardless of the developer's system language.
+LC_ALL = { value = "C.UTF-8", force = true }
