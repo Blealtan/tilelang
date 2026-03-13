@@ -71,6 +71,23 @@ fn vector_add_named_let() {
     }
 }
 
+/// Element-wise add using `T::Tensor` parameter syntax (p3-macro-tensor-params).
+///
+/// Parameters typed `T::Tensor` are stripped from the function signature by
+/// `#[tl_ir]` and replaced with `let a = Tensor::new();` at the start of the
+/// function body. The `named_let` transform then injects the binding name "a",
+/// "b", "c" via `PendingBuffer::apply_name` when `declare` is called.
+#[tl_ir]
+fn buffer_kernel(a: T::Tensor, b: T::Tensor, c: T::Tensor) {
+    let n = T::dynamic("n", T::INT64);
+    let a = a.declare(&n, T::FLOAT32);
+    let b = b.declare(&n, T::FLOAT32);
+    let c = c.declare(&n, T::FLOAT32);
+    for i in T::serial(0i64, &n) {
+        c.store_at(&i, a.load_at(&i) + b.load_at(&i));
+    }
+}
+
 // ── tests ─────────────────────────────────────────────────────────────────────
 // Single #[test] to run all kernels sequentially.
 // KernelLaunchFrame has Python-callback global state that is not safe to use
@@ -140,5 +157,37 @@ fn tl_ir_runtime_ir() -> Result<()> {
         );
     }
 
+    Ok(())
+}
+
+/// Verify that `#[tl_ir]` correctly strips `T::Tensor` parameters and that the
+/// named_let transform injects buffer names into the resulting IR.
+///
+/// Uses `T::serial` (no KernelLaunch) so this test is safe to run concurrently.
+#[test]
+fn tl_ir_runtime_prints_buffer_ir() -> Result<()> {
+    let printed = debug_print(buffer_kernel()?);
+    println!("{}", printed);
+    assert!(
+        printed.contains("def buffer_kernel("),
+        "missing function name"
+    );
+    assert!(
+        printed.contains("T.match_buffer") || printed.contains("T.Buffer"),
+        "missing buffer declarations"
+    );
+    // The buffers should be named by the binding variable (a, b, c).
+    assert!(
+        printed.contains(": a") || printed.contains("\"a\"") || printed.contains("a["),
+        "buffer 'a' name not injected into IR"
+    );
+    assert!(
+        printed.contains(": b") || printed.contains("\"b\"") || printed.contains("b["),
+        "buffer 'b' name not injected into IR"
+    );
+    assert!(
+        printed.contains(": c") || printed.contains("\"c\"") || printed.contains("c["),
+        "buffer 'c' name not injected into IR"
+    );
     Ok(())
 }

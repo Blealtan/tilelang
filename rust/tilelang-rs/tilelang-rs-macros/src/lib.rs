@@ -238,12 +238,26 @@ fn expand_tl_ir(input: &ItemFn) -> syn::Result<TokenStream2> {
     let vis = &input.vis;
     let mut sig = input.sig.clone();
     let fn_name = sig.ident.clone();
+
+    // Collect and strip Tensor parameters before setting output type.
+    let tensor_params = extract_tensor_params(&mut sig);
+
     sig.output = ReturnType::Type(
         Default::default(),
         Box::new(parse_quote!(
             ::tilelang_rs_core::Result<::tilelang_rs_core::ffi::ir::IRModule>
         )),
     );
+
+    // Generate `let a = ::tilelang_rs_core::Tensor::new();` for each stripped param.
+    let tensor_inits: TokenStream2 = tensor_params
+        .iter()
+        .map(|ident| {
+            quote! {
+                let #ident = ::tilelang_rs_core::Tensor::new();
+            }
+        })
+        .collect();
 
     let ctx_ident = format_ident!("__ctx");
     let body = transform_block(&input.block, &ctx_ident)?;
@@ -253,11 +267,56 @@ fn expand_tl_ir(input: &ItemFn) -> syn::Result<TokenStream2> {
         #vis #sig {
             let #ctx_ident = ::tilelang_rs_core::BuilderContext::new(stringify!(#fn_name))?;
             #ctx_ident.with_tir_prim_func(stringify!(#fn_name), false, |_prim_func| {
+                #tensor_inits
                 #body
             });
             Ok(#ctx_ident.finish_ir_module())
         }
     })
+}
+
+/// Returns `true` if the type is a path whose last segment is `Tensor`.
+///
+/// This matches `Tensor`, `T::Tensor`, `tilelang_rs::Tensor`, etc.
+fn is_tensor_type(ty: &syn::Type) -> bool {
+    if let syn::Type::Path(type_path) = ty {
+        if let Some(seg) = type_path.path.segments.last() {
+            return seg.ident == "Tensor";
+        }
+    }
+    false
+}
+
+/// Remove all `fn(param: *::Tensor)` arguments from `sig.inputs` and return their names.
+///
+/// Any `FnArg::Typed` whose type path ends in `Tensor` is stripped from the signature.
+/// A `let param = ::tilelang_rs_core::Tensor::new();` initializer is injected into the
+/// function body by `expand_tl_ir` for each stripped parameter.
+fn extract_tensor_params(sig: &mut syn::Signature) -> Vec<syn::Ident> {
+    let mut tensor_params = Vec::new();
+    sig.inputs = sig
+        .inputs
+        .iter()
+        .filter(|arg| {
+            if let FnArg::Typed(pat_type) = arg {
+                if is_tensor_type(&pat_type.ty) {
+                    if let Pat::Ident(PatIdent {
+                        ident,
+                        mutability: None,
+                        subpat: None,
+                        ..
+                    }) = pat_type.pat.as_ref()
+                    {
+                        tensor_params.push(ident.clone());
+                        return false;
+                    }
+                }
+            }
+            true
+        })
+        .cloned()
+        .collect();
+    tensor_params
 }
 
 fn transform_block(block: &Block, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {

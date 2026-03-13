@@ -927,6 +927,10 @@ where
 pub mod language {
     use super::*;
 
+    /// Re-export `Tensor` into the `language` module so users can write `T::Tensor`
+    /// as the parameter type in `#[tl_ir]` functions.
+    pub use super::Tensor;
+
     pub fn serial<S, E>(start: S, stop: E) -> SerialDsl<S, E>
     where
         S: IntoPrimExpr,
