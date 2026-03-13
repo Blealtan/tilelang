@@ -38,17 +38,26 @@ Use this skill when the task involves one or more of:
   - FieldGetter-based `get_*` accessors for non-layout fields (same signature)
 - `tilelang-rs-core`
   - `BuilderContext`, `FrameGuard`
-  - loop DSL and `FromLoopVars`
+  - loop DSL (`ForDsl`, `SerialDsl`, `ParallelDsl`, `KernelDsl`, `PipelinedDsl`, etc.) and `FromLoopVars`
   - predicate lowering and `if_stmt`
   - `alloc_var`, `select`
+  - `Expr` newtype with `Add`/`Sub`/`Mul`/`Div` operator overloads
+  - `IntoPrimExpr` / `IntoPrimExprs` conversion traits (scalar, array `[T;N]`, tuple variants)
+  - `Tensor` (placeholder) → `PendingBuffer` → `Buffer` two-phase buffer API
+  - `Nameable` + autoref named_let specialization (`NameableKind` / `PassthroughKind`)
+  - `DLDataTypeExt` trait and full dtype constant set (`T::FLOAT32`, `T::INT64`, etc.)
+  - `language` module: `T::dynamic`, `T::ceildiv`, `T::kernel`, `T::parallel`, `T::serial`, etc.
   - runtime autoload in `runtime.rs`
 - `tilelang-rs-macros`
-  - `#[tl_ir]` precheck
-  - function wrapping
-  - `for` / `if` AST rewrite
+  - `#[tl_ir]` precheck (rejects `let mut`, `&mut`, host assignments)
+  - function wrapping (adds `Result<IRModule>` return, `BuilderContext::new`)
+  - `T::Tensor` parameter stripping → `Tensor::new()` init injection
+  - `for` / `if` AST rewrite (`for_each`, `if_stmt`)
+  - `named_let` transform: `let x = expr;` → autoref `__tl_named_tag().apply(val, "x")`
 - `tilelang-rs`
-  - public re-exports
-  - examples and integration tests
+  - public re-exports of all core types and macros
+  - `examples/add_ir.rs`: canonical 1-D vector_add using the full DSL
+  - integration tests
 
 ## Development Workflow
 
@@ -73,6 +82,46 @@ cargo test -p tilelang-rs -- --nocapture
 ./scripts/test_frontend.sh
 ```
 
+## Key DSL APIs (phase4)
+
+### Buffer lifecycle
+```rust
+// T::Tensor parameter (stripped by macro) → declare with named_let
+#[tl_ir]
+fn kernel(a: T::Tensor, b: T::Tensor, c: T::Tensor) {
+    let n = T::dynamic("n", T::INT64);   // symbolic Var
+    let a = a.declare(&n, T::FLOAT32);   // named_let → Arg("a", buffer)
+    let b = b.declare(&n, T::FLOAT32);
+    let c = c.declare(&n, T::FLOAT32);
+    // ...
+}
+
+// Explicit name variant (no named_let needed):
+let a = Tensor::new().declare_named(&n, T::FLOAT32, "A");
+```
+
+### Arithmetic expressions
+```rust
+let start_x = Expr::from(&bx) * block_n;  // Var → Expr, then Expr * i64
+let x = start_x + &ix;                    // Expr + &Var (no clone needed with FnOnce)
+c.store_at(&x, a.load_at(&x) + b.load_at(&x));
+```
+
+### Loop types
+```rust
+for i in T::serial(0i64, &n) { ... }
+for v in T::parallel(2048i64) { ... }
+for (i, j) in T::parallel([m, n]) { ... }
+for bx in T::kernel(T::ceildiv(&n, 2048i64)).threads(128i64) { ... }
+for i in T::pipelined(0i64, &n).num_stages(2) { ... }
+```
+
+### Predicates
+```rust
+if i < 2i64 { ... }               // lowered to pred::lt(i, 2i64)
+if (a && !b) || c == d { ... }    // pred::and, pred::not, pred::or, pred::eq
+```
+
 ## Design Guidance
 
 - Put reusable IR-building semantics in `tilelang-rs-core`.
@@ -80,6 +129,11 @@ cargo test -p tilelang-rs -- --nocapture
 - Validate macro behavior in two layers:
   - `trybuild` for compilation and diagnostics
   - runtime IR printing tests for semantic output
+- `named_let` relies on autoref specialization: types that implement `Nameable` define
+  an inherent `__tl_named_tag(&self) -> NameableKind` method which shadows the blanket
+  `PassthroughTag` trait method. No macro changes needed to extend to new nameable types.
+- `FnOnce` closures (used by `for_each`) allow moving `Expr` values into loop bodies
+  without `.clone()` — the closure runs exactly once.
 - When changing runtime autoload:
   - preserve environment override priority
   - preserve in-tree fallback
@@ -133,3 +187,4 @@ dump_forframe_field_schemas();
 
 - File map and command checklist: [reference.md](reference.md)
 - Example task patterns and testing expectations: [examples.md](examples.md)
+- Deep design document: [rust/tilelang-rs/docs/design.md](../../../../rust/tilelang-rs/docs/design.md)
