@@ -9,7 +9,7 @@
 /// them in-place but does not set a span.  Calling `get_span()` on a
 /// TVM-internal node with a null span causes a null-pointer crash, so we only
 /// verify span tracking on nodes we explicitly construct with `empty_span()`.
-use tilelang_rs_core::{ffi, language as T, IntoPrimExpr, Result};
+use tilelang_rs_core::{IntoPrimExpr, Result, ffi, language as T};
 use tilelang_rs_macros::tl_ir;
 
 // ── kernel showing correct loop variable names ────────────────────────────────

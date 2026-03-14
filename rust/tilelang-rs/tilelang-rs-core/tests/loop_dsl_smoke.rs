@@ -1,5 +1,5 @@
 use tilelang_rs_core::{
-    debug_print, ffi, language as T, BuilderContext, FromLoopVars, IntoPrimExpr, Result,
+    BuilderContext, FromLoopVars, IntoPrimExpr, Result, debug_print, ffi, language as T,
 };
 
 fn emit_eval(expr: impl IntoPrimExpr) {

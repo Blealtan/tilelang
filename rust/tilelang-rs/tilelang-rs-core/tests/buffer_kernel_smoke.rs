@@ -4,7 +4,7 @@
 /// that each primitive works at the core level.  End-to-end macro integration
 /// lives in `tilelang-rs-macros/tests/runtime_ir.rs`.
 use tilelang_rs_core::{
-    debug_print, language as T, BuilderContext, Expr, FromLoopVars, IntoPrimExpr, Result, Tensor,
+    BuilderContext, Expr, FromLoopVars, IntoPrimExpr, Result, Tensor, debug_print, language as T,
 };
 
 fn ffi_eval(expr: tilelang_rs_core::ffi::ir::PrimExpr) {

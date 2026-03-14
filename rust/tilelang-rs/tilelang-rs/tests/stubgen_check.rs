@@ -1,4 +1,4 @@
-use tilelang_rs::{debug_print, ffi, runtime, Result};
+use tilelang_rs::{Result, debug_print, ffi, runtime};
 use tvm_ffi::DLDataTypeExt;
 
 #[test]

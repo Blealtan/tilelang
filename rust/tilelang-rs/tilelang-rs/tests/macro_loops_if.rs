@@ -1,4 +1,4 @@
-use tilelang_rs::{debug_print, language as T, tl_ir, Result};
+use tilelang_rs::{Result, debug_print, language as T, tl_ir};
 
 #[tl_ir]
 fn macro_kernel() {

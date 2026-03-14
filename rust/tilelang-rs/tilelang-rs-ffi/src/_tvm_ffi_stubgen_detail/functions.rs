@@ -18844,8 +18844,8 @@ pub mod transform {
     static FUNC_TRANSFORM_LISTCONFIGS: LazyLock<Function> = LazyLock::new(|| {
         Function::get_global("transform.ListConfigs").expect("missing global function")
     });
-    pub fn ListConfigs(
-    ) -> Result<tvm_ffi::Map<tvm_ffi::String, tvm_ffi::Map<tvm_ffi::String, tvm_ffi::String>>> {
+    pub fn ListConfigs()
+    -> Result<tvm_ffi::Map<tvm_ffi::String, tvm_ffi::Map<tvm_ffi::String, tvm_ffi::String>>> {
         let func = &*FUNC_TRANSFORM_LISTCONFIGS;
         let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<tvm_ffi::Map<tvm_ffi::String, tvm_ffi::Map<tvm_ffi::String, tvm_ffi::String>>>);
         typed()

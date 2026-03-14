@@ -1,6 +1,6 @@
 use tilelang_rs_core::{
-    debug_print, ffi, language as T, BuilderContext, Expr, FromLoopVars, IntoPrimExpr,
-    IntoPrimExprs, Result,
+    BuilderContext, Expr, FromLoopVars, IntoPrimExpr, IntoPrimExprs, Result, debug_print, ffi,
+    language as T,
 };
 
 #[test]

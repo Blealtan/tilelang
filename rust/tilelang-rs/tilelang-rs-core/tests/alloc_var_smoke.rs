@@ -1,4 +1,4 @@
-use tilelang_rs_core::{debug_print, ffi, language as T, pred, BuilderContext, Result};
+use tilelang_rs_core::{BuilderContext, Result, debug_print, ffi, language as T, pred};
 
 #[test]
 fn alloc_var_smoke_prints_local_var_updates() -> Result<()> {

@@ -1,5 +1,5 @@
 use tilelang_rs_core::{
-    ffi, language as T, BuilderContext, Expr, FromLoopVars, IntoPrimExpr, Result,
+    BuilderContext, Expr, FromLoopVars, IntoPrimExpr, Result, ffi, language as T,
 };
 
 #[test]

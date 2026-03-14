@@ -4,10 +4,10 @@ use quote::{format_ident, quote};
 use syn::spanned::Spanned;
 use syn::visit::{self, Visit};
 use syn::{
-    parse_macro_input, parse_quote, Arm, BinOp, Block, Expr, ExprAssign, ExprBinary, ExprBlock,
-    ExprClosure, ExprForLoop, ExprGroup, ExprIf, ExprLet, ExprParen, ExprReference, ExprUnary,
-    FnArg, ItemFn, Local, Pat, PatIdent, PatReference, PatType, ReturnType, Stmt, TypeReference,
-    UnOp,
+    Arm, BinOp, Block, Expr, ExprAssign, ExprBinary, ExprBlock, ExprClosure, ExprForLoop,
+    ExprGroup, ExprIf, ExprLet, ExprParen, ExprReference, ExprUnary, FnArg, ItemFn, Local, Pat,
+    PatIdent, PatReference, PatType, ReturnType, Stmt, TypeReference, UnOp, parse_macro_input,
+    parse_quote,
 };
 
 /// Emit a `set_current_span` call that records the Rust source location of `s`
@@ -290,10 +290,10 @@ fn expand_tl_ir(input: &ItemFn) -> syn::Result<TokenStream2> {
 ///
 /// This matches `Tensor`, `T::Tensor`, `tilelang_rs::Tensor`, etc.
 fn is_tensor_type(ty: &syn::Type) -> bool {
-    if let syn::Type::Path(type_path) = ty {
-        if let Some(seg) = type_path.path.segments.last() {
-            return seg.ident == "Tensor";
-        }
+    if let syn::Type::Path(type_path) = ty
+        && let Some(seg) = type_path.path.segments.last()
+    {
+        return seg.ident == "Tensor";
     }
     false
 }
@@ -309,19 +309,17 @@ fn extract_tensor_params(sig: &mut syn::Signature) -> Vec<syn::Ident> {
         .inputs
         .iter()
         .filter(|arg| {
-            if let FnArg::Typed(pat_type) = arg {
-                if is_tensor_type(&pat_type.ty) {
-                    if let Pat::Ident(PatIdent {
-                        ident,
-                        mutability: None,
-                        subpat: None,
-                        ..
-                    }) = pat_type.pat.as_ref()
-                    {
-                        tensor_params.push(ident.clone());
-                        return false;
-                    }
-                }
+            if let FnArg::Typed(pat_type) = arg
+                && is_tensor_type(&pat_type.ty)
+                && let Pat::Ident(PatIdent {
+                    ident,
+                    mutability: None,
+                    subpat: None,
+                    ..
+                }) = pat_type.pat.as_ref()
+            {
+                tensor_params.push(ident.clone());
+                return false;
             }
             true
         })
@@ -454,13 +452,7 @@ fn transform_stmt_expr(
         Expr::Group(ExprGroup { expr, .. }) | Expr::Paren(ExprParen { expr, .. }) => {
             transform_stmt_expr(expr, has_semi, ctx_ident)
         }
-        _ => {
-            if has_semi {
-                Ok(quote!(#expr;))
-            } else {
-                Ok(quote!(#expr;))
-            }
-        }
+        _ => Ok(quote!(#expr;)),
     }
 }
 

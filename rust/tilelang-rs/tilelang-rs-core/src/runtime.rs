@@ -3,7 +3,7 @@ use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
-use crate::{ffi, Result};
+use crate::{Result, ffi};
 
 const TILELANG_MODULE_ENV: &str = "TILELANG_RS_TILELANG_MODULE_PATH";
 const TVM_ENV: &str = "TILELANG_RS_TVM_PATH";
@@ -118,7 +118,7 @@ fn try_load_runtime() -> std::result::Result<LoadedRuntime, RuntimeLoadError> {
 fn load_first_available(
     missing_library: &'static str,
     candidates: &[String],
-    env_snapshot: &Vec<(&'static str, Option<String>)>,
+    env_snapshot: &[(&'static str, Option<String>)],
 ) -> std::result::Result<(tvm_ffi::Module, String), RuntimeLoadError> {
     let mut attempts = Vec::new();
     let mut last_error = None;
@@ -134,7 +134,7 @@ fn load_first_available(
     Err(RuntimeLoadError {
         missing_library,
         attempted_paths: attempts,
-        env_snapshot: env_snapshot.clone(),
+        env_snapshot: env_snapshot.to_vec(),
         suggestions: runtime_suggestions(),
         source_message: last_error.unwrap_or_else(|| "no candidate path succeeded".to_string()),
     })
@@ -185,13 +185,13 @@ fn runtime_dirs() -> Vec<PathBuf> {
         push_unique_path(&mut dirs, dir);
     }
 
-    if let Ok(exe) = env::current_exe() {
-        if let Some(parent) = exe.parent() {
-            push_unique_path(&mut dirs, parent.to_path_buf());
-            push_unique_path(&mut dirs, parent.join("lib"));
-            if let Some(grand_parent) = parent.parent() {
-                push_unique_path(&mut dirs, grand_parent.join("lib"));
-            }
+    if let Ok(exe) = env::current_exe()
+        && let Some(parent) = exe.parent()
+    {
+        push_unique_path(&mut dirs, parent.to_path_buf());
+        push_unique_path(&mut dirs, parent.join("lib"));
+        if let Some(grand_parent) = parent.parent() {
+            push_unique_path(&mut dirs, grand_parent.join("lib"));
         }
     }
 

@@ -1,4 +1,4 @@
-use tilelang_rs_core::{debug_print, language as T, Result, Tensor};
+use tilelang_rs_core::{Result, Tensor, debug_print, language as T};
 use tilelang_rs_macros::tl_ir;
 
 // ── kernels ───────────────────────────────────────────────────────────────────

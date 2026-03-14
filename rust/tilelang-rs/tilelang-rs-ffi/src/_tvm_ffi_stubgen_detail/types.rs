@@ -107,6 +107,14 @@ pub mod ffi {
             tvm_ffi::object_wrapper::FieldGetter::new("ffi.reflection.AccessPath", "step")
                 .expect("non-layout field step must be registered in TVM reflection")
         });
+        static METHOD_FFI_REFLECTION_ACCESSPATH____FFI_SHALLOW_COPY__: LazyLock<tvm_ffi::Function> =
+            LazyLock::new(|| {
+                tvm_ffi::object_wrapper::resolve_type_method(
+                    "ffi.reflection.AccessPath",
+                    "__ffi_shallow_copy__",
+                )
+                .expect("missing type method")
+            });
         static METHOD_FFI_REFLECTION_ACCESSPATH___ROOT: LazyLock<tvm_ffi::Function> =
             LazyLock::new(|| {
                 tvm_ffi::object_wrapper::resolve_type_method("ffi.reflection.AccessPath", "_root")
@@ -187,6 +195,13 @@ pub mod ffi {
                 .expect("missing type method")
             });
         impl AccessPath {
+            pub fn __ffi_shallow_copy__(&self, args: &[Any]) -> Result<Any> {
+                let func = &*METHOD_FFI_REFLECTION_ACCESSPATH____FFI_SHALLOW_COPY__;
+                let mut views: Vec<AnyView<'_>> = Vec::with_capacity(args.len() + 1);
+                views.push(AnyView::from(self as &tvm_ffi::object::ObjectRef));
+                views.extend(args.iter().map(AnyView::from));
+                func.call_packed(&views)
+            }
             pub fn _root() -> Result<crate::ffi::reflection::AccessPath> {
                 let func = &*METHOD_FFI_REFLECTION_ACCESSPATH___ROOT;
                 let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::ffi::reflection::AccessPath>);

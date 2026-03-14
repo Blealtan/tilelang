@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use tilelang_rs_core::{runtime, BuilderContext, Result};
+use tilelang_rs_core::{BuilderContext, Result, runtime};
 
 fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))

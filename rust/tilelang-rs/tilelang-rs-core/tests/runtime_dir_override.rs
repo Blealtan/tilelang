@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use tilelang_rs_core::{runtime, BuilderContext, Result};
+use tilelang_rs_core::{BuilderContext, Result, runtime};
 
 fn repo_root() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))

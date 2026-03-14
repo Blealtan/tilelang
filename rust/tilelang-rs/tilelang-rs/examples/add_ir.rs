@@ -1,4 +1,4 @@
-use tilelang_rs::{debug_print, language as T, tl_ir, Result};
+use tilelang_rs::{Result, debug_print, language as T, tl_ir};
 
 /// 1-D element-wise add: C[i] = A[i] + B[i]
 ///

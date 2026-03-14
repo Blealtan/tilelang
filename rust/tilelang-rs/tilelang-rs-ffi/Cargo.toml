@@ -2,6 +2,7 @@
 path = "../../../3rdparty/tvm/3rdparty/tvm-ffi/rust/tvm-ffi"
 
 [package]
-edition = "2021"
+edition = "2024"
+rust-version = "1.85"
 name = "tilelang-rs-ffi"
 version = "0.1.0"
