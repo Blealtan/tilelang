@@ -10,12 +10,13 @@ fn into_prim_expr_ref_impls() -> Result<()> {
         ctx.for_each(T::serial(0i64, 4i64), |_ctx, vars| {
             let i = FromLoopVars::bind1(vars);
 
-            // &Var -> PrimExpr
+            // &PendingLoopVar -> PrimExpr
             let _e1: ffi::ir::PrimExpr = (&i).into_prim_expr();
+            // PendingLoopVar -> PrimExpr (via IntoPrimExpr)
+            let raw: ffi::ir::PrimExpr = i.clone().into_prim_expr();
             // &PrimExpr -> PrimExpr
-            let raw: ffi::ir::PrimExpr = i.clone().into();
             let _e2: ffi::ir::PrimExpr = (&raw).into_prim_expr();
-            // &Expr -> PrimExpr
+            // PendingLoopVar -> Expr -> PrimExpr
             let expr = Expr::from(i.clone());
             let _e3: ffi::ir::PrimExpr = (&expr).into_prim_expr();
 

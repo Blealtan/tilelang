@@ -10,6 +10,17 @@ use syn::{
     UnOp,
 };
 
+/// Emit a `set_current_span` call that records the Rust source location of `s`
+/// in the thread-local span used by subsequent IR node construction.
+fn span_setter(s: &Span) -> TokenStream2 {
+    let lc = s.start();
+    let line = lc.line as i64;
+    let col = lc.column as i64;
+    quote! {
+        ::tilelang_rs_core::set_current_span(file!(), #line, #col);
+    }
+}
+
 #[proc_macro_attribute]
 pub fn tl_ir(_attr: TokenStream, item: TokenStream) -> TokenStream {
     let input = parse_macro_input!(item as ItemFn);
@@ -330,15 +341,21 @@ fn transform_block(block: &Block, ctx_ident: &syn::Ident) -> syn::Result<TokenSt
 fn transform_stmt(stmt: &Stmt, ctx_ident: &syn::Ident) -> syn::Result<TokenStream2> {
     match stmt {
         Stmt::Local(local) => {
-            if let Some(tokens) = try_named_let_transform(local) {
-                Ok(tokens)
+            let setter = span_setter(&local.span());
+            let body = if let Some(tokens) = try_named_let_transform(local) {
+                tokens
             } else {
-                Ok(quote!(#local))
-            }
+                quote!(#local)
+            };
+            Ok(quote! { #setter #body })
         }
         Stmt::Item(item) => Ok(quote!(#item)),
         Stmt::Macro(mac) => Ok(quote!(#mac)),
-        Stmt::Expr(expr, semi) => transform_stmt_expr(expr, semi.is_some(), ctx_ident),
+        Stmt::Expr(expr, semi) => {
+            let setter = span_setter(&expr.span());
+            let body = transform_stmt_expr(expr, semi.is_some(), ctx_ident)?;
+            Ok(quote! { #setter #body })
+        }
     }
 }
 
@@ -484,27 +501,74 @@ fn transform_for_loop(for_loop: &ExprForLoop, ctx_ident: &syn::Ident) -> syn::Re
     })
 }
 
+/// Emit the named-let binding for one loop variable.
+///
+/// `raw_var_expr` must evaluate to a `PendingLoopVar` (the direct return value
+/// of [`FromLoopVars::bind*`]).  Generates:
+///
+/// ```ignore
+/// let <ident> = {
+///     #[allow(unused_imports)]
+///     use ::tilelang_rs_core::PassthroughTag as _;
+///     let __val = raw_var_expr;   // PendingLoopVar from bind*
+///     (&__val).__tl_named_tag().apply(__val, "ident")
+/// };
+/// ```
+fn named_loop_var_binding(pat: &Pat, var_name: &str, raw_var_expr: TokenStream2) -> TokenStream2 {
+    quote! {
+        let #pat = {
+            #[allow(unused_imports)]
+            use ::tilelang_rs_core::PassthroughTag as _;
+            let __val = #raw_var_expr;
+            (&__val).__tl_named_tag().apply(__val, #var_name)
+        };
+    }
+}
+
 fn loop_binding(pat: &Pat, vars_ident: &syn::Ident) -> syn::Result<TokenStream2> {
     match pat {
-        Pat::Ident(_) => Ok(quote! {
-            let #pat = ::tilelang_rs_core::FromLoopVars::bind1(#vars_ident);
-        }),
+        Pat::Ident(pat_ident) => {
+            let var_name = pat_ident.ident.to_string();
+            let raw = quote! { ::tilelang_rs_core::FromLoopVars::bind1(#vars_ident) };
+            Ok(named_loop_var_binding(pat, &var_name, raw))
+        }
         Pat::Tuple(tuple) => {
             let arity = tuple.elems.len();
+            if !(2..=4).contains(&arity) {
+                return Err(syn::Error::new(
+                    tuple.span(),
+                    "#[tl_ir] 目前仅支持单变量循环绑定或 2-4 元组绑定。",
+                ));
+            }
+
             let bind_fn = match arity {
                 2 => format_ident!("bind2"),
                 3 => format_ident!("bind3"),
-                4 => format_ident!("bind4"),
-                _ => {
-                    return Err(syn::Error::new(
-                        tuple.span(),
-                        "#[tl_ir] 目前仅支持单变量循环绑定或 2-4 元组绑定。",
-                    ))
-                }
+                _ => format_ident!("bind4"),
             };
-            Ok(quote! {
-                let #pat = ::tilelang_rs_core::FromLoopVars::#bind_fn(#vars_ident);
-            })
+
+            // Generate temporary names for each raw Var from bind*.
+            let tmp_idents: Vec<syn::Ident> =
+                (0..arity).map(|i| format_ident!("__tup_{}", i)).collect();
+
+            // Destructure bind* into temporaries.
+            let bind_stmt = quote! {
+                let (#(#tmp_idents),*) =
+                    ::tilelang_rs_core::FromLoopVars::#bind_fn(#vars_ident);
+            };
+
+            // Generate a named-let binding for each element.
+            let mut bindings = bind_stmt;
+            for (i, elem_pat) in tuple.elems.iter().enumerate() {
+                let var_name = match elem_pat {
+                    Pat::Ident(pi) => pi.ident.to_string(),
+                    _ => "_".to_string(),
+                };
+                let tmp = &tmp_idents[i];
+                let raw = quote! { #tmp };
+                bindings.extend(named_loop_var_binding(elem_pat, &var_name, raw));
+            }
+            Ok(bindings)
         }
         _ => Err(syn::Error::new(
             pat.span(),

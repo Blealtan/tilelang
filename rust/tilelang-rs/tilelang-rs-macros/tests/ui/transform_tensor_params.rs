@@ -1,5 +1,5 @@
 #![allow(unused_imports)]
-use tilelang_rs_core::{language as T, Expr, Tensor};
+use tilelang_rs_core::{language as T, Tensor};
 use tilelang_rs_macros::tl_ir;
 
 // Target expansion shape for Tensor params:
@@ -28,6 +28,8 @@ fn kernel_t_tensor(a: T::Tensor, b: T::Tensor, c: T::Tensor) {
 }
 
 /// Using bare `Tensor` for parameter type annotation.
+///
+/// Loop variables are now `Expr` directly — no `Expr::from` needed.
 #[tl_ir]
 fn kernel_bare_tensor(a: Tensor, b: Tensor, c: Tensor) {
     let n = T::dynamic("n", T::INT64);
@@ -35,8 +37,7 @@ fn kernel_bare_tensor(a: Tensor, b: Tensor, c: Tensor) {
     let b = b.declare(&n, T::FLOAT32);
     let c = c.declare(&n, T::FLOAT32);
     for i in T::serial(0i64, &n) {
-        let x = Expr::from(&i);
-        c.store_at(&x, a.load_at(&x) + b.load_at(&x));
+        c.store_at(&i, a.load_at(&i) + b.load_at(&i));
     }
 }
 

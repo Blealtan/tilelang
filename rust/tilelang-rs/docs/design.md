@@ -130,7 +130,36 @@ The macro lowers every `for pat in expr { body }` to:
 
 ```rust
 ctx.for_each(expr, |ctx, __vars| {
-    let pat = FromLoopVars::bind1(__vars);  // or bind2/bind3/bind4 for tuples
+    // loop_binding output (single-var case):
+    let pat = {
+        #[allow(unused_imports)]
+        use ::tilelang_rs_core::PassthroughTag as _;
+        let __val = ::tilelang_rs_core::PendingLoopVar::new(
+            ::tilelang_rs_core::FromLoopVars::bind1(__vars)
+        );
+        (&__val).__tl_named_tag().apply(__val, "pat")
+    };
+    body
+});
+```
+
+For a tuple pattern `for (bx, by) in expr`, the binding becomes:
+
+```rust
+ctx.for_each(expr, |ctx, __vars| {
+    let (__tup_0, __tup_1) = ::tilelang_rs_core::FromLoopVars::bind2(__vars);
+    let bx = {
+        #[allow(unused_imports)]
+        use ::tilelang_rs_core::PassthroughTag as _;
+        let __val = ::tilelang_rs_core::PendingLoopVar::new(__tup_0);
+        (&__val).__tl_named_tag().apply(__val, "bx")
+    };
+    let by = {
+        #[allow(unused_imports)]
+        use ::tilelang_rs_core::PassthroughTag as _;
+        let __val = ::tilelang_rs_core::PendingLoopVar::new(__tup_1);
+        (&__val).__tl_named_tag().apply(__val, "by")
+    };
     body
 });
 ```
@@ -138,6 +167,27 @@ ctx.for_each(expr, |ctx, __vars| {
 Because `F: FnOnce`, the closure body runs exactly once (the IR builder records the
 loop structure, not Rust iterations).  This means an `Expr` value can be moved into
 the inner closure without `.clone()`.
+
+### 3.4 `PendingLoopVar` — Loop Variable Naming
+
+When the macro expands `for bx in T::kernel(...)`, it wraps the raw loop variable
+(named `"v"` by TVM) in a `PendingLoopVar` and runs it through `named_let`.  The
+`apply_name("bx")` call:
+
+1. Gets the loop var's dtype via `get_type_annotation()`.
+2. Creates a new `ffi::tir::Var("bx", dtype, span)`.
+3. Emits `LetStmt(raw_var, None, new_bx_var)` — visible in IR as `bx: T.int64 = v`.
+4. Enters the `LetFrame` scope and pushes the guard to a thread-local stack
+   (`PENDING_LET_FRAMES`).
+5. Returns `Expr(new_bx_var)` — the loop body uses the named var directly.
+
+`for_each` creates a `PendingLetFrameDrainer` (RAII, panic-safe) that exits all
+`LetFrame`s entered during the closure body, in LIFO order.  This ensures the
+scope nesting mirrors the source code structure.
+
+The result: loop variable names (`bx`, `ix`, etc.) appear in the generated TIR
+without any manual `Expr::from` or string annotation.  The mechanism reuses the
+same `Nameable` / `named_let` infrastructure as buffer naming.
 
 ---
 
@@ -159,10 +209,16 @@ impl<R: IntoPrimExpr> std::ops::Div<R> for Expr { ... }
 The right-hand side accepts anything that implements `IntoPrimExpr`, including
 `i64`, `Var`, `&Var`, `PrimExpr`, `&PrimExpr`, and `Expr` itself.
 
-To use arithmetic on a loop variable `bx: ffi::tir::Var`, wrap it once:
+In `#[tl_ir]` functions, loop variables are `Expr` values automatically (via
+`PendingLoopVar`), so arithmetic works directly without any wrapping:
 
 ```rust
-let start_x = Expr::from(&bx) * block_n;
+for bx in T::kernel(T::ceildiv(&n, block_n)).threads(128i64) {
+    let start_x = bx * block_n;   // Expr * i64 → Expr, no Expr::from needed
+    for ix in T::parallel(block_n) {
+        let x = start_x + ix;     // Expr + Expr → Expr
+    }
+}
 ```
 
 ---
@@ -385,3 +441,45 @@ No macro changes required.
 3. For `T.copy`: this is a `tir.Call` intrinsic; wrap it as a `Buffer` method
    or a free function in the `language` module.
 4. Update the public re-exports in `tilelang-rs/src/lib.rs`.
+
+---
+
+## 10. Span Injection — Rust Source Locations in IR
+
+All IR nodes carry a `tir.Span` that encodes source location
+(`SourceName`, `line`, `col`).  By default, nodes built without explicit span
+information use a synthetic `"tilelang-rs-core"` source with zero coordinates.
+
+The `#[tl_ir]` macro improves this by inserting a `set_current_span(file, line, col)`
+call before each statement in the lowered function body:
+
+```rust
+// User writes:
+for bx in T::kernel(...) {
+    let start_x = bx * block_n;
+}
+
+// Macro emits (conceptually):
+::tilelang_rs_core::set_current_span(file!(), 3, 4);  // before `for`
+ctx.for_each(..., |ctx, vars| {
+    ::tilelang_rs_core::set_current_span(file!(), 4, 8);  // before `let`
+    let start_x = { ... };
+});
+```
+
+`set_current_span` updates a **thread-local** `TlSpanState`.  The private
+`empty_span()` helper (used throughout `tilelang-rs-core` to construct `ffi::ir::Span`)
+reads from this state, so every IR node built after a span update inherits the
+current source location.
+
+The span information is not visible in `debug_print` output (TVM's TVMScript
+printer omits it), but it is embedded in the IR and available for downstream
+tools (debuggers, profilers, error messages).
+
+**Implementation note**: the `span-locations` feature of `proc_macro2` is required
+so that `proc_macro2::Span::start()` (returning `LineColumn`) is available in the
+macro crate.  This is set in `tilelang-rs-macros/Cargo.toml`:
+
+```toml
+proc-macro2 = { version = "1.0.106", features = ["span-locations"] }
+```

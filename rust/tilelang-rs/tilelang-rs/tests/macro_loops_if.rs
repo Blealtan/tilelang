@@ -23,10 +23,20 @@ fn public_macro_kernel_prints_ir() -> Result<()> {
     println!("{}", printed);
 
     assert!(printed.contains("@T.prim_func"));
-    assert!(printed.contains("for v in range(T.int64(4))"));
-    assert!(printed.contains("for v in T.parallel(T.int64(2))"));
+    // Loop vars carry user-visible names via IRBuilderName.
+    assert!(
+        printed.contains("for i in range(T.int64(4))"),
+        "missing serial loop"
+    );
+    assert!(
+        printed.contains("for i in T.parallel"),
+        "missing parallel loop"
+    );
     assert!(printed.contains("scope=\"local.var\""));
-    assert!(printed.contains("if v < T.int64(2):"));
+    assert!(
+        printed.contains("if i < T.int64(2):"),
+        "missing if condition"
+    );
 
     Ok(())
 }

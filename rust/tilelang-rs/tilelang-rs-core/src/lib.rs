@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::string::String as StdString;
 
 pub use tilelang_rs_ffi as ffi;
@@ -302,6 +303,90 @@ impl Nameable for PendingBuffer {
     }
 }
 
+/// A raw loop variable returned by [`FromLoopVars::bind*`] before the
+/// `named_let` transform has assigned it a meaningful IR name.
+///
+/// When used inside a `#[tl_ir]` function, the `named_let` transform converts
+///
+/// ```ignore
+/// let bx = FromLoopVars::bind1(vars);
+/// ```
+///
+/// into the autoref pattern, which calls [`Nameable::apply_name`].  That
+/// method:
+///
+/// 1. Extracts the loop variable's dtype.
+/// 2. Creates a new [`ffi::tir::Var`] with the binding name (e.g. `"bx"`).
+/// 3. Emits a `LetStmt` binding the new var to the raw loop variable.
+/// 4. Enters the resulting [`LetFrame`] scope (kept alive via thread-local
+///    [`PENDING_LET_FRAMES`] until [`for_each`] drains it).
+/// 5. Returns an [`Expr`] wrapping the new named var.
+///
+/// In direct (non-macro) API code, [`FromLoopVars::bind*`] still returns
+/// [`ffi::tir::Var`] and this type is only created explicitly by the macro.
+/// A raw loop variable produced by [`FromLoopVars::bind*`].
+///
+/// In `#[tl_ir]` code the `named_let` transform calls [`Nameable::apply_name`]
+/// automatically, emitting a `LetStmt` that binds the user name to the raw
+/// loop variable and returning an [`Expr`].
+///
+/// In direct (non-macro) API code, [`PendingLoopVar`] implements
+/// [`IntoPrimExpr`] so the raw variable can still be used in IR expressions
+/// without any naming overhead.
+#[derive(Clone)]
+pub struct PendingLoopVar {
+    var: ffi::tir::Var,
+}
+
+impl PendingLoopVar {
+    /// Autoref tag — the inherent method shadows the blanket
+    /// [`PassthroughTag`] trait impl, triggering the named_let specialization.
+    #[doc(hidden)]
+    pub fn __tl_named_tag(&self) -> NameableKind {
+        NameableKind
+    }
+}
+
+impl IntoPrimExpr for PendingLoopVar {
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self.var.into()
+    }
+}
+
+impl IntoPrimExpr for &PendingLoopVar {
+    fn into_prim_expr(self) -> ffi::ir::PrimExpr {
+        self.var.clone().into()
+    }
+}
+
+impl From<PendingLoopVar> for Expr {
+    fn from(p: PendingLoopVar) -> Self {
+        Expr(p.var.into())
+    }
+}
+
+impl From<&PendingLoopVar> for Expr {
+    fn from(p: &PendingLoopVar) -> Self {
+        Expr(p.var.clone().into())
+    }
+}
+
+impl Nameable for PendingLoopVar {
+    type Named = Expr;
+
+    fn apply_name(self, name: &str) -> Expr {
+        // Rename the ForFrame's loop var in-place via TVM's IRBuilderName,
+        // which calls `Namer::Name(var, name)` → `var->name_hint = name`.
+        // Because the ForFrame holds a reference to this same VarNode object,
+        // the For node produced when the frame exits will already carry the
+        // user-visible name — no LetStmt indirection needed.
+        ffi::script::ir_builder::IRBuilderName(FfiString::from(name), self.var.clone().into())
+            .expect("IRBuilderName should not fail");
+
+        Expr(self.var.into())
+    }
+}
+
 /// Autoref specialization tag for types that implement [`Nameable`].
 ///
 /// Returned by the **inherent** `__tl_named_tag` method on nameable types.
@@ -408,6 +493,8 @@ impl Buffer {
         .expect("BufferStore should not fail");
     }
 }
+
+// ── FrameGuard ───────────────────────────────────────────────────────────────
 
 pub struct FrameGuard {
     frame: Option<ffi::script::ir_builder::IRBuilderFrame>,
@@ -753,37 +840,62 @@ impl LocalVar {
 pub struct FromLoopVars;
 
 impl FromLoopVars {
-    pub fn bind1(vars: Array<ffi::tir::Var>) -> ffi::tir::Var {
+    pub fn bind1(vars: Array<ffi::tir::Var>) -> PendingLoopVar {
         assert_loop_vars(vars.clone(), 1);
-        vars.get(0).expect("index 0 must exist after count check")
+        PendingLoopVar {
+            var: vars.get(0).expect("index 0 must exist after count check"),
+        }
     }
 
-    pub fn bind2(vars: Array<ffi::tir::Var>) -> (ffi::tir::Var, ffi::tir::Var) {
+    pub fn bind2(vars: Array<ffi::tir::Var>) -> (PendingLoopVar, PendingLoopVar) {
         assert_loop_vars(vars.clone(), 2);
         (
-            vars.get(0).expect("index 0 must exist"),
-            vars.get(1).expect("index 1 must exist"),
+            PendingLoopVar {
+                var: vars.get(0).expect("index 0 must exist"),
+            },
+            PendingLoopVar {
+                var: vars.get(1).expect("index 1 must exist"),
+            },
         )
     }
 
-    pub fn bind3(vars: Array<ffi::tir::Var>) -> (ffi::tir::Var, ffi::tir::Var, ffi::tir::Var) {
+    pub fn bind3(vars: Array<ffi::tir::Var>) -> (PendingLoopVar, PendingLoopVar, PendingLoopVar) {
         assert_loop_vars(vars.clone(), 3);
         (
-            vars.get(0).expect("index 0 must exist"),
-            vars.get(1).expect("index 1 must exist"),
-            vars.get(2).expect("index 2 must exist"),
+            PendingLoopVar {
+                var: vars.get(0).expect("index 0 must exist"),
+            },
+            PendingLoopVar {
+                var: vars.get(1).expect("index 1 must exist"),
+            },
+            PendingLoopVar {
+                var: vars.get(2).expect("index 2 must exist"),
+            },
         )
     }
 
     pub fn bind4(
         vars: Array<ffi::tir::Var>,
-    ) -> (ffi::tir::Var, ffi::tir::Var, ffi::tir::Var, ffi::tir::Var) {
+    ) -> (
+        PendingLoopVar,
+        PendingLoopVar,
+        PendingLoopVar,
+        PendingLoopVar,
+    ) {
         assert_loop_vars(vars.clone(), 4);
         (
-            vars.get(0).expect("index 0 must exist"),
-            vars.get(1).expect("index 1 must exist"),
-            vars.get(2).expect("index 2 must exist"),
-            vars.get(3).expect("index 3 must exist"),
+            PendingLoopVar {
+                var: vars.get(0).expect("index 0 must exist"),
+            },
+            PendingLoopVar {
+                var: vars.get(1).expect("index 1 must exist"),
+            },
+            PendingLoopVar {
+                var: vars.get(2).expect("index 2 must exist"),
+            },
+            PendingLoopVar {
+                var: vars.get(3).expect("index 3 must exist"),
+            },
         )
     }
 }
@@ -1249,10 +1361,52 @@ fn scalar_index() -> Array<ffi::ir::PrimExpr> {
     Array::new(vec![int64_imm(0)])
 }
 
+// ── Thread-local current span ────────────────────────────────────────────────
+//
+// The `#[tl_ir]` macro injects `set_tl_span!(file, line, col)` calls before
+// key source constructs so that the IR nodes built from that point carry the
+// source location of the originating Rust code.
+
+/// Current source location for `#[tl_ir]` IR nodes (thread-local).
+struct TlSpanState {
+    file: &'static str,
+    line: i64,
+    col: i64,
+}
+
+thread_local! {
+    static TL_SPAN: RefCell<TlSpanState> = const {
+        RefCell::new(TlSpanState {
+            file: "tilelang-rs-core",
+            line: 0,
+            col: 0,
+        })
+    };
+}
+
+/// Update the thread-local source location used for new IR spans.
+///
+/// Called by the `set_tl_span!` macro that `#[tl_ir]` inserts before each
+/// statement.
+#[inline]
+pub fn set_current_span(file: &'static str, line: i64, col: i64) {
+    TL_SPAN.with(|s| {
+        let mut s = s.borrow_mut();
+        s.file = file;
+        s.line = line;
+        s.col = col;
+    });
+}
+
 fn empty_span() -> ffi::ir::Span {
-    let source = ffi::ir::SourceName(FfiString::from("tilelang-rs-core"))
-        .expect("SourceName construction should not fail");
-    ffi::ir::Span(source, 0, 0, 0, 0).expect("Span construction should not fail")
+    TL_SPAN.with(|s| {
+        let s = s.borrow();
+        let source = ffi::ir::SourceName(FfiString::from(s.file))
+            .expect("SourceName construction should not fail");
+        // TVM C++ Span constructor: (source, line, end_line, column, end_column).
+        ffi::ir::Span(source, s.line, s.line, s.col, s.col)
+            .expect("Span construction should not fail")
+    })
 }
 
 fn int64_imm(value: i64) -> ffi::ir::PrimExpr {

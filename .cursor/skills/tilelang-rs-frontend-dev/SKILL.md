@@ -39,6 +39,8 @@ Use this skill when the task involves one or more of:
 - `tilelang-rs-core`
   - `BuilderContext`, `FrameGuard`
   - loop DSL (`ForDsl`, `SerialDsl`, `ParallelDsl`, `KernelDsl`, `PipelinedDsl`, etc.) and `FromLoopVars`
+  - `PendingLoopVar` — wraps a raw loop `Var`, named_let → LetStmt + `Expr`
+  - `PENDING_LET_FRAMES` thread-local + `PendingLetFrameDrainer` for scope management
   - predicate lowering and `if_stmt`
   - `alloc_var`, `select`
   - `Expr` newtype with `Add`/`Sub`/`Mul`/`Div` operator overloads
@@ -47,6 +49,7 @@ Use this skill when the task involves one or more of:
   - `Nameable` + autoref named_let specialization (`NameableKind` / `PassthroughKind`)
   - `DLDataTypeExt` trait and full dtype constant set (`T::FLOAT32`, `T::INT64`, etc.)
   - `language` module: `T::dynamic`, `T::ceildiv`, `T::kernel`, `T::parallel`, `T::serial`, etc.
+  - `TL_SPAN` thread-local + `set_current_span(file, line, col)` for Rust source location in IR
   - runtime autoload in `runtime.rs`
 - `tilelang-rs-macros`
   - `#[tl_ir]` precheck (rejects `let mut`, `&mut`, host assignments)
@@ -54,6 +57,9 @@ Use this skill when the task involves one or more of:
   - `T::Tensor` parameter stripping → `Tensor::new()` init injection
   - `for` / `if` AST rewrite (`for_each`, `if_stmt`)
   - `named_let` transform: `let x = expr;` → autoref `__tl_named_tag().apply(val, "x")`
+  - `loop_binding`: wraps raw loop var in `PendingLoopVar` + named_let (→ `Expr`)
+  - span injection: `set_current_span(file!(), line, col)` before each statement
+  - requires `proc-macro2` with `span-locations` feature
 - `tilelang-rs`
   - public re-exports of all core types and macros
   - `examples/add_ir.rs`: canonical 1-D vector_add using the full DSL
@@ -82,15 +88,15 @@ cargo test -p tilelang-rs -- --nocapture
 ./scripts/test_frontend.sh
 ```
 
-## Key DSL APIs (phase4)
+## Key DSL APIs (phase5)
 
 ### Buffer lifecycle
 ```rust
 // T::Tensor parameter (stripped by macro) → declare with named_let
 #[tl_ir]
 fn kernel(a: T::Tensor, b: T::Tensor, c: T::Tensor) {
-    let n = T::dynamic("n", T::INT64);   // symbolic Var
-    let a = a.declare(&n, T::FLOAT32);   // named_let → Arg("a", buffer)
+    let n = T::dynamic("n", T::INT64);   // symbolic Expr (Var-backed)
+    let a = a.declare(&n, T::FLOAT32);   // named_let → Arg("a", buffer) → Buffer
     let b = b.declare(&n, T::FLOAT32);
     let c = c.declare(&n, T::FLOAT32);
     // ...
@@ -102,9 +108,14 @@ let a = Tensor::new().declare_named(&n, T::FLOAT32, "A");
 
 ### Arithmetic expressions
 ```rust
-let start_x = Expr::from(&bx) * block_n;  // Var → Expr, then Expr * i64
-let x = start_x + &ix;                    // Expr + &Var (no clone needed with FnOnce)
-c.store_at(&x, a.load_at(&x) + b.load_at(&x));
+// Loop vars are Expr automatically — no Expr::from needed
+for bx in T::kernel(T::ceildiv(&n, block_n)).threads(128i64) {
+    let start_x = bx * block_n;      // Expr * i64 → Expr
+    for ix in T::parallel(block_n) {
+        let x = start_x + ix;        // Expr + Expr → Expr (FnOnce: can move)
+        c.store_at(&x, a.load_at(&x) + b.load_at(&x));
+    }
+}
 ```
 
 ### Loop types
@@ -115,6 +126,14 @@ for (i, j) in T::parallel([m, n]) { ... }
 for bx in T::kernel(T::ceildiv(&n, 2048i64)).threads(128i64) { ... }
 for i in T::pipelined(0i64, &n).num_stages(2) { ... }
 ```
+
+### Loop variable naming
+Loop variables (`bx`, `ix`, etc.) automatically get meaningful names in the TIR
+via `PendingLoopVar` + `LetStmt` injection.  The macro inserts:
+```rust
+let bx: T.int64 = v  // LetStmt visible in debug_print IR
+```
+No user action required — just name the for-loop variable normally.
 
 ### Predicates
 ```rust

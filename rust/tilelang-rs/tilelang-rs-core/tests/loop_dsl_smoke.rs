@@ -2,8 +2,9 @@ use tilelang_rs_core::{
     debug_print, ffi, language as T, BuilderContext, FromLoopVars, IntoPrimExpr, Result,
 };
 
-fn emit_eval(var: ffi::tir::Var) {
-    ffi::script::ir_builder::tir::Evaluate(var.into_prim_expr()).expect("Evaluate should not fail");
+fn emit_eval(expr: impl IntoPrimExpr) {
+    ffi::script::ir_builder::tir::Evaluate(expr.into_prim_expr())
+        .expect("Evaluate should not fail");
 }
 
 #[test]

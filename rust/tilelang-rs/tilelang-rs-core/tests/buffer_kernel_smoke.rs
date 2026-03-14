@@ -27,7 +27,7 @@ fn buffer_kernel_smoke_all() -> Result<()> {
             let grid = T::ceildiv(&n, block_n);
             ctx.for_each(T::kernel(grid).threads(128i64), |ctx, bvars| {
                 let bx = FromLoopVars::bind1(bvars);
-                let start_x = Expr::from(&bx) * block_n;
+                let start_x = Expr::from(bx) * block_n;
                 ctx.for_each(T::parallel(block_n), |_ctx, ivars| {
                     let ix = FromLoopVars::bind1(ivars);
                     let x = start_x.clone() + &ix;
