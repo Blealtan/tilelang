@@ -29,14 +29,16 @@ public:
   int strideA_, strideB_;
   int offsetA_, offsetB_;
   PrimExpr clearAccum_ = const_false();
-  BufferRegion mbarRegion_;
-  tir::Buffer mbar_; // mbar is optional, only used for TCGEN5MMA
+  tir::BufferLoad mbar_; // mbar is optional, only used for TCGEN5MMA
   Array<PrimExpr> cCoords_;
   // k_pack please ref to bitblas/tl/mfma_macro_generator.py::k_pack
   // only will be enabled under cdna mfma instructions
   int kPack_ = 1;
   int wgWait_ = 0;
+  bool isWgmma_ = false;
+  bool isTcgen05_ = false;
   mutable GemmWarpPolicy policy_;
+  Map<String, ObjectRef> annotations_;
 
   TVM_FFI_DECLARE_OBJECT_INFO_FINAL("tl.GemmPy", GemmPyNode, TileOperatorNode);
 
@@ -59,12 +61,14 @@ public:
         .def_ro("offsetA", &GemmPyNode::offsetA_)
         .def_ro("offsetB", &GemmPyNode::offsetB_)
         .def_ro("clearAccum", &GemmPyNode::clearAccum_)
-        .def_ro("mbarRegion", &GemmPyNode::mbarRegion_)
         .def_ro("mbar", &GemmPyNode::mbar_)
         .def_ro("cCoords", &GemmPyNode::cCoords_)
         .def_ro("kPack", &GemmPyNode::kPack_)
         .def_ro("wgWait", &GemmPyNode::wgWait_)
-        .def_ro("policy", &GemmPyNode::policy_);
+        .def_ro("isWgmma", &GemmPyNode::isWgmma_)
+        .def_ro("isTcgen05", &GemmPyNode::isTcgen05_)
+        .def_ro("policy", &GemmPyNode::policy_)
+        .def_ro("annotations", &GemmPyNode::annotations_);
   }
 
   Stmt Lower(const LowerArgs &T, arith::Analyzer *analyzer) const override;

@@ -77,11 +77,218 @@ def __ldg(load_or_buf: BufferLoad | tir.Buffer, index: PrimExpr | int | None = N
     raise TypeError("T.__ldg expects a BufferLoad or a Buffer.")
 
 
+def access_ptr(
+    base: BufferLikeType,
+    access_type: str | int = "r",
+    *extents: PrimExpr | int | tuple[PrimExpr | int, ...] | list[PrimExpr | int],
+    offset: PrimExpr | int = 0,
+    extent: PrimExpr | int | None = None,
+    ignore_last_ndim: int = 0,
+) -> PrimExpr:
+    """Create a TileLang `tl.access_ptr` from a buffer-like base location.
+
+    This is a frontend convenience wrapper that keeps a `BufferLoad` argument
+    in the resulting call so downstream passes can recover the referenced
+    `tir.Buffer` (including strides/storage scope) *and* the `rw_mask`
+    (read/write intent) required by synchronization and safety checks.
+
+    The returned `tl.access_ptr` is expected to be lowered to
+    `tir.builtin.tvm_access_ptr` later in the TileLang compilation pipeline.
+
+    Parameters
+    ----------
+    base : BufferLikeType
+        The base location to take the address of. Supported:
+        - `tir.BufferLoad` (e.g. `A[i, j]`): pointer to that element
+        - `tir.BufferRegion`: pointer to the region minima
+        - `tir.Buffer`: pointer to the beginning of the buffer
+        - `tir.Var` with let-binding to one of the above (inside TileLang frame)
+
+    access_type : str | int
+        Access mask for the pointer. Common string forms: `"r"`, `"w"`, `"rw"`.
+        Integer bitmask is also accepted (1=read, 2=write, 3=read-write).
+
+    *extents : PrimExpr | int
+        Optional per-axis extents. When provided and `extent` is not specified,
+        the 1D `extent` passed to `tvm_access_ptr` is computed as the product of
+        the provided extents (padding leading dimensions with 1 if needed).
+
+        For example:
+        - `T.access_ptr(A[i], "r")` -> extent defaults to 1 (element pointer)
+        - `T.access_ptr(A[i], "r", 16)` -> extent=16
+        - `T.access_ptr(A[i, j], "r", m, n)` -> extent=m*n
+
+    offset : PrimExpr | int
+        Additional element offset from the base location.
+
+    extent : PrimExpr | int | None
+        Optional explicit 1D extent override (in elements). If provided, it
+        takes precedence over `*extents`.
+
+    ignore_last_ndim : int
+        If non-zero, the base linear offset is computed only over the leading
+        dimensions, ignoring the last `ignore_last_ndim` axes. This is useful
+        when treating an N-D buffer as a view of its trailing sub-tensor.
+
+    Returns
+    -------
+    ptr : PrimExpr
+        A handle-typed `tir.Call` to `tl.access_ptr`.
+    """
+
+    from tilelang.language.frame import has_let_value, get_let_value
+    from tilelang.language.utils import get_buffer_region_from_load
+
+    if isinstance(base, tir.Var) and has_let_value(base):
+        base = get_let_value(base)
+
+    # Allow passing a single list/tuple as the extents argument.
+    if len(extents) == 1 and isinstance(extents[0], (list, tuple)):
+        extents = tuple(extents[0])
+
+    def _rw_mask(access_type: str | int) -> int:
+        if isinstance(access_type, int):
+            return int(access_type)
+        if isinstance(access_type, str):
+            table = {"r": 1, "w": 2, "rw": 3}
+            if access_type not in table:
+                raise ValueError(f'Invalid access_type="{access_type}", expected one of {sorted(table.keys())}.')
+            return table[access_type]
+        raise TypeError(f"T.access_ptr access_type must be str or int, but got {type(access_type)}.")
+
+    def _index_dtype(buf: tir.Buffer) -> str:
+        if len(buf.shape) > 0:
+            return str(buf.shape[0].dtype)
+        return "int32"
+
+    # Extract underlying buffer and per-axis minima (indices).
+    inferred_region_extents: list[PrimExpr] | None = None
+    is_buffer_load_base = False
+    if isinstance(base, BufferLoad):
+        is_buffer_load_base = True
+        buf = base.buffer
+        region = get_buffer_region_from_load(base)
+        if region is not None:
+            mins = [r.min for r in region.region]
+            inferred_region_extents = [r.extent for r in region.region]
+        else:
+            mins = list(base.indices)
+    elif isinstance(base, BufferRegion):
+        buf = base.buffer
+        mins = [r.min for r in base.region]
+        inferred_region_extents = [r.extent for r in base.region]
+    elif isinstance(base, tir.Buffer):
+        buf = base
+        idx_dtype = _index_dtype(buf)
+        mins = [tir.IntImm(idx_dtype, 0) for _ in buf.shape]
+    else:
+        raise TypeError(f"T.access_ptr expects a Buffer, BufferLoad, BufferRegion, or a Var bound to one of them, but got {type(base)}.")
+
+    # Apply ignore_last_ndim by zeroing-out the ignored tail indices.
+    idx_dtype = _index_dtype(buf)
+    ignore_last_ndim = int(ignore_last_ndim)
+    if ignore_last_ndim != 0:
+        upto = max(0, len(mins) - ignore_last_ndim)
+        mins = list(mins[:upto]) + [tir.IntImm(idx_dtype, 0) for _ in range(len(mins) - upto)]
+
+    # Support non-zero `offset` only for 1D buffers in the frontend meta-op.
+    if isinstance(offset, int):
+        if offset != 0:
+            if len(mins) != 1:
+                raise ValueError(
+                    "T.access_ptr(offset!=0) is only supported for 1D buffers when emitting tl.access_ptr. "
+                    "Use explicit indexing (e.g. A[i + off]) for N-D buffers."
+                )
+            mins = [mins[0] + tir.IntImm(idx_dtype, offset)]
+    elif isinstance(offset, PrimExpr):
+        if not (isinstance(offset, tir.IntImm) and int(offset.value) == 0):
+            if len(mins) != 1:
+                raise ValueError(
+                    "T.access_ptr(offset!=0) is only supported for 1D buffers when emitting tl.access_ptr. "
+                    "Use explicit indexing (e.g. A[i + off]) for N-D buffers."
+                )
+            mins = [mins[0] + offset]
+    else:
+        raise TypeError(f"T.access_ptr offset must be int or PrimExpr, but got {type(offset)}.")
+
+    base_load = BufferLoad(buf, mins)
+
+    # Compute 1D extent (in elements).
+    extent_1d: PrimExpr
+    if extent is not None:
+        extent_1d = convert(extent)
+    elif len(extents) > 0:
+        exts = [convert(e) for e in extents]
+        if len(exts) > len(buf.shape):
+            raise ValueError(f"T.access_ptr got {len(exts)} extents for a buffer with ndim={len(buf.shape)}.")
+        if len(exts) < len(buf.shape):
+            pad = [tir.IntImm(idx_dtype, 1) for _ in range(len(buf.shape) - len(exts))]
+            exts = pad + exts
+        extent_1d = tir.IntImm(idx_dtype, 1)
+        for e in exts:
+            extent_1d = extent_1d * e
+    else:
+        # Match `tir.Buffer.access_ptr` defaults:
+        # - BufferLoad base: element pointer (extent=1)
+        # - BufferRegion base: product of region extents
+        # - Buffer base: full buffer size (product of shape)
+        if is_buffer_load_base:
+            extent_1d = tir.IntImm(idx_dtype, 1)
+        elif inferred_region_extents is not None:
+            extent_1d = tir.IntImm(idx_dtype, 1)
+            for e in inferred_region_extents:
+                extent_1d = extent_1d * convert(e)
+        else:
+            extent_1d = tir.IntImm(idx_dtype, 1)
+            for dim in buf.shape:
+                extent_1d = extent_1d * convert(dim)
+
+    return tir.call_intrin(
+        "handle",
+        tir.op.Op.get("tl.access_ptr"),
+        base_load,
+        extent_1d,
+        tir.IntImm("int32", _rw_mask(access_type)),
+    )
+
+
+def deallocate_tmem(tmem: tir.Buffer) -> None:
+    """Explicitly deallocate a TMEM buffer allocated by ``T.alloc_tmem``.
+
+    By default, TileLang inserts a TMEM deallocation automatically at the end
+    of the allocation block. Calling ``T.deallocate_tmem(buf)`` suppresses that
+    automatic tail deallocation for ``buf`` and lowers an explicit deallocation
+    at the call site instead.
+
+    Notes:
+    - The deallocation must obey the hardware TMEM rules: it should be issued by
+      the same warp that performed the allocation.
+    - Once this API is used, the buffer lifetime is user-managed for the current
+      block; deallocating too early or conditionally is the user's responsibility.
+
+    Args:
+        tmem: A TMEM buffer previously returned by ``T.alloc_tmem``.
+    """
+
+    if not isinstance(tmem, tir.Buffer):
+        raise TypeError(f"T.deallocate_tmem expects a tvm.tir.Buffer, but got {type(tmem)}.")
+    if tmem.scope() != "shared.tmem":
+        raise ValueError(f"T.deallocate_tmem expects a shared.tmem buffer, but got scope={tmem.scope()}.")
+
+    return evaluate(tir.call_intrin("handle", tir.op.Op.get("tl.deallocate_tmem"), tmem.data))
+
+
 def create_tma_descriptor(*args):
     """Create a Tensor Memory Access (TMA) descriptor.
 
-    Args:
-        *args: Variable arguments defining the TMA descriptor configuration
+    This is an internal API used by copy lowering. The argument list depends on
+    the tensor rank and encodes the full TMA descriptor configuration:
+
+        create_tma_descriptor(data_type, rank, global_addr,
+            global_shape..., global_stride..., smem_box..., smem_stride...,
+            interleave, swizzle, l2_promotion, oob_fill)
+
+    Total arguments: 7 + 4 * rank.
 
     Returns:
         tir.Call: A handle to the created TMA descriptor
@@ -89,15 +296,12 @@ def create_tma_descriptor(*args):
     return tir.call_intrin("handle", tir.op.Op.get("tl.create_tma_descriptor"), *args)
 
 
-# NOTE(wt): T.create_list_of_mbarrier and T.get_mbarrier is now only an intermediate intrinsic
-# during transforms, and won't be exposed to frontend. For creating mbarriers, please use T.alloc_barrier instead.
-
-
 def tma_load(*args):
     """Perform a Tensor Memory Access (TMA) load operation.
 
-    Args:
-        *args: Variable arguments specifying the TMA load parameters
+    This is an internal API used by copy lowering. Arguments:
+
+        tma_load(descriptor, mbarrier, smem_addr, coord_0, ..., coord_n, eviction_policy)
 
     Returns:
         tir.Call: A handle to the TMA load operation
@@ -105,40 +309,56 @@ def tma_load(*args):
     return tir.call_intrin("handle", tir.op.Op.get("tl.tma_load"), *args)
 
 
-def fence_proxy_async(*args):
-    """Create a fence for asynchronous proxy operations.
+def tma_load_2sm(*args):
+    """Perform a TMA load with 2SM (two Streaming Multiprocessors) on Blackwell.
 
-    Args:
-        *args: Variable arguments for fence configuration
+    This is an internal API. Same arguments as :func:`tma_load`, but with
+    the ``use_2cta`` annotation enabled for 2-CTA cooperative loading.
+
+    Returns:
+        tir.Call: A handle to the TMA load operation
+    """
+    return tir.call_intrin("handle", tir.op.Op.get("tl.tma_load"), *args, annotations={"use_2cta": 1})
+
+
+def fence_proxy_async():
+    """Issue a shared memory fence for asynchronous proxy operations.
+
+    Ensures that prior asynchronous operations (e.g. TMA stores) are visible
+    to subsequent memory accesses. Maps to ``fence.proxy.async.shared::cta``.
 
     Returns:
         tir.Call: A handle to the fence operation
     """
-    return tir.call_intrin("handle", tir.op.Op.get("tl.fence_proxy_async"), *args)
+    return tir.call_intrin("handle", tir.op.Op.get("tl.fence_proxy_async"))
 
 
-def tma_store_arrive(*args):
+def tma_store_arrive():
     """Signal the arrival of a TMA store operation.
 
-    Args:
-        *args: Variable arguments for the store arrival operation
+    Commits the current group of outstanding TMA store operations.
+    Maps to ``cp.async.bulk.commit_group``.
 
     Returns:
         tir.Call: A handle to the store arrive operation
     """
-    return tir.call_intrin("handle", tir.op.Op.get("tl.tma_store_arrive"), *args)
+    return tir.call_intrin("handle", tir.op.Op.get("tl.tma_store_arrive"))
 
 
-def tma_store_wait(*args):
+def tma_store_wait(count: int = 0):
     """Wait for completion of TMA store operations.
 
+    Waits until the number of outstanding TMA store groups is at most ``count``.
+    Maps to the PTX instruction ``cp.async.bulk.wait_group.read <count>``.
+
     Args:
-        *args: Variable arguments specifying which store operations to wait for
+        count (int): The maximum number of outstanding store groups allowed
+            to remain in flight. Defaults to 0 (wait for all stores to complete).
 
     Returns:
         tir.Call: A handle to the store wait operation
     """
-    return tir.call_intrin("handle", tir.op.Op.get("tl.tma_store_wait"), *args)
+    return tir.call_intrin("handle", tir.op.Op.get("tl.tma_store_wait"), count)
 
 
 def set_max_nreg(reg_count: int, is_inc: int):
@@ -189,6 +409,18 @@ def disable_warp_group_reg_alloc():
     return no_set_max_nreg()
 
 
+def ptx_arrive_cluster_barrier(mbarrier: BarrierType, cta_id: int | Var):
+    """Arrive at a shared barrier in cluster.
+
+    Args:
+        mbarrier: BarrierType
+            The memory barrier to arrive at
+        cta_id: int | Var
+            The peer CTA rank in cluster to arrive at.
+    """
+    return tir.call_intrin("handle", tir.op.Op.get("tl.ptx_arrive_cluster_barrier"), mbarrier, cta_id)
+
+
 def mbarrier_wait_parity(mbarrier: BarrierType, parity: int | Var):
     """Wait for memory barrier parity condition.
 
@@ -230,15 +462,22 @@ def mbarrier_wait_parity(mbarrier: BarrierType, parity: int | Var):
     return tir.call_intrin("handle", tir.op.Op.get("tl.mbarrier_wait_parity"), mbarrier, parity)
 
 
-def mbarrier_arrive(mbarrier: BarrierType):
+def mbarrier_arrive(mbarrier: BarrierType, cta_id: int | Var | None = None):
     """Arrive at memory barrier.
 
     Args:
         mbarrier: BarrierType
             The memory barrier to arrive at
+        cta_id: int | Var | None
+            The peer CTA rank in cluster to arrive at. (Only valid for cluster barriers)
+            If not provided, will arrive on current CTA's barrier.
     """
     mbarrier = _mbar_to_buffer_load(mbarrier)
-    return ptx_arrive_barrier(mbarrier)
+    if cta_id is not None:
+        assert mbarrier.buffer.scope() == "shared.cluster_barrier", f"mbarrier must be a cluster barrier, but got {mbarrier.buffer.scope}"
+        return ptx_arrive_cluster_barrier(mbarrier, cta_id)
+    else:
+        return ptx_arrive_barrier(mbarrier)
 
 
 def mbarrier_expect_tx(mbarrier: BarrierType, tx: int):
@@ -805,15 +1044,21 @@ def cp_async_barrier_noinc(barrier: BarrierType):
     return tir.call_intrin("handle", tir.op.Op.get("tl.ptx_cp_async_barrier_noinc"), barrier)
 
 
-def tcgen05_mma_arrive(mbar_ptr):
+def tcgen05_mma_arrive(mbar: tir.Buffer | BufferLoad | PrimExpr, arrive_2cta: bool = False):
     """Signal UMMA (TCGEN05) barrier arrival for a shared-memory mbarrier pointer.
 
     Parameters
     ----------
-    mbar_ptr : PrimExpr
-        Pointer to the mbarrier object in shared memory (e.g., Barrier*).
+    mbar: tir.Buffer | BufferLoad | PrimExpr
+        The mbarrier object in shared memory (e.g., Barrier*) or its address.
+    arrive_2cta: bool
+        Whether to also arrive at the peer CTA's barrier.
+        If set, will be lowered to umma_arrive_multicast_2x1SM.
     """
-    return tir.call_intrin("void", tir.op.Op.get("tl.tcgen05_mma_arrive"), mbar_ptr)
+    if isinstance(mbar, (tir.Buffer, BufferLoad)):
+        mbar = retrieve_ptr(mbar, access_type="rw")
+    ann = {"use_2cta": 1} if arrive_2cta else {}
+    return tir.call_intrin("void", tir.op.Op.get("tl.tcgen05_mma_arrive"), mbar, annotations=ann)
 
 
 def ptx_mma_sm70(

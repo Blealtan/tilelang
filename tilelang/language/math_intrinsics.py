@@ -333,6 +333,84 @@ def ieee_fdiv(x: PrimExpr, y: PrimExpr, rounding_mode="rn") -> PrimExpr:
     return tir.call_intrin(x.dtype, tir.op.Op.get("tl.ieee_fdiv"), x, y, rounding_mode)
 
 
+_PACKED_X2_DTYPES = frozenset({"float32x2", "bfloat16x2", "float16x2"})
+
+
+def _validate_packed_x2_args(*args: PrimExpr) -> None:
+    """Validate that all arguments are PrimExpr with a supported packed x2 dtype."""
+    for arg in args:
+        if not isinstance(arg, PrimExpr):
+            raise TypeError(f"Expected PrimExpr, got {type(arg)}: {arg}")
+        if arg.dtype not in _PACKED_X2_DTYPES:
+            raise ValueError(f"Expected dtype in {sorted(_PACKED_X2_DTYPES)}, got '{arg.dtype}'")
+
+
+# ---------------------------------------------------------------------------
+# Packed x2 element-wise operations
+#
+# All ops accept float32x2, bfloat16x2, and float16x2 operands.
+# On CUDA, the codegen emits ``tl::<op>(...)`` which resolves to the
+# appropriate C++ overload (float2, __half2, __nv_bfloat162, or the uint1
+# bridge overload used by TVM for 16-bit packed types).
+# ---------------------------------------------------------------------------
+
+
+def add2(x: PrimExpr, y: PrimExpr) -> PrimExpr:
+    """Packed element-wise add (x + y)."""
+    x = tir.convert(x)
+    y = tir.convert(y)
+    _validate_packed_x2_args(x, y)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.add2"), x, y)
+
+
+def sub2(x: PrimExpr, y: PrimExpr) -> PrimExpr:
+    """Packed element-wise subtract (x - y)."""
+    x = tir.convert(x)
+    y = tir.convert(y)
+    _validate_packed_x2_args(x, y)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.sub2"), x, y)
+
+
+def mul2(x: PrimExpr, y: PrimExpr) -> PrimExpr:
+    """Packed element-wise multiply (x * y)."""
+    x = tir.convert(x)
+    y = tir.convert(y)
+    _validate_packed_x2_args(x, y)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.mul2"), x, y)
+
+
+def fma2(x: PrimExpr, y: PrimExpr, z: PrimExpr) -> PrimExpr:
+    """Packed fused multiply-add (x * y + z)."""
+    x = tir.convert(x)
+    y = tir.convert(y)
+    z = tir.convert(z)
+    _validate_packed_x2_args(x, y, z)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.fma2"), x, y, z)
+
+
+def max2(x: PrimExpr, y: PrimExpr) -> PrimExpr:
+    """Packed element-wise maximum."""
+    x = tir.convert(x)
+    y = tir.convert(y)
+    _validate_packed_x2_args(x, y)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.max2"), x, y)
+
+
+def min2(x: PrimExpr, y: PrimExpr) -> PrimExpr:
+    """Packed element-wise minimum."""
+    x = tir.convert(x)
+    y = tir.convert(y)
+    _validate_packed_x2_args(x, y)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.min2"), x, y)
+
+
+def abs2(x: PrimExpr) -> PrimExpr:
+    """Packed element-wise absolute value."""
+    x = tir.convert(x)
+    _validate_packed_x2_args(x)
+    return tir.call_intrin(x.dtype, tir.op.Op.get("tl.abs2"), x)
+
+
 __all__ = [
     "__log",  # noqa: F401
     "__log2",  # noqa: F401
@@ -350,4 +428,11 @@ __all__ = [
     "ieee_fsqrt",  # noqa: F401
     "ieee_frsqrt",  # noqa: F401
     "ieee_fdiv",  # noqa: F401
+    "add2",  # noqa: F401
+    "sub2",  # noqa: F401
+    "mul2",  # noqa: F401
+    "fma2",  # noqa: F401
+    "max2",  # noqa: F401
+    "min2",  # noqa: F401
+    "abs2",  # noqa: F401
 ]

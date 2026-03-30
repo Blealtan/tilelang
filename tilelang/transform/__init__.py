@@ -71,6 +71,17 @@ def InjectSoftwarePipeline():
     return _ffi_api.InjectSoftwarePipeline()  # type: ignore
 
 
+def OptimizeCPAsyncSync():
+    """Optimize explicit cp.async commit/wait synchronization intrinsics.
+
+    Returns
+    -------
+    fpass : tvm.transform.Pass
+        The result pass
+    """
+    return _ffi_api.OptimizeCPAsyncSync()  # type: ignore
+
+
 def FrontendLegalize():
     """FrontendLegalize
 
@@ -214,26 +225,35 @@ def LoopUnswitching():
     return _ffi_api.LoopUnswitching()  # type: ignore
 
 
-def MultiVersionBuffer():
-    """WarpSpecializedPipeline
+def MultiVersionBuffer(barrier_only: bool = False):
+    """MultiVersionBuffer
+
+    Parameters
+    ----------
+    barrier_only : bool
+        If True, only version barrier buffers (shared.barrier scope).
+        Data buffer versioning is left to InjectSoftwarePipeline.
 
     Returns
     -------
     fpass : tvm.transform.Pass
         The result pass
     """
-    return _ffi_api.MultiVersionBuffer()  # type: ignore
+    return _ffi_api.MultiVersionBuffer(barrier_only)  # type: ignore
 
 
-def WarpSpecialized():
-    """WarpSpecializedPipeline
+def ProducerConsumerWarpSpecialized():
+    """Producer-Consumer Warp Specialization for TMA pipelines.
+
+    Splits pipelined loops with TMA loads into producer (TMA copy) and
+    consumer (compute) warp groups with mbarrier-based synchronization.
 
     Returns
     -------
     fpass : tvm.transform.Pass
         The result pass
     """
-    return _ffi_api.WarpSpecialized()  # type: ignore
+    return _ffi_api.ProducerConsumerWarpSpecialized()  # type: ignore
 
 
 def AnnotateWarpGroupRegAlloc():
@@ -251,15 +271,9 @@ def AnnotateWarpGroupRegAlloc():
     return _ffi_api.AnnotateWarpGroupRegAlloc()  # type: ignore
 
 
-def InjectTmaBarrier():
-    """InjectTmaBarrier
-
-    Returns
-    -------
-    fpass : tvm.transform.Pass
-        The result pass
-    """
-    return _ffi_api.InjectTmaBarrier()  # type: ignore
+def FuseMBarrierArriveExpectTx():
+    """Fuse simple expect_tx -> TMA issue -> arrive back into arrive_and_expect_tx."""
+    return _ffi_api.FuseMBarrierArriveExpectTx()  # type: ignore
 
 
 def InjectFenceProxy():
@@ -293,6 +307,17 @@ def LegalizeSafeMemoryAccess():
         The result pass
     """
     return _ffi_api.LegalizeSafeMemoryAccess()  # type: ignore
+
+
+def LowerAccessPtr():
+    """Lower TileLang frontend `tl.access_ptr` to `tir.builtin.tvm_access_ptr`.
+
+    Returns
+    -------
+    fpass : tvm.transform.Pass
+        The result pass
+    """
+    return _ffi_api.LowerAccessPtr()  # type: ignore
 
 
 def MakePackedAPI():
@@ -354,15 +379,28 @@ def VectorizeLoop(enable_vectorize: bool = True):
     return _ffi_api.VectorizeLoop(enable_vectorize)  # type: ignore
 
 
-def InjectPTXAsyncCopy():
-    """Rewrite global to shared memory copy on CUDA with asynchronous copy.
+def LowerPTXAsyncCopy():
+    """Lower eligible global->shared copies into PTX `cp.async` on CUDA.
+
+    When enabled (pass config `tl.enable_async_copy`, default True), this pass
+    may rewrite plain user-written global->shared `BufferStore` patterns (e.g.
+    SIMT copies in `T.Parallel`) into `tir.ptx_cp_async`, and insert
+    `tir.ptx_commit_group` + `tir.ptx_wait_group(0)` to preserve synchronous
+    semantics for normal stores. If explicit commit/wait intrinsics already
+    exist, the pass avoids duplicating them (and may insert a missing commit
+    immediately before an existing wait to cover injected `cp.async`).
 
     Returns
     -------
     fpass : tvm.transform.Pass
         The result pass
     """
-    return _ffi_api.InjectPTXAsyncCopy()  # type: ignore
+    return _ffi_api.LowerPTXAsyncCopy()  # type: ignore
+
+
+def InjectPTXAsyncCopy():
+    """Deprecated alias of `LowerPTXAsyncCopy`."""
+    return LowerPTXAsyncCopy()
 
 
 def LowerDeviceStorageAccessInfo():
@@ -464,6 +502,17 @@ def PlanAndUpdateBufferAllocationLocation():
     return _ffi_api.PlanAndUpdateBufferAllocationLocation()  # type: ignore
 
 
+def HoistGlobalBufferAllocations():
+    """Hoist global buffer allocations to the top of the block (host side).
+
+    Returns
+    -------
+    fpass : tvm.transform.Pass
+        The result pass
+    """
+    return _ffi_api.HoistGlobalBufferAllocations()  # type: ignore
+
+
 def HoistNonRestrictParams():
     return _ffi_api.HoistNonRestrictParams()  # type: ignore
 
@@ -562,3 +611,13 @@ def LowerLDGSTG():
         The result pass
     """
     return _ffi_api.LowerLDGSTG()  # type: ignore
+
+
+def LowerBlackwell2SM():
+    """Lower 2SM TCGEN5MMA and related on Blackwell target
+
+    Returns:
+        fpass : tvm.transform.Pass
+            The result pass
+    """
+    return _ffi_api.LowerBlackwell2SM()  # type: ignore

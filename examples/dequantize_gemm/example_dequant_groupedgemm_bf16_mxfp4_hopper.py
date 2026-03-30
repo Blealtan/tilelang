@@ -211,8 +211,8 @@ def matmul(
                 # Then, dequant.
                 T.call_extern(
                     func_name,
-                    T.address_of(B_local_thread[0]),
-                    T.address_of(B_dequantize_local_thread[0]),
+                    T.access_ptr(B_local_thread, "r"),
+                    T.access_ptr(B_dequantize_local_thread, "w"),
                     1,
                     dtype=out_dtype,
                 )
@@ -568,5 +568,4 @@ if __name__ == "__main__":
     parser.add_argument("--E", type=int, default=32, help="E")  # number of experts
     parser.add_argument("--tune", action="store_true", help="tune configs")
     args = parser.parse_args()
-
     main(args.M, args.N, args.K, args.scale_size, topk=args.topk, E=args.E, fast_dequant=True, with_bias=True, tune=args.tune)

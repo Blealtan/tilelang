@@ -180,8 +180,8 @@ def matmul(
                 # Then, dequant.
                 T.call_extern(
                     func_name,
-                    T.address_of(B_local_thread[0]),
-                    T.address_of(B_dequantize_local_thread[0]),
+                    T.access_ptr(B_local_thread, "r"),
+                    T.access_ptr(B_dequantize_local_thread, "w"),
                     1,
                     dtype=out_dtype,
                 )
@@ -449,6 +449,7 @@ def run_regression_perf(m=4096, n=4096, k=4096, fast_dequant=True):
         threads=256,
         split=1,
     )
+    print(kernel.get_kernel_source())
     profiler = kernel.get_profiler(tilelang.TensorSupplyType.Auto)
     return profiler.do_bench(backend="cupti")
 

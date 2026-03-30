@@ -157,11 +157,10 @@ Stmt GemmSPNode::Lower(const LowerArgs &T, arith::Analyzer *analyzer) const {
 
   std::stringstream ss;
   std::string op_name = "tl::gemm_sp_ss";
-  ICHECK((a_.scope() == "shared" || a_.scope() == "shared.dyn") &&
-         (b_.scope() == "shared" || b_.scope() == "shared.dyn"))
+  ICHECK(IsSharedBuffer(a_) && IsSharedBuffer(b_))
       << "Only support shared.dyn scope for A and B, but received "
       << a_.scope() << " and " << b_.scope();
-  ICHECK((e_.scope() == "shared" || e_.scope() == "shared.dyn"))
+  ICHECK(IsSharedBuffer(e_))
       << "Only support shared.dyn scope for E as copy from smem to rmem are "
          "delegated to cute implementation, found "
       << e_.scope();
@@ -239,26 +238,28 @@ LayoutMap GemmSPNode::InferLayout(const LayoutInferArgs &T,
                         : makeGemmFragmentC(m_, n_, m_ / warp_m, n_ / warp_n,
                                             c_->dtype.bits());
     results.Set(c_, fragment->BindThreadRange(thread_range));
-    if (a_.scope() == "shared" || a_.scope() == "shared.dyn") {
+    if (IsSharedBuffer(a_)) {
       int dim_A = a_->shape.size();
       const int64_t mat_stride = *as_const_int(a_->shape[dim_A - 2]);
       const int64_t mat_continuous = *as_const_int(a_->shape[dim_A - 1]);
-      results.Set(a_, makeGemmABLayoutHopper(mat_stride, mat_continuous,
-                                             mat_continuous, a_->dtype.bits(),
-                                             transA_ ? 1 : 2));
+      auto layout =
+          makeGemmABLayoutHopper(mat_stride, mat_continuous, mat_continuous,
+                                 a_->dtype.bits(), transA_ ? 1 : 2);
+      results.Set(a_, ExpandLayoutToMatchBuffer(layout, a_));
     } else {
       ICHECK(false) << "Not implemented";
     }
 
-    if (b_.scope() == "shared" || b_.scope() == "shared.dyn") {
+    if (IsSharedBuffer(b_)) {
       int dim_B = b_->shape.size();
       const int64_t mat_stride = *as_const_int(b_->shape[dim_B - 2]);
       const int64_t mat_continuous = *as_const_int(b_->shape[dim_B - 1]);
       const int64_t continuity =
           transB_ ? mat_continuous : mat_continuous / warp_n;
-      results.Set(b_,
-                  makeGemmABLayoutHopper(mat_stride, mat_continuous, continuity,
-                                         b_->dtype.bits(), transB_ ? 2 : 1));
+      auto layout =
+          makeGemmABLayoutHopper(mat_stride, mat_continuous, continuity,
+                                 b_->dtype.bits(), transB_ ? 2 : 1);
+      results.Set(b_, ExpandLayoutToMatchBuffer(layout, b_));
     } else {
       ICHECK(false) << "WGMMA only support B in shared.";
     }
@@ -269,12 +270,13 @@ LayoutMap GemmSPNode::InferLayout(const LayoutInferArgs &T,
                                             c_->dtype.bits());
     results.Set(c_, fragment->BindThreadRange(thread_range));
 
-    if (a_.scope() == "shared" || a_.scope() == "shared.dyn") {
+    if (IsSharedBuffer(a_)) {
       int dim_A = a_->shape.size();
       const int64_t mat_stride = *as_const_int(a_->shape[dim_A - 2]);
       const int64_t mat_continuous = *as_const_int(a_->shape[dim_A - 1]);
-      results.Set(a_, makeGemmSparseAmpereABLayout(mat_stride, mat_continuous,
-                                                   a_->dtype.bits()));
+      auto layout = makeGemmSparseAmpereABLayout(mat_stride, mat_continuous,
+                                                 a_->dtype.bits());
+      results.Set(a_, ExpandLayoutToMatchBuffer(layout, a_));
     } else if (IsFragmentBuffer(a_)) {
       // auto fragment = makeGemmFragmentA(M, N, K, M / warp_m, N / warp_n,
       //                                   A->dtype.bits(), trans_A);
@@ -283,12 +285,13 @@ LayoutMap GemmSPNode::InferLayout(const LayoutInferArgs &T,
     } else {
       ICHECK(0);
     }
-    if (b_.scope() == "shared" || b_.scope() == "shared.dyn") {
+    if (IsSharedBuffer(b_)) {
       int dim_B = b_->shape.size();
       const int64_t mat_stride = *as_const_int(b_->shape[dim_B - 2]);
       const int64_t mat_continuous = *as_const_int(b_->shape[dim_B - 1]);
-      results.Set(b_, makeGemmSparseAmpereABLayout(mat_stride, mat_continuous,
-                                                   b_->dtype.bits()));
+      auto layout = makeGemmSparseAmpereABLayout(mat_stride, mat_continuous,
+                                                 b_->dtype.bits());
+      results.Set(b_, ExpandLayoutToMatchBuffer(layout, b_));
     } else if (IsFragmentBuffer(b_)) {
       // auto fragment =
       //     makeGemmFragmentB(M, N, K, M / warp_m, N / warp_n, trans_B);

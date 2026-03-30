@@ -23,6 +23,7 @@ from tvm.runtime import Executable
 
 BEST_CONFIG_PATH = "best_config.json"
 FUNCTION_PATH = "function.pkl"
+OUT_IDX_PATH = "out_idx.json"
 LATENCY_PATH = "latency.json"
 
 # Align file names with cache/kernel_cache.py
@@ -86,6 +87,7 @@ class ProfileArgs:
         warmup: Number of warmup iterations.
         rep: Number of repetitions for timing.
         timeout: Maximum time per configuration.
+        backend: Profiler backend - "event" (CUDA events), "cupti", or "cudagraph".
         supply_type: Type of tensor supply mechanism.
         ref_prog: Reference program for correctness validation.
         supply_prog: Supply program for input tensors.
@@ -104,6 +106,7 @@ class ProfileArgs:
     warmup: int = 25
     rep: int = 100
     timeout: int = 30
+    backend: Literal["event", "cupti", "cudagraph"] = "event"
     supply_type: tilelang.TensorSupplyType = tilelang.TensorSupplyType.Auto
     ref_prog: Callable = None
     supply_prog: Callable = None
@@ -119,6 +122,7 @@ class ProfileArgs:
             "warmup": self.warmup,
             "rep": self.rep,
             "timeout": self.timeout,
+            "backend": self.backend,
             "supply_type": str(self.supply_type),
             "rtol": self.rtol,
             "atol": self.atol,
@@ -237,10 +241,16 @@ class AutotuneResult:
                     logger.debug(f"Saving kernel library to file: {kernel_lib_path}")
                 self._safe_write_file(kernel_lib_path, "wb", lambda f: f.write(self._load_binary(src_lib_path)))
             elif kernel.execution_backend == "tvm_ffi":
-                executable = kernel.adapter.executable
-                if verbose:
-                    logger.debug(f"Saving kernel executable to file: {kernel_lib_path}")
-                self._safe_write_executable(executable, kernel_lib_path)
+                if hasattr(kernel.adapter, "libpath") and kernel.adapter.libpath:
+                    src_lib_path = kernel.adapter.libpath
+                    if verbose:
+                        logger.debug(f"Copying kernel library to file: {kernel_lib_path}")
+                    self._safe_write_file(kernel_lib_path, "wb", lambda f: f.write(self._load_binary(src_lib_path)))
+                else:
+                    executable = kernel.adapter.executable
+                    if verbose:
+                        logger.debug(f"Saving kernel executable to file: {kernel_lib_path}")
+                    self._safe_write_executable(executable, kernel_lib_path)
             else:
                 src_lib_path = kernel.adapter.libpath
                 if verbose:
@@ -369,6 +379,20 @@ class AutotuneResult:
             logger.debug(f"Saving function to file: {path / FUNCTION_PATH}")
         self._safe_write_file(str(path / FUNCTION_PATH), "wb", lambda f: cloudpickle.dump(self.func, f))
 
+        # save out idx (atomic)
+        if verbose:
+            logger.debug(f"Saving out idx to file: {path / OUT_IDX_PATH}")
+        self._safe_write_file(
+            str(path / OUT_IDX_PATH),
+            "w",
+            lambda f: json.dump(
+                {
+                    "out_idx": getattr(self.func, "out_idx_override", None),
+                },
+                f,
+            ),
+        )
+
         # save ref latency (atomic)
         if verbose:
             logger.debug(f"Saving latency to file: {path / LATENCY_PATH}")
@@ -412,6 +436,12 @@ class AutotuneResult:
         with open(path / FUNCTION_PATH, "rb") as f:
             func = cloudpickle.load(f)
 
+        # load out idx
+        if verbose:
+            logger.debug(f"Loading out idx from file: {path / OUT_IDX_PATH}")
+        with open(path / OUT_IDX_PATH) as f:
+            out_idx_override = json.load(f)["out_idx"]
+
         # load latency
         if verbose:
             logger.debug(f"Loading latency from file: {path / LATENCY_PATH}")
@@ -424,7 +454,7 @@ class AutotuneResult:
             path,
             norm_target,
             compile_args.target_host,
-            compile_args.out_idx,
+            out_idx_override if out_idx_override is not None else compile_args.out_idx,
             resolved_backend,
             compile_args.pass_configs,
             None,  # compile_flags not tracked here

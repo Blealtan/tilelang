@@ -425,6 +425,7 @@ void CodeGenTileLangHIP::PrintType(DataType t, std::ostream &os) { // NOLINT(*)
 void CodeGenTileLangHIP::PrintVecBinaryOp(const std::string &op, DataType t,
                                           PrimExpr lhs, PrimExpr rhs,
                                           std::ostream &os) { // NOLINT(*)
+
   // Declare the result.
   std::string sret = name_supply_->FreshName("_");
   this->PrintIndent();
@@ -518,8 +519,8 @@ void CodeGenTileLangHIP::PrintVecElemStore(const std::string &vec, DataType t,
                                                              : 4));
   if (t.bits() == 8 && (t.is_int() || t.is_uint())) {
     if (t.lanes() == 2 || t.lanes() == 3) {
-      stream << vec << '.' << access[i % t.lanes()] << "="
-             << "(" << value << ");\n";
+      stream << vec << '.' << access[i % t.lanes()] << "=" << "(" << value
+             << ");\n";
     } else {
       std::string ac = t.lanes() == 4 ? vec : (vec + "." + access[i / 4]);
       stream << ac << "=";
@@ -566,6 +567,10 @@ void CodeGenTileLangHIP::PrintStorageSync(const CallNode *op) {
     // DO nothing.
   } else if (sync == "shared" || sync == "shared.dyn") {
     this->PrintIndent();
+    // TODO: change to __builtin_amdgcn_s_barrier() later
+    // __syncthreads() will add a vmcnt(0) to final asm, which will break all
+    // buffer_load_async and buffer_load_async...lds
+    // in tilelang vmcnt should be managed explicitly by cp_async_wait.
     this->stream << "__syncthreads();\n";
   }
 }
@@ -738,9 +743,8 @@ std::string CodeGenTileLangHIP::GetBufferRef(DataType t,
     // sizes in that case.
     int div_factor = (t.lanes() == 1) ? (32 / t.bits()) : t.lanes();
 
-    os << "*("
-       << "(" << ptr_cast(t) << vid << ")"
-       << " + " << index_str << " / " << div_factor << ")";
+    os << "*(" << "(" << ptr_cast(t) << vid << ")" << " + " << index_str
+       << " / " << div_factor << ")";
   } else if (t == buffer_element_dtype) {
     os << buffer_str << "[" << index_str << "]";
   } else {
@@ -794,10 +798,6 @@ void CodeGenTileLangHIP::VisitExpr_(const CallNode *op, std::ostream &os) {
     std::string barrier_name = "_mbarrier";
     this->stream << "__shared__ uint64_t " << barrier_name << "["
                  << barrier_count << "];\n";
-  } else if (op->op.same_as(tl::get_mbarrier())) {
-    std::string barrier_name = "_mbarrier";
-    std::string barrier_id = this->PrintExpr(op->args[0]);
-    os << barrier_name + "[" + barrier_id + "]";
   } else if (op->op.same_as(builtin::ptx_arrive_barrier())) {
     print_extern_call_stmt("tl::mbarrier_arrive");
   } else if (op->op.same_as(builtin::ptx_init_barrier_thread_count())) {
@@ -824,6 +824,34 @@ void CodeGenTileLangHIP::VisitExpr_(const CallNode *op, std::ostream &os) {
   } else if (op->op.same_as(tl::pack_b16())) {
     os << "__pack_half2(" << this->PrintExpr(op->args[0]) << ", "
        << this->PrintExpr(op->args[1]) << ")";
+  } else if (op->op.same_as(tl::add2()) || op->op.same_as(tl::sub2()) ||
+             op->op.same_as(tl::mul2()) || op->op.same_as(tl::fma2()) ||
+             op->op.same_as(tl::max2()) || op->op.same_as(tl::min2()) ||
+             op->op.same_as(tl::abs2())) {
+    // Packed x2 element-wise math intrinsics.
+    // HIP currently only supports float32x2 (float2).
+    std::string op_name;
+    if (op->op.same_as(tl::add2()))
+      op_name = "add2";
+    else if (op->op.same_as(tl::sub2()))
+      op_name = "sub2";
+    else if (op->op.same_as(tl::mul2()))
+      op_name = "mul2";
+    else if (op->op.same_as(tl::fma2()))
+      op_name = "fma2";
+    else if (op->op.same_as(tl::max2()))
+      op_name = "max2";
+    else if (op->op.same_as(tl::min2()))
+      op_name = "min2";
+    else
+      op_name = "abs2";
+
+    os << "tl::" << op_name << "(";
+    os << PrintExpr(op->args[0]);
+    for (size_t i = 1; i < op->args.size(); ++i) {
+      os << ", " << PrintExpr(op->args[i]);
+    }
+    os << ")";
   } else if (op->op.same_as(tl::__ldg())) {
     // HIP fallback: regular load
     const BufferLoadNode *bl = op->args[0].as<BufferLoadNode>();
@@ -934,7 +962,9 @@ void CodeGenTileLangHIP::VisitExpr_(const CallNode *op, std::ostream &os) {
         {"float32", "float"},
         {"float64", "double"},
         {"float16x4", "float16x4"},
+        {"float16x8", "float16x8"},
         {"bfloat16x4", "bfloat16x4_vec"},
+        {"bfloat16x8", "bfloat16x8_vec"},
         {"float32x4", "float32x4"},
         {"float8_e4m3fnuzx4", "fp8_e4_4_t"},
         {"float8_e4m3fnx4", "fp8_e4_4_t"},
@@ -964,6 +994,66 @@ void CodeGenTileLangHIP::VisitExpr_(const CallNode *op, std::ostream &os) {
     replacer.register_rule("{c_ref}", c_ref);
     replacer.register_rule("{c_bias}", c_bias);
     os << replacer.rewrite(call_mfma_code);
+  } else if (op->op.same_as(tl::tvm_rdna_wmma())) {
+    // arg 0: shape string, e.g. "f32_16x16x16_f16_w32"
+    // arg 1: A layout: "row"/"col"
+    // arg 2: B layout: "row"/"col"
+    // arg 3: A dtype, e.g. "float16x8"
+    // arg 4: B dtype
+    // arg 5: C dtype, e.g. "float32x8"
+    // arg 6: A data pointer
+    // arg 7: A element index (in units of the vectorized type)
+    // arg 8: B data pointer
+    // arg 9: B element index
+    // arg 10: C data pointer
+    // arg 11: C element index
+    ICHECK(op->args.size() == 12U) << "tvm_rdna_wmma expects 12 arguments";
+    std::string shape = Downcast<StringImm>(op->args[0])->value;
+    std::string A_layout = Downcast<StringImm>(op->args[1])->value;
+    std::string B_layout = Downcast<StringImm>(op->args[2])->value;
+    std::string A_dtype = Downcast<StringImm>(op->args[3])->value;
+    std::string B_dtype = Downcast<StringImm>(op->args[4])->value;
+    std::string C_dtype = Downcast<StringImm>(op->args[5])->value;
+    std::string a_ref = this->PrintExpr(op->args[6]);
+    std::string a_bias = this->PrintExpr(op->args[7]);
+    std::string b_ref = this->PrintExpr(op->args[8]);
+    std::string b_bias = this->PrintExpr(op->args[9]);
+    std::string c_ref = this->PrintExpr(op->args[10]);
+    std::string c_bias = this->PrintExpr(op->args[11]);
+
+    // Determine wmma builtin name from shape
+    // shape = "f32_16x16x16_f16_w32" ->
+    // "__builtin_amdgcn_wmma_f32_16x16x16_f16_w32_gfx12" For gfx12 targets use
+    // the _gfx12 suffix variant.
+    std::string wmma_builtin = "__builtin_amdgcn_wmma_" + shape + "_gfx12";
+
+    // Emit the WMMA call.
+    // Signature: v8f32 = wmma_builtin(v8f16 a, v8f16 b, v8f32 c)
+    // where v8f16 = __fp16 x 8, v8f32 = float x 8.
+    // A/B buffers hold half_t (fp16), C/D buffers hold float.
+    // Each element index accesses a packed vector of 8 elements.
+    //
+    // Using typedef'd vector types for the cast:
+    //   typedef __attribute__((__vector_size__(8 * sizeof(__fp16)))) __fp16
+    //   tl_v8f16; typedef __attribute__((__vector_size__(8 * sizeof(float))))
+    //   float tl_v8f32;
+    std::string call_wmma_code = R"({
+      typedef __attribute__((__vector_size__(8 * sizeof(__fp16)))) __fp16 tl_v8f16;
+      typedef __attribute__((__vector_size__(8 * sizeof(float)))) float tl_v8f32;
+      *((tl_v8f32*){c_ref} + {c_bias}) = {wmma_builtin}(
+          *((tl_v8f16*){a_ref} + {a_bias}),
+          *((tl_v8f16*){b_ref} + {b_bias}),
+          *((tl_v8f32*){c_ref} + {c_bias}));
+    })";
+    Replacer wmma_replacer;
+    wmma_replacer.register_rule("{wmma_builtin}", wmma_builtin);
+    wmma_replacer.register_rule("{a_ref}", a_ref);
+    wmma_replacer.register_rule("{a_bias}", a_bias);
+    wmma_replacer.register_rule("{b_ref}", b_ref);
+    wmma_replacer.register_rule("{b_bias}", b_bias);
+    wmma_replacer.register_rule("{c_ref}", c_ref);
+    wmma_replacer.register_rule("{c_bias}", c_bias);
+    os << wmma_replacer.rewrite(call_wmma_code);
   } else if (op->op.same_as(builtin::thread_return())) {
     os << "return";
   } else if (op->op.same_as(tl::tl_gemm())) {
@@ -1154,8 +1244,8 @@ void CodeGenTileLangHIP::VisitExpr_(const RampNode *op, std::ostream &os) {
   PrintType(op->dtype, os);
   os << "(";
   for (int i = 0; i < lanes; i++) {
-    os << "(" << PrintExpr(op->base) << ")"
-       << "+(" << PrintExpr(op->stride) << "*" << i << ")";
+    os << "(" << PrintExpr(op->base) << ")" << "+(" << PrintExpr(op->stride)
+       << "*" << i << ")";
     if (i != lanes - 1)
       os << ", ";
   }

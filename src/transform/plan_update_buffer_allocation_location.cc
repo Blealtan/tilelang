@@ -28,6 +28,7 @@
 #include <tvm/tir/transform.h>
 #include <tvm/tir/var.h>
 
+#include "../op/utils.h"
 #include "tir/transforms/ir_utils.h"
 
 // Forward-declare tir's var-level LCA helper which has no public header.
@@ -141,6 +142,13 @@ public:
     }
     // create buffers to be allocated at each stmts
     for (const auto &buffer : buffer_alloc_recorder) {
+      // Shared barriers must stay in their original block so the accompanying
+      // barrier_init annotation remains attached to the block that owns the
+      // initialization. Moving them into injected opaque blocks causes
+      // LowerSharedBarrier to see barrier buffers without local annotations.
+      if (IsBarrierBuffer(buffer)) {
+        continue;
+      }
       // Prefer the LCA derived from the underlying data var. If missing, fall
       // back to Buffer LCA.
       const StmtNode *stmt = nullptr;
@@ -154,9 +162,12 @@ public:
         }
       }
       if (stmt != nullptr || vit != var_lca.end()) {
+        // Skip moving allocations that are already bound to func arguments.
         if (arg_buffer_vars.count(buffer->data.get())) {
           continue;
         }
+        // Only allocate managed allocations (a.k.a ignore the ones that are not
+        // allocated outside of the block)
         if (managed_allocations_.count(buffer->data.get())) {
           alloc_buffers_[stmt].push_back(buffer);
         }
@@ -246,10 +257,18 @@ private:
   Stmt VisitStmt_(const BlockNode *op) final {
     ICHECK(!op->init.defined());
     ffi::Array<Buffer> alloc_buffers;
+    ffi::Array<Buffer> preserved_barrier_buffers;
+    for (const Buffer &buf : op->alloc_buffers) {
+      if (IsBarrierBuffer(buf)) {
+        alloc_buffers.push_back(buf);
+        preserved_barrier_buffers.push_back(buf);
+        PushBinding(buf->data, buf);
+      }
+    }
     auto it = alloc_buffers_.find(op);
     if (it != alloc_buffers_.end()) {
-      alloc_buffers = it->second;
       for (const Buffer &buf : it->second) {
+        alloc_buffers.push_back(buf);
         PushBinding(buf->data, buf);
       }
     }
@@ -275,6 +294,9 @@ private:
       for (const Buffer &buf : it->second) {
         PopBinding(buf->data);
       }
+    }
+    for (const Buffer &buf : preserved_barrier_buffers) {
+      PopBinding(buf->data);
     }
 
     ObjectPtr<BlockNode> n = CopyOnWrite(op);
@@ -328,6 +350,11 @@ private:
   ffi::Map<Var, ffi::Array<Buffer>> buffer_data_to_buffers_;
   /*! \brief Buffers that are allocated within a BlockNode, and may be moved. */
   std::unordered_set<const VarNode *> managed_allocations_;
+
+  static bool IsBarrierBuffer(const Buffer &buffer) {
+    String scope = buffer.scope();
+    return scope == "shared.barrier" || scope == "shared.cluster_barrier";
+  }
 };
 
 PrimFunc PlanAndUpdateBufferAllocationLocation(PrimFunc func) {
