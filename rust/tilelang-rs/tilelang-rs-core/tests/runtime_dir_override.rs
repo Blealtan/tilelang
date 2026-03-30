@@ -80,9 +80,9 @@ fn runtime_loads_from_runtime_dir_override() -> Result<()> {
     let lib_dir = repo_root().join("build/lib");
     let temp_dir = TempDir::new("tilelang-rs-runtime-dir").expect("temp dir should be creatable");
     let tvm_src = lib_dir.join("libtvm.so");
-    let tilelang_src = lib_dir.join("libtilelang_module.so");
+    let tilelang_src = lib_dir.join("libtilelang.so");
     let tvm_dst = temp_dir.path.join("libtvm.so");
-    let tilelang_dst = temp_dir.path.join("libtilelang_module.so");
+    let tilelang_dst = temp_dir.path.join("libtilelang.so");
 
     link_or_copy(&tvm_src, &tvm_dst).expect("tvm runtime should be linked");
     link_or_copy(&tilelang_src, &tilelang_dst).expect("tilelang runtime should be linked");

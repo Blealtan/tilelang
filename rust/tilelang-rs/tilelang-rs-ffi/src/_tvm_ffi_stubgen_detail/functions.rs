@@ -3081,323 +3081,6 @@ pub mod relax {
             typed(_0.into(), _1.into(), _2)
         }
 
-        static FUNC_RELAX_DPL_EXTERNFUNCPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.ExternFuncPattern").expect("missing global function")
-        });
-        pub fn ExternFuncPattern(
-            _0: tvm_ffi::String,
-        ) -> Result<crate::relax::dpl::ExternFuncPattern> {
-            let func = &*FUNC_RELAX_DPL_EXTERNFUNCPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::ExternFuncPattern>);
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_VARPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.VarPattern").expect("missing global function")
-        });
-        pub fn VarPattern(_0: tvm_ffi::String) -> Result<crate::relax::dpl::VarPattern> {
-            let func = &*FUNC_RELAX_DPL_VARPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::VarPattern>);
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_DATAFLOWVARPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.DataflowVarPattern").expect("missing global function")
-        });
-        pub fn DataflowVarPattern(
-            _0: tvm_ffi::String,
-        ) -> Result<crate::relax::dpl::DataflowVarPattern> {
-            let func = &*FUNC_RELAX_DPL_DATAFLOWVARPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::DataflowVarPattern>);
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_GLOBALVARPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.GlobalVarPattern").expect("missing global function")
-        });
-        pub fn GlobalVarPattern(
-            _0: tvm_ffi::String,
-        ) -> Result<crate::relax::dpl::GlobalVarPattern> {
-            let func = &*FUNC_RELAX_DPL_GLOBALVARPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::GlobalVarPattern>);
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_EXPRPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.ExprPattern").expect("missing global function")
-        });
-        pub fn ExprPattern(_0: crate::ir::RelaxExpr) -> Result<crate::relax::dpl::ExprPattern> {
-            let func = &*FUNC_RELAX_DPL_EXPRPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::ExprPattern>);
-            typed(_0.into())
-        }
-
-        static FUNC_RELAX_DPL_CONSTANTPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.ConstantPattern").expect("missing global function")
-        });
-        pub fn ConstantPattern() -> Result<crate::relax::dpl::ConstantPattern> {
-            let func = &*FUNC_RELAX_DPL_CONSTANTPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::relax::dpl::ConstantPattern>);
-            typed()
-        }
-
-        static FUNC_RELAX_DPL_CALLPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.CallPattern").expect("missing global function")
-        });
-        pub fn CallPattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-            _2: bool,
-        ) -> Result<crate::relax::dpl::CallPattern> {
-            let func = &*FUNC_RELAX_DPL_CALLPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-                    bool,
-                ) -> Result<crate::relax::dpl::CallPattern>
-            );
-            typed(_0.into(), _1, _2)
-        }
-
-        static FUNC_RELAX_DPL_PRIMARRPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.PrimArrPattern").expect("missing global function")
-        });
-        pub fn PrimArrPattern(
-            _0: tvm_ffi::Array<crate::ir::PrimExpr>,
-        ) -> Result<crate::relax::dpl::PrimArrPattern> {
-            let func = &*FUNC_RELAX_DPL_PRIMARRPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::ir::PrimExpr>,
-                ) -> Result<crate::relax::dpl::PrimArrPattern>
-            );
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_FUNCTIONPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.FunctionPattern").expect("missing global function")
-        });
-        pub fn FunctionPattern(
-            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-            _1: crate::relax::dpl::DFPattern,
-        ) -> Result<crate::relax::dpl::FunctionPattern> {
-            let func = &*FUNC_RELAX_DPL_FUNCTIONPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-                    tvm_ffi::object::ObjectRef,
-                ) -> Result<crate::relax::dpl::FunctionPattern>
-            );
-            typed(_0, _1.into())
-        }
-
-        static FUNC_RELAX_DPL_TUPLEPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.TuplePattern").expect("missing global function")
-        });
-        pub fn TuplePattern(
-            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-        ) -> Result<crate::relax::dpl::TuplePattern> {
-            let func = &*FUNC_RELAX_DPL_TUPLEPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-                ) -> Result<crate::relax::dpl::TuplePattern>
-            );
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_UNORDEREDTUPLEPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.UnorderedTuplePattern")
-                .expect("missing global function")
-        });
-        pub fn UnorderedTuplePattern(
-            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-        ) -> Result<crate::relax::dpl::UnorderedTuplePattern> {
-            let func = &*FUNC_RELAX_DPL_UNORDEREDTUPLEPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-                ) -> Result<crate::relax::dpl::UnorderedTuplePattern>
-            );
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_TUPLEGETITEMPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.TupleGetItemPattern").expect("missing global function")
-        });
-        pub fn TupleGetItemPattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: i64,
-        ) -> Result<crate::relax::dpl::TupleGetItemPattern> {
-            let func = &*FUNC_RELAX_DPL_TUPLEGETITEMPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64) -> Result<crate::relax::dpl::TupleGetItemPattern>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_RELAX_DPL_ANDPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.AndPattern").expect("missing global function")
-        });
-        pub fn AndPattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: crate::relax::dpl::DFPattern,
-        ) -> Result<crate::relax::dpl::AndPattern> {
-            let func = &*FUNC_RELAX_DPL_ANDPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::AndPattern>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_RELAX_DPL_ORPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.OrPattern").expect("missing global function")
-        });
-        pub fn OrPattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: crate::relax::dpl::DFPattern,
-        ) -> Result<crate::relax::dpl::OrPattern> {
-            let func = &*FUNC_RELAX_DPL_ORPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::OrPattern>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_RELAX_DPL_NOTPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.NotPattern").expect("missing global function")
-        });
-        pub fn NotPattern(
-            _0: crate::relax::dpl::DFPattern,
-        ) -> Result<crate::relax::dpl::NotPattern> {
-            let func = &*FUNC_RELAX_DPL_NOTPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::NotPattern>);
-            typed(_0.into())
-        }
-
-        static FUNC_RELAX_DPL_WILDCARDPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.WildcardPattern").expect("missing global function")
-        });
-        pub fn WildcardPattern() -> Result<crate::relax::dpl::WildcardPattern> {
-            let func = &*FUNC_RELAX_DPL_WILDCARDPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::relax::dpl::WildcardPattern>);
-            typed()
-        }
-
-        static FUNC_RELAX_DPL_STRUCTINFOPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.StructInfoPattern").expect("missing global function")
-        });
-        pub fn StructInfoPattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: crate::ir::StructInfo,
-        ) -> Result<crate::relax::dpl::StructInfoPattern> {
-            let func = &*FUNC_RELAX_DPL_STRUCTINFOPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::StructInfoPattern>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_RELAX_DPL_SHAPEPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.ShapePattern").expect("missing global function")
-        });
-        pub fn ShapePattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: tvm_ffi::Array<crate::ir::PrimExpr>,
-        ) -> Result<crate::relax::dpl::ShapePattern> {
-            let func = &*FUNC_RELAX_DPL_SHAPEPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::ir::PrimExpr>,
-                ) -> Result<crate::relax::dpl::ShapePattern>
-            );
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_RELAX_DPL_SAMESHAPECONSTRAINT: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.SameShapeConstraint").expect("missing global function")
-        });
-        pub fn SameShapeConstraint(
-            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-        ) -> Result<crate::relax::dpl::SameShapeConstraint> {
-            let func = &*FUNC_RELAX_DPL_SAMESHAPECONSTRAINT;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-                ) -> Result<crate::relax::dpl::SameShapeConstraint>
-            );
-            typed(_0)
-        }
-
-        static FUNC_RELAX_DPL_DATATYPEPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.DataTypePattern").expect("missing global function")
-        });
-        pub fn DataTypePattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: tvm_ffi::DLDataType,
-        ) -> Result<crate::relax::dpl::DataTypePattern> {
-            let func = &*FUNC_RELAX_DPL_DATATYPEPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::DLDataType) -> Result<crate::relax::dpl::DataTypePattern>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_RELAX_DPL_ATTRPATTERN: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.AttrPattern").expect("missing global function")
-        });
-        pub fn AttrPattern(
-            _0: crate::relax::dpl::DFPattern,
-            _1: crate::ir::DictAttrs,
-        ) -> Result<crate::relax::dpl::AttrPattern> {
-            let func = &*FUNC_RELAX_DPL_ATTRPATTERN;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::AttrPattern>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_RELAX_DPL_PATTERNSEQ: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.PatternSeq").expect("missing global function")
-        });
-        pub fn PatternSeq(
-            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-            _1: bool,
-        ) -> Result<crate::relax::dpl::PatternSeq> {
-            let func = &*FUNC_RELAX_DPL_PATTERNSEQ;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
-                    bool,
-                ) -> Result<crate::relax::dpl::PatternSeq>
-            );
-            typed(_0, _1)
-        }
-
-        static FUNC_RELAX_DPL_USED_BY: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.used_by").expect("missing global function")
-        });
-        pub fn used_by(
-            _0: crate::relax::dpl::PatternSeq,
-            _1: crate::relax::dpl::PatternSeq,
-            _2: i64,
-        ) -> Result<crate::relax::dpl::PatternSeq> {
-            let func = &*FUNC_RELAX_DPL_USED_BY;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64) -> Result<crate::relax::dpl::PatternSeq>);
-            typed(_0.into(), _1.into(), _2)
-        }
-
-        static FUNC_RELAX_DPL_ONLY_USED_BY: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("relax.dpl.only_used_by").expect("missing global function")
-        });
-        pub fn only_used_by(
-            _0: crate::relax::dpl::PatternSeq,
-            _1: crate::relax::dpl::PatternSeq,
-            _2: i64,
-        ) -> Result<crate::relax::dpl::PatternSeq> {
-            let func = &*FUNC_RELAX_DPL_ONLY_USED_BY;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64) -> Result<crate::relax::dpl::PatternSeq>);
-            typed(_0.into(), _1.into(), _2)
-        }
-
         static FUNC_RELAX_DPL_DUP_PATTERN: LazyLock<Function> = LazyLock::new(|| {
             Function::get_global("relax.dpl.dup_pattern").expect("missing global function")
         });
@@ -3453,6 +3136,323 @@ pub mod relax {
             let func = &*FUNC_RELAX_DPL_EXIT_CONTEXT;
             let typed =
                 tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<()>);
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_USED_BY: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.used_by").expect("missing global function")
+        });
+        pub fn used_by(
+            _0: crate::relax::dpl::PatternSeq,
+            _1: crate::relax::dpl::PatternSeq,
+            _2: i64,
+        ) -> Result<crate::relax::dpl::PatternSeq> {
+            let func = &*FUNC_RELAX_DPL_USED_BY;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64) -> Result<crate::relax::dpl::PatternSeq>);
+            typed(_0.into(), _1.into(), _2)
+        }
+
+        static FUNC_RELAX_DPL_ONLY_USED_BY: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.only_used_by").expect("missing global function")
+        });
+        pub fn only_used_by(
+            _0: crate::relax::dpl::PatternSeq,
+            _1: crate::relax::dpl::PatternSeq,
+            _2: i64,
+        ) -> Result<crate::relax::dpl::PatternSeq> {
+            let func = &*FUNC_RELAX_DPL_ONLY_USED_BY;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64) -> Result<crate::relax::dpl::PatternSeq>);
+            typed(_0.into(), _1.into(), _2)
+        }
+
+        static FUNC_RELAX_DPL_PATTERNSEQ: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.PatternSeq").expect("missing global function")
+        });
+        pub fn PatternSeq(
+            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+            _1: bool,
+        ) -> Result<crate::relax::dpl::PatternSeq> {
+            let func = &*FUNC_RELAX_DPL_PATTERNSEQ;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+                    bool,
+                ) -> Result<crate::relax::dpl::PatternSeq>
+            );
+            typed(_0, _1)
+        }
+
+        static FUNC_RELAX_DPL_ATTRPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.AttrPattern").expect("missing global function")
+        });
+        pub fn AttrPattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: crate::ir::DictAttrs,
+        ) -> Result<crate::relax::dpl::AttrPattern> {
+            let func = &*FUNC_RELAX_DPL_ATTRPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::AttrPattern>);
+            typed(_0.into(), _1.into())
+        }
+
+        static FUNC_RELAX_DPL_DATATYPEPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.DataTypePattern").expect("missing global function")
+        });
+        pub fn DataTypePattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: tvm_ffi::DLDataType,
+        ) -> Result<crate::relax::dpl::DataTypePattern> {
+            let func = &*FUNC_RELAX_DPL_DATATYPEPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::DLDataType) -> Result<crate::relax::dpl::DataTypePattern>);
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_RELAX_DPL_SAMESHAPECONSTRAINT: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.SameShapeConstraint").expect("missing global function")
+        });
+        pub fn SameShapeConstraint(
+            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+        ) -> Result<crate::relax::dpl::SameShapeConstraint> {
+            let func = &*FUNC_RELAX_DPL_SAMESHAPECONSTRAINT;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+                ) -> Result<crate::relax::dpl::SameShapeConstraint>
+            );
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_SHAPEPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.ShapePattern").expect("missing global function")
+        });
+        pub fn ShapePattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: tvm_ffi::Array<crate::ir::PrimExpr>,
+        ) -> Result<crate::relax::dpl::ShapePattern> {
+            let func = &*FUNC_RELAX_DPL_SHAPEPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::ir::PrimExpr>,
+                ) -> Result<crate::relax::dpl::ShapePattern>
+            );
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_RELAX_DPL_STRUCTINFOPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.StructInfoPattern").expect("missing global function")
+        });
+        pub fn StructInfoPattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: crate::ir::StructInfo,
+        ) -> Result<crate::relax::dpl::StructInfoPattern> {
+            let func = &*FUNC_RELAX_DPL_STRUCTINFOPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::StructInfoPattern>);
+            typed(_0.into(), _1.into())
+        }
+
+        static FUNC_RELAX_DPL_WILDCARDPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.WildcardPattern").expect("missing global function")
+        });
+        pub fn WildcardPattern() -> Result<crate::relax::dpl::WildcardPattern> {
+            let func = &*FUNC_RELAX_DPL_WILDCARDPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::relax::dpl::WildcardPattern>);
+            typed()
+        }
+
+        static FUNC_RELAX_DPL_NOTPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.NotPattern").expect("missing global function")
+        });
+        pub fn NotPattern(
+            _0: crate::relax::dpl::DFPattern,
+        ) -> Result<crate::relax::dpl::NotPattern> {
+            let func = &*FUNC_RELAX_DPL_NOTPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::NotPattern>);
+            typed(_0.into())
+        }
+
+        static FUNC_RELAX_DPL_ORPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.OrPattern").expect("missing global function")
+        });
+        pub fn OrPattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: crate::relax::dpl::DFPattern,
+        ) -> Result<crate::relax::dpl::OrPattern> {
+            let func = &*FUNC_RELAX_DPL_ORPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::OrPattern>);
+            typed(_0.into(), _1.into())
+        }
+
+        static FUNC_RELAX_DPL_ANDPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.AndPattern").expect("missing global function")
+        });
+        pub fn AndPattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: crate::relax::dpl::DFPattern,
+        ) -> Result<crate::relax::dpl::AndPattern> {
+            let func = &*FUNC_RELAX_DPL_ANDPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::AndPattern>);
+            typed(_0.into(), _1.into())
+        }
+
+        static FUNC_RELAX_DPL_TUPLEGETITEMPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.TupleGetItemPattern").expect("missing global function")
+        });
+        pub fn TupleGetItemPattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: i64,
+        ) -> Result<crate::relax::dpl::TupleGetItemPattern> {
+            let func = &*FUNC_RELAX_DPL_TUPLEGETITEMPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64) -> Result<crate::relax::dpl::TupleGetItemPattern>);
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_RELAX_DPL_UNORDEREDTUPLEPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.UnorderedTuplePattern")
+                .expect("missing global function")
+        });
+        pub fn UnorderedTuplePattern(
+            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+        ) -> Result<crate::relax::dpl::UnorderedTuplePattern> {
+            let func = &*FUNC_RELAX_DPL_UNORDEREDTUPLEPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+                ) -> Result<crate::relax::dpl::UnorderedTuplePattern>
+            );
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_TUPLEPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.TuplePattern").expect("missing global function")
+        });
+        pub fn TuplePattern(
+            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+        ) -> Result<crate::relax::dpl::TuplePattern> {
+            let func = &*FUNC_RELAX_DPL_TUPLEPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+                ) -> Result<crate::relax::dpl::TuplePattern>
+            );
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_FUNCTIONPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.FunctionPattern").expect("missing global function")
+        });
+        pub fn FunctionPattern(
+            _0: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+            _1: crate::relax::dpl::DFPattern,
+        ) -> Result<crate::relax::dpl::FunctionPattern> {
+            let func = &*FUNC_RELAX_DPL_FUNCTIONPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+                    tvm_ffi::object::ObjectRef,
+                ) -> Result<crate::relax::dpl::FunctionPattern>
+            );
+            typed(_0, _1.into())
+        }
+
+        static FUNC_RELAX_DPL_PRIMARRPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.PrimArrPattern").expect("missing global function")
+        });
+        pub fn PrimArrPattern(
+            _0: tvm_ffi::Array<crate::ir::PrimExpr>,
+        ) -> Result<crate::relax::dpl::PrimArrPattern> {
+            let func = &*FUNC_RELAX_DPL_PRIMARRPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::ir::PrimExpr>,
+                ) -> Result<crate::relax::dpl::PrimArrPattern>
+            );
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_CALLPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.CallPattern").expect("missing global function")
+        });
+        pub fn CallPattern(
+            _0: crate::relax::dpl::DFPattern,
+            _1: tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+            _2: bool,
+        ) -> Result<crate::relax::dpl::CallPattern> {
+            let func = &*FUNC_RELAX_DPL_CALLPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::relax::dpl::DFPattern>,
+                    bool,
+                ) -> Result<crate::relax::dpl::CallPattern>
+            );
+            typed(_0.into(), _1, _2)
+        }
+
+        static FUNC_RELAX_DPL_CONSTANTPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.ConstantPattern").expect("missing global function")
+        });
+        pub fn ConstantPattern() -> Result<crate::relax::dpl::ConstantPattern> {
+            let func = &*FUNC_RELAX_DPL_CONSTANTPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::relax::dpl::ConstantPattern>);
+            typed()
+        }
+
+        static FUNC_RELAX_DPL_EXPRPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.ExprPattern").expect("missing global function")
+        });
+        pub fn ExprPattern(_0: crate::ir::RelaxExpr) -> Result<crate::relax::dpl::ExprPattern> {
+            let func = &*FUNC_RELAX_DPL_EXPRPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::relax::dpl::ExprPattern>);
+            typed(_0.into())
+        }
+
+        static FUNC_RELAX_DPL_GLOBALVARPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.GlobalVarPattern").expect("missing global function")
+        });
+        pub fn GlobalVarPattern(
+            _0: tvm_ffi::String,
+        ) -> Result<crate::relax::dpl::GlobalVarPattern> {
+            let func = &*FUNC_RELAX_DPL_GLOBALVARPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::GlobalVarPattern>);
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_DATAFLOWVARPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.DataflowVarPattern").expect("missing global function")
+        });
+        pub fn DataflowVarPattern(
+            _0: tvm_ffi::String,
+        ) -> Result<crate::relax::dpl::DataflowVarPattern> {
+            let func = &*FUNC_RELAX_DPL_DATAFLOWVARPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::DataflowVarPattern>);
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_VARPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.VarPattern").expect("missing global function")
+        });
+        pub fn VarPattern(_0: tvm_ffi::String) -> Result<crate::relax::dpl::VarPattern> {
+            let func = &*FUNC_RELAX_DPL_VARPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::VarPattern>);
+            typed(_0)
+        }
+
+        static FUNC_RELAX_DPL_EXTERNFUNCPATTERN: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("relax.dpl.ExternFuncPattern").expect("missing global function")
+        });
+        pub fn ExternFuncPattern(
+            _0: tvm_ffi::String,
+        ) -> Result<crate::relax::dpl::ExternFuncPattern> {
+            let func = &*FUNC_RELAX_DPL_EXTERNFUNCPATTERN;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::relax::dpl::ExternFuncPattern>);
             typed(_0)
         }
     }
@@ -11840,6 +11840,405 @@ pub mod script {
         use std::sync::LazyLock;
         use tvm_ffi::{Any, AnyView, Function, Result};
 
+        static FUNC_SCRIPT_PRINTER_DOCSTRINGDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.DocStringDoc").expect("missing global function")
+        });
+        pub fn DocStringDoc(_0: tvm_ffi::String) -> Result<crate::script::printer::DocStringDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_DOCSTRINGDOC;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::script::printer::DocStringDoc>);
+            typed(_0)
+        }
+
+        static FUNC_SCRIPT_PRINTER_COMMENTDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.CommentDoc").expect("missing global function")
+        });
+        pub fn CommentDoc(_0: tvm_ffi::String) -> Result<crate::script::printer::CommentDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_COMMENTDOC;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::script::printer::CommentDoc>);
+            typed(_0)
+        }
+
+        static FUNC_SCRIPT_PRINTER_CLASSDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.ClassDoc").expect("missing global function")
+        });
+        pub fn ClassDoc(
+            _0: crate::script::printer::IdDoc,
+            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::ClassDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_CLASSDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::ClassDoc>
+            );
+            typed(_0.into(), _1, _2)
+        }
+
+        static FUNC_SCRIPT_PRINTER_FUNCTIONDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.FunctionDoc").expect("missing global function")
+        });
+        pub fn FunctionDoc(
+            _0: crate::script::printer::IdDoc,
+            _1: tvm_ffi::Array<crate::script::printer::AssignDoc>,
+            _2: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+            _3: Option<crate::script::printer::ExprDoc>,
+            _4: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::FunctionDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_FUNCTIONDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::AssignDoc>,
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                    Option<crate::script::printer::ExprDoc>,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::FunctionDoc>
+            );
+            typed(_0.into(), _1, _2, _3, _4)
+        }
+
+        static FUNC_SCRIPT_PRINTER_RETURNDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.ReturnDoc").expect("missing global function")
+        });
+        pub fn ReturnDoc(
+            _0: crate::script::printer::ExprDoc,
+        ) -> Result<crate::script::printer::ReturnDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_RETURNDOC;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::script::printer::ReturnDoc>);
+            typed(_0.into())
+        }
+
+        static FUNC_SCRIPT_PRINTER_ASSERTDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.AssertDoc").expect("missing global function")
+        });
+        pub fn AssertDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: Option<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::AssertDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_ASSERTDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    Option<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::AssertDoc>
+            );
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_SCRIPT_PRINTER_EXPRSTMTDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.ExprStmtDoc").expect("missing global function")
+        });
+        pub fn ExprStmtDoc(
+            _0: crate::script::printer::ExprDoc,
+        ) -> Result<crate::script::printer::ExprStmtDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_EXPRSTMTDOC;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::script::printer::ExprStmtDoc>);
+            typed(_0.into())
+        }
+
+        static FUNC_SCRIPT_PRINTER_SCOPEDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.ScopeDoc").expect("missing global function")
+        });
+        pub fn ScopeDoc(
+            _0: Option<crate::script::printer::ExprDoc>,
+            _1: crate::script::printer::ExprDoc,
+            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::ScopeDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_SCOPEDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    Option<crate::script::printer::ExprDoc>,
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::ScopeDoc>
+            );
+            typed(_0, _1.into(), _2)
+        }
+
+        static FUNC_SCRIPT_PRINTER_FORDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.ForDoc").expect("missing global function")
+        });
+        pub fn ForDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: crate::script::printer::ExprDoc,
+            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::ForDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_FORDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::ForDoc>
+            );
+            typed(_0.into(), _1.into(), _2)
+        }
+
+        static FUNC_SCRIPT_PRINTER_WHILEDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.WhileDoc").expect("missing global function")
+        });
+        pub fn WhileDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::WhileDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_WHILEDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::WhileDoc>
+            );
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_SCRIPT_PRINTER_IFDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.IfDoc").expect("missing global function")
+        });
+        pub fn IfDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::IfDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_IFDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::IfDoc>
+            );
+            typed(_0.into(), _1, _2)
+        }
+
+        static FUNC_SCRIPT_PRINTER_ASSIGNDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.AssignDoc").expect("missing global function")
+        });
+        pub fn AssignDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: Option<crate::script::printer::ExprDoc>,
+            _2: Option<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::AssignDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_ASSIGNDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    Option<crate::script::printer::ExprDoc>,
+                    Option<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::AssignDoc>
+            );
+            typed(_0.into(), _1, _2)
+        }
+
+        static FUNC_SCRIPT_PRINTER_SLICEDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.SliceDoc").expect("missing global function")
+        });
+        pub fn SliceDoc(
+            _0: Option<crate::script::printer::ExprDoc>,
+            _1: Option<crate::script::printer::ExprDoc>,
+            _2: Option<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::SliceDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_SLICEDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    Option<crate::script::printer::ExprDoc>,
+                    Option<crate::script::printer::ExprDoc>,
+                    Option<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::SliceDoc>
+            );
+            typed(_0, _1, _2)
+        }
+
+        static FUNC_SCRIPT_PRINTER_DICTDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.DictDoc").expect("missing global function")
+        });
+        pub fn DictDoc(
+            _0: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::DictDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_DICTDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::DictDoc>
+            );
+            typed(_0, _1)
+        }
+
+        static FUNC_SCRIPT_PRINTER_LISTDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.ListDoc").expect("missing global function")
+        });
+        pub fn ListDoc(
+            _0: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::ListDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_LISTDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::ListDoc>
+            );
+            typed(_0)
+        }
+
+        static FUNC_SCRIPT_PRINTER_TUPLEDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.TupleDoc").expect("missing global function")
+        });
+        pub fn TupleDoc(
+            _0: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::TupleDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_TUPLEDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::TupleDoc>
+            );
+            typed(_0)
+        }
+
+        static FUNC_SCRIPT_PRINTER_LAMBDADOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.LambdaDoc").expect("missing global function")
+        });
+        pub fn LambdaDoc(
+            _0: tvm_ffi::Array<crate::script::printer::IdDoc>,
+            _1: crate::script::printer::ExprDoc,
+        ) -> Result<crate::script::printer::LambdaDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_LAMBDADOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::script::printer::IdDoc>,
+                    tvm_ffi::object::ObjectRef,
+                ) -> Result<crate::script::printer::LambdaDoc>
+            );
+            typed(_0, _1.into())
+        }
+
+        static FUNC_SCRIPT_PRINTER_OPERATIONDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.OperationDoc").expect("missing global function")
+        });
+        pub fn OperationDoc(
+            _0: i64,
+            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::OperationDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_OPERATIONDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    i64,
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::OperationDoc>
+            );
+            typed(_0, _1)
+        }
+
+        static FUNC_SCRIPT_PRINTER_CALLDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.CallDoc").expect("missing global function")
+        });
+        pub fn CallDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+            _2: tvm_ffi::Array<tvm_ffi::String>,
+            _3: tvm_ffi::Array<crate::script::printer::ExprDoc>,
+        ) -> Result<crate::script::printer::CallDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_CALLDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                    tvm_ffi::Array<tvm_ffi::String>,
+                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
+                ) -> Result<crate::script::printer::CallDoc>
+            );
+            typed(_0.into(), _1, _2, _3)
+        }
+
+        static FUNC_SCRIPT_PRINTER_INDEXDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.IndexDoc").expect("missing global function")
+        });
+        pub fn IndexDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: tvm_ffi::Array<crate::script::printer::Doc>,
+        ) -> Result<crate::script::printer::IndexDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_INDEXDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::Array<crate::script::printer::Doc>,
+                ) -> Result<crate::script::printer::IndexDoc>
+            );
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_SCRIPT_PRINTER_ATTRACCESSDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.AttrAccessDoc").expect("missing global function")
+        });
+        pub fn AttrAccessDoc(
+            _0: crate::script::printer::ExprDoc,
+            _1: tvm_ffi::String,
+        ) -> Result<crate::script::printer::AttrAccessDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_ATTRACCESSDOC;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::String) -> Result<crate::script::printer::AttrAccessDoc>);
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_SCRIPT_PRINTER_IDDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.IdDoc").expect("missing global function")
+        });
+        pub fn IdDoc(_0: tvm_ffi::String) -> Result<crate::script::printer::IdDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_IDDOC;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::script::printer::IdDoc>);
+            typed(_0)
+        }
+
+        static FUNC_SCRIPT_PRINTER_STMTBLOCKDOC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.StmtBlockDoc").expect("missing global function")
+        });
+        pub fn StmtBlockDoc(
+            _0: tvm_ffi::Array<crate::script::printer::StmtDoc>,
+        ) -> Result<crate::script::printer::StmtBlockDoc> {
+            let func = &*FUNC_SCRIPT_PRINTER_STMTBLOCKDOC;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
+                ) -> Result<crate::script::printer::StmtBlockDoc>
+            );
+            typed(_0)
+        }
+
+        static FUNC_SCRIPT_PRINTER_STMTDOCSETCOMMENT: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("script.printer.StmtDocSetComment")
+                .expect("missing global function")
+        });
+        pub fn StmtDocSetComment(
+            _0: crate::script::printer::StmtDoc,
+            _1: Option<tvm_ffi::String>,
+        ) -> Result<()> {
+            let func = &*FUNC_SCRIPT_PRINTER_STMTDOCSETCOMMENT;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(tvm_ffi::object::ObjectRef, Option<tvm_ffi::String>) -> Result<()>
+            );
+            typed(_0.into(), _1)
+        }
+
         static FUNC_SCRIPT_PRINTER_DOCSETSOURCEPATHS: LazyLock<Function> = LazyLock::new(|| {
             Function::get_global("script.printer.DocSetSourcePaths")
                 .expect("missing global function")
@@ -11909,405 +12308,6 @@ pub mod script {
                 ) -> Result<crate::script::printer::ExprDoc>
             );
             typed(_0.into(), _1, _2, _3)
-        }
-
-        static FUNC_SCRIPT_PRINTER_STMTDOCSETCOMMENT: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.StmtDocSetComment")
-                .expect("missing global function")
-        });
-        pub fn StmtDocSetComment(
-            _0: crate::script::printer::StmtDoc,
-            _1: Option<tvm_ffi::String>,
-        ) -> Result<()> {
-            let func = &*FUNC_SCRIPT_PRINTER_STMTDOCSETCOMMENT;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(tvm_ffi::object::ObjectRef, Option<tvm_ffi::String>) -> Result<()>
-            );
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_STMTBLOCKDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.StmtBlockDoc").expect("missing global function")
-        });
-        pub fn StmtBlockDoc(
-            _0: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::StmtBlockDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_STMTBLOCKDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::StmtBlockDoc>
-            );
-            typed(_0)
-        }
-
-        static FUNC_SCRIPT_PRINTER_IDDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.IdDoc").expect("missing global function")
-        });
-        pub fn IdDoc(_0: tvm_ffi::String) -> Result<crate::script::printer::IdDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_IDDOC;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::script::printer::IdDoc>);
-            typed(_0)
-        }
-
-        static FUNC_SCRIPT_PRINTER_ATTRACCESSDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.AttrAccessDoc").expect("missing global function")
-        });
-        pub fn AttrAccessDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: tvm_ffi::String,
-        ) -> Result<crate::script::printer::AttrAccessDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_ATTRACCESSDOC;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::String) -> Result<crate::script::printer::AttrAccessDoc>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_INDEXDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.IndexDoc").expect("missing global function")
-        });
-        pub fn IndexDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: tvm_ffi::Array<crate::script::printer::Doc>,
-        ) -> Result<crate::script::printer::IndexDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_INDEXDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::Doc>,
-                ) -> Result<crate::script::printer::IndexDoc>
-            );
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_CALLDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.CallDoc").expect("missing global function")
-        });
-        pub fn CallDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-            _2: tvm_ffi::Array<tvm_ffi::String>,
-            _3: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::CallDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_CALLDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                    tvm_ffi::Array<tvm_ffi::String>,
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::CallDoc>
-            );
-            typed(_0.into(), _1, _2, _3)
-        }
-
-        static FUNC_SCRIPT_PRINTER_OPERATIONDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.OperationDoc").expect("missing global function")
-        });
-        pub fn OperationDoc(
-            _0: i64,
-            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::OperationDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_OPERATIONDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    i64,
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::OperationDoc>
-            );
-            typed(_0, _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_LAMBDADOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.LambdaDoc").expect("missing global function")
-        });
-        pub fn LambdaDoc(
-            _0: tvm_ffi::Array<crate::script::printer::IdDoc>,
-            _1: crate::script::printer::ExprDoc,
-        ) -> Result<crate::script::printer::LambdaDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_LAMBDADOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::script::printer::IdDoc>,
-                    tvm_ffi::object::ObjectRef,
-                ) -> Result<crate::script::printer::LambdaDoc>
-            );
-            typed(_0, _1.into())
-        }
-
-        static FUNC_SCRIPT_PRINTER_TUPLEDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.TupleDoc").expect("missing global function")
-        });
-        pub fn TupleDoc(
-            _0: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::TupleDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_TUPLEDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::TupleDoc>
-            );
-            typed(_0)
-        }
-
-        static FUNC_SCRIPT_PRINTER_LISTDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.ListDoc").expect("missing global function")
-        });
-        pub fn ListDoc(
-            _0: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::ListDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_LISTDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::ListDoc>
-            );
-            typed(_0)
-        }
-
-        static FUNC_SCRIPT_PRINTER_DICTDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.DictDoc").expect("missing global function")
-        });
-        pub fn DictDoc(
-            _0: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::DictDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_DICTDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::DictDoc>
-            );
-            typed(_0, _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_SLICEDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.SliceDoc").expect("missing global function")
-        });
-        pub fn SliceDoc(
-            _0: Option<crate::script::printer::ExprDoc>,
-            _1: Option<crate::script::printer::ExprDoc>,
-            _2: Option<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::SliceDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_SLICEDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    Option<crate::script::printer::ExprDoc>,
-                    Option<crate::script::printer::ExprDoc>,
-                    Option<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::SliceDoc>
-            );
-            typed(_0, _1, _2)
-        }
-
-        static FUNC_SCRIPT_PRINTER_ASSIGNDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.AssignDoc").expect("missing global function")
-        });
-        pub fn AssignDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: Option<crate::script::printer::ExprDoc>,
-            _2: Option<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::AssignDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_ASSIGNDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    Option<crate::script::printer::ExprDoc>,
-                    Option<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::AssignDoc>
-            );
-            typed(_0.into(), _1, _2)
-        }
-
-        static FUNC_SCRIPT_PRINTER_IFDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.IfDoc").expect("missing global function")
-        });
-        pub fn IfDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::IfDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_IFDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::IfDoc>
-            );
-            typed(_0.into(), _1, _2)
-        }
-
-        static FUNC_SCRIPT_PRINTER_WHILEDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.WhileDoc").expect("missing global function")
-        });
-        pub fn WhileDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::WhileDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_WHILEDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::WhileDoc>
-            );
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_FORDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.ForDoc").expect("missing global function")
-        });
-        pub fn ForDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: crate::script::printer::ExprDoc,
-            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::ForDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_FORDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::ForDoc>
-            );
-            typed(_0.into(), _1.into(), _2)
-        }
-
-        static FUNC_SCRIPT_PRINTER_SCOPEDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.ScopeDoc").expect("missing global function")
-        });
-        pub fn ScopeDoc(
-            _0: Option<crate::script::printer::ExprDoc>,
-            _1: crate::script::printer::ExprDoc,
-            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::ScopeDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_SCOPEDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    Option<crate::script::printer::ExprDoc>,
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::ScopeDoc>
-            );
-            typed(_0, _1.into(), _2)
-        }
-
-        static FUNC_SCRIPT_PRINTER_EXPRSTMTDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.ExprStmtDoc").expect("missing global function")
-        });
-        pub fn ExprStmtDoc(
-            _0: crate::script::printer::ExprDoc,
-        ) -> Result<crate::script::printer::ExprStmtDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_EXPRSTMTDOC;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::script::printer::ExprStmtDoc>);
-            typed(_0.into())
-        }
-
-        static FUNC_SCRIPT_PRINTER_ASSERTDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.AssertDoc").expect("missing global function")
-        });
-        pub fn AssertDoc(
-            _0: crate::script::printer::ExprDoc,
-            _1: Option<crate::script::printer::ExprDoc>,
-        ) -> Result<crate::script::printer::AssertDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_ASSERTDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    Option<crate::script::printer::ExprDoc>,
-                ) -> Result<crate::script::printer::AssertDoc>
-            );
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_SCRIPT_PRINTER_RETURNDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.ReturnDoc").expect("missing global function")
-        });
-        pub fn ReturnDoc(
-            _0: crate::script::printer::ExprDoc,
-        ) -> Result<crate::script::printer::ReturnDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_RETURNDOC;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::script::printer::ReturnDoc>);
-            typed(_0.into())
-        }
-
-        static FUNC_SCRIPT_PRINTER_FUNCTIONDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.FunctionDoc").expect("missing global function")
-        });
-        pub fn FunctionDoc(
-            _0: crate::script::printer::IdDoc,
-            _1: tvm_ffi::Array<crate::script::printer::AssignDoc>,
-            _2: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-            _3: Option<crate::script::printer::ExprDoc>,
-            _4: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::FunctionDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_FUNCTIONDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::AssignDoc>,
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                    Option<crate::script::printer::ExprDoc>,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::FunctionDoc>
-            );
-            typed(_0.into(), _1, _2, _3, _4)
-        }
-
-        static FUNC_SCRIPT_PRINTER_CLASSDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.ClassDoc").expect("missing global function")
-        });
-        pub fn ClassDoc(
-            _0: crate::script::printer::IdDoc,
-            _1: tvm_ffi::Array<crate::script::printer::ExprDoc>,
-            _2: tvm_ffi::Array<crate::script::printer::StmtDoc>,
-        ) -> Result<crate::script::printer::ClassDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_CLASSDOC;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::Array<crate::script::printer::ExprDoc>,
-                    tvm_ffi::Array<crate::script::printer::StmtDoc>,
-                ) -> Result<crate::script::printer::ClassDoc>
-            );
-            typed(_0.into(), _1, _2)
-        }
-
-        static FUNC_SCRIPT_PRINTER_COMMENTDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.CommentDoc").expect("missing global function")
-        });
-        pub fn CommentDoc(_0: tvm_ffi::String) -> Result<crate::script::printer::CommentDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_COMMENTDOC;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::script::printer::CommentDoc>);
-            typed(_0)
-        }
-
-        static FUNC_SCRIPT_PRINTER_DOCSTRINGDOC: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("script.printer.DocStringDoc").expect("missing global function")
-        });
-        pub fn DocStringDoc(_0: tvm_ffi::String) -> Result<crate::script::printer::DocStringDoc> {
-            let func = &*FUNC_SCRIPT_PRINTER_DOCSTRINGDOC;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String) -> Result<crate::script::printer::DocStringDoc>);
-            typed(_0)
         }
 
         static FUNC_SCRIPT_PRINTER_LITERALDOCNONE: LazyLock<Function> = LazyLock::new(|| {
@@ -13234,352 +13234,45 @@ pub mod tir {
         typed(_0.into(), _1)
     }
 
-    static FUNC_TIR_CONVERT: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.convert").expect("missing global function"));
-    pub fn convert(args: &[Any]) -> Result<Any> {
-        let func = &*FUNC_TIR_CONVERT;
-        let views: Vec<AnyView<'_>> = args.iter().map(AnyView::from).collect();
-        func.call_packed(&views)
-    }
-
-    static FUNC_TIR_VAR: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Var").expect("missing global function"));
-    pub fn Var(
-        _0: tvm_ffi::String,
-        _1: tvm_ffi::AnyValue,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Var> {
-        let func = &*FUNC_TIR_VAR;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String, tvm_ffi::AnyValue, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Var>);
-        typed(_0, _1, _2.into())
-    }
-
-    static FUNC_TIR_SIZEVAR: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.SizeVar").expect("missing global function"));
-    pub fn SizeVar(
-        _0: tvm_ffi::String,
-        _1: tvm_ffi::DLDataType,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::SizeVar> {
-        let func = &*FUNC_TIR_SIZEVAR;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String, tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::tir::SizeVar>);
-        typed(_0, _1, _2.into())
-    }
-
-    static FUNC_TIR_ITERVAR: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.IterVar").expect("missing global function"));
-    pub fn IterVar(
-        _0: crate::ir::Range,
-        _1: crate::tir::Var,
-        _2: i64,
-        _3: tvm_ffi::String,
-        _4: crate::ir::Span,
-    ) -> Result<crate::tir::IterVar> {
-        let func = &*FUNC_TIR_ITERVAR;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::IterVar>);
-        typed(_0.into(), _1.into(), _2, _3, _4.into())
-    }
-
-    static FUNC_TIR_STRINGIMM: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.StringImm").expect("missing global function"));
-    pub fn StringImm(_0: tvm_ffi::String, _1: crate::ir::Span) -> Result<crate::tir::StringImm> {
-        let func = &*FUNC_TIR_STRINGIMM;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::StringImm>);
-        typed(_0, _1.into())
-    }
-
-    static FUNC_TIR_CAST: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Cast").expect("missing global function"));
-    pub fn Cast(
-        _0: tvm_ffi::DLDataType,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Cast> {
-        let func = &*FUNC_TIR_CAST;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Cast>);
-        typed(_0, _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_ADD: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Add").expect("missing global function"));
-    pub fn Add(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Add> {
-        let func = &*FUNC_TIR_ADD;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Add>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_SUB: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Sub").expect("missing global function"));
-    pub fn Sub(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Sub> {
-        let func = &*FUNC_TIR_SUB;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Sub>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_MUL: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Mul").expect("missing global function"));
-    pub fn Mul(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Mul> {
-        let func = &*FUNC_TIR_MUL;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Mul>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_DIV: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Div").expect("missing global function"));
-    pub fn Div(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Div> {
-        let func = &*FUNC_TIR_DIV;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Div>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_MOD: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Mod").expect("missing global function"));
-    pub fn Mod(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Mod> {
-        let func = &*FUNC_TIR_MOD;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Mod>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_FLOORDIV: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.FloorDiv").expect("missing global function"));
-    pub fn FloorDiv(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::FloorDiv> {
-        let func = &*FUNC_TIR_FLOORDIV;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::FloorDiv>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_FLOORMOD: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.FloorMod").expect("missing global function"));
-    pub fn FloorMod(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::FloorMod> {
-        let func = &*FUNC_TIR_FLOORMOD;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::FloorMod>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_MIN: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Min").expect("missing global function"));
-    pub fn Min(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Min> {
-        let func = &*FUNC_TIR_MIN;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Min>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_MAX: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Max").expect("missing global function"));
-    pub fn Max(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Max> {
-        let func = &*FUNC_TIR_MAX;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Max>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_EQ: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.EQ").expect("missing global function"));
-    pub fn EQ(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::EQ> {
-        let func = &*FUNC_TIR_EQ;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::EQ>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_NE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.NE").expect("missing global function"));
-    pub fn NE(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::NE> {
-        let func = &*FUNC_TIR_NE;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::NE>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_LT: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.LT").expect("missing global function"));
-    pub fn LT(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::LT> {
-        let func = &*FUNC_TIR_LT;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::LT>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_LE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.LE").expect("missing global function"));
-    pub fn LE(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::LE> {
-        let func = &*FUNC_TIR_LE;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::LE>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_GT: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.GT").expect("missing global function"));
-    pub fn GT(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::GT> {
-        let func = &*FUNC_TIR_GT;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::GT>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_GE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.GE").expect("missing global function"));
-    pub fn GE(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::GE> {
-        let func = &*FUNC_TIR_GE;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::GE>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_AND: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.And").expect("missing global function"));
-    pub fn And(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::And> {
-        let func = &*FUNC_TIR_AND;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::And>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_OR: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Or").expect("missing global function"));
-    pub fn Or(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Or> {
-        let func = &*FUNC_TIR_OR;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Or>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_NOT: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Not").expect("missing global function"));
-    pub fn Not(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::tir::Not> {
-        let func = &*FUNC_TIR_NOT;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Not>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_SELECT: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Select").expect("missing global function"));
-    pub fn Select(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::PrimExpr,
-        _3: crate::ir::Span,
-    ) -> Result<crate::tir::Select> {
-        let func = &*FUNC_TIR_SELECT;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Select>);
-        typed(_0.into(), _1.into(), _2.into(), _3.into())
-    }
-
-    static FUNC_TIR_RAMP: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Ramp").expect("missing global function"));
-    pub fn Ramp(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::PrimExpr,
-        _3: crate::ir::Span,
-    ) -> Result<crate::tir::Ramp> {
-        let func = &*FUNC_TIR_RAMP;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Ramp>);
-        typed(_0.into(), _1.into(), _2.into(), _3.into())
-    }
-
-    static FUNC_TIR_BROADCAST: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Broadcast").expect("missing global function"));
-    pub fn Broadcast(
-        _0: crate::ir::PrimExpr,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::tir::Broadcast> {
-        let func = &*FUNC_TIR_BROADCAST;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Broadcast>);
-        typed(_0.into(), _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_LET: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Let").expect("missing global function"));
-    pub fn Let(
-        _0: crate::tir::Var,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::PrimExpr,
-        _3: crate::ir::Span,
-    ) -> Result<crate::tir::Let> {
-        let func = &*FUNC_TIR_LET;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Let>);
-        typed(_0.into(), _1.into(), _2.into(), _3.into())
-    }
-
-    static FUNC_TIR_SHUFFLE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Shuffle").expect("missing global function"));
-    pub fn Shuffle(
-        _0: tvm_ffi::Array<crate::ir::PrimExpr>,
+    static FUNC_TIR_PRODUCERLOAD: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tir.ProducerLoad").expect("missing global function")
+    });
+    pub fn ProducerLoad(
+        _0: crate::tir::DataProducer,
         _1: tvm_ffi::Array<crate::ir::PrimExpr>,
         _2: crate::ir::Span,
-    ) -> Result<crate::tir::Shuffle> {
-        let func = &*FUNC_TIR_SHUFFLE;
+    ) -> Result<crate::tir::ProducerLoad> {
+        let func = &*FUNC_TIR_PRODUCERLOAD;
         let typed = tvm_ffi::into_typed_fn!(
             func.clone(),
             Fn(
-                tvm_ffi::Array<crate::ir::PrimExpr>,
+                tvm_ffi::object::ObjectRef,
                 tvm_ffi::Array<crate::ir::PrimExpr>,
                 tvm_ffi::object::ObjectRef,
-            ) -> Result<crate::tir::Shuffle>
+            ) -> Result<crate::tir::ProducerLoad>
         );
-        typed(_0, _1, _2.into())
+        typed(_0.into(), _1, _2.into())
+    }
+
+    static FUNC_TIR_BUFFERLOAD: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.BufferLoad").expect("missing global function"));
+    pub fn BufferLoad(
+        _0: crate::tir::Buffer,
+        _1: tvm_ffi::Array<crate::ir::PrimExpr>,
+        _2: Option<crate::ir::PrimExpr>,
+        _3: crate::ir::Span,
+    ) -> Result<crate::tir::BufferLoad> {
+        let func = &*FUNC_TIR_BUFFERLOAD;
+        let typed = tvm_ffi::into_typed_fn!(
+            func.clone(),
+            Fn(
+                tvm_ffi::object::ObjectRef,
+                tvm_ffi::Array<crate::ir::PrimExpr>,
+                Option<crate::ir::PrimExpr>,
+                tvm_ffi::object::ObjectRef,
+            ) -> Result<crate::tir::BufferLoad>
+        );
+        typed(_0.into(), _1, _2, _3.into())
     }
 
     static FUNC_TIR_REDUCE: LazyLock<Function> =
@@ -13609,45 +13302,360 @@ pub mod tir {
         typed(_0.into(), _1, _2, _3.into(), _4, _5, _6.into())
     }
 
-    static FUNC_TIR_BUFFERLOAD: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.BufferLoad").expect("missing global function"));
-    pub fn BufferLoad(
-        _0: crate::tir::Buffer,
-        _1: tvm_ffi::Array<crate::ir::PrimExpr>,
-        _2: Option<crate::ir::PrimExpr>,
-        _3: crate::ir::Span,
-    ) -> Result<crate::tir::BufferLoad> {
-        let func = &*FUNC_TIR_BUFFERLOAD;
-        let typed = tvm_ffi::into_typed_fn!(
-            func.clone(),
-            Fn(
-                tvm_ffi::object::ObjectRef,
-                tvm_ffi::Array<crate::ir::PrimExpr>,
-                Option<crate::ir::PrimExpr>,
-                tvm_ffi::object::ObjectRef,
-            ) -> Result<crate::tir::BufferLoad>
-        );
-        typed(_0.into(), _1, _2, _3.into())
-    }
-
-    static FUNC_TIR_PRODUCERLOAD: LazyLock<Function> = LazyLock::new(|| {
-        Function::get_global("tir.ProducerLoad").expect("missing global function")
-    });
-    pub fn ProducerLoad(
-        _0: crate::tir::DataProducer,
+    static FUNC_TIR_SHUFFLE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Shuffle").expect("missing global function"));
+    pub fn Shuffle(
+        _0: tvm_ffi::Array<crate::ir::PrimExpr>,
         _1: tvm_ffi::Array<crate::ir::PrimExpr>,
         _2: crate::ir::Span,
-    ) -> Result<crate::tir::ProducerLoad> {
-        let func = &*FUNC_TIR_PRODUCERLOAD;
+    ) -> Result<crate::tir::Shuffle> {
+        let func = &*FUNC_TIR_SHUFFLE;
         let typed = tvm_ffi::into_typed_fn!(
             func.clone(),
             Fn(
-                tvm_ffi::object::ObjectRef,
+                tvm_ffi::Array<crate::ir::PrimExpr>,
                 tvm_ffi::Array<crate::ir::PrimExpr>,
                 tvm_ffi::object::ObjectRef,
-            ) -> Result<crate::tir::ProducerLoad>
+            ) -> Result<crate::tir::Shuffle>
         );
-        typed(_0.into(), _1, _2.into())
+        typed(_0, _1, _2.into())
+    }
+
+    static FUNC_TIR_CALL: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Call").expect("missing global function"));
+    pub fn Call(args: &[Any]) -> Result<Any> {
+        let func = &*FUNC_TIR_CALL;
+        let views: Vec<AnyView<'_>> = args.iter().map(AnyView::from).collect();
+        func.call_packed(&views)
+    }
+
+    static FUNC_TIR_LET: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Let").expect("missing global function"));
+    pub fn Let(
+        _0: crate::tir::Var,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::PrimExpr,
+        _3: crate::ir::Span,
+    ) -> Result<crate::tir::Let> {
+        let func = &*FUNC_TIR_LET;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Let>);
+        typed(_0.into(), _1.into(), _2.into(), _3.into())
+    }
+
+    static FUNC_TIR_BROADCAST: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Broadcast").expect("missing global function"));
+    pub fn Broadcast(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Broadcast> {
+        let func = &*FUNC_TIR_BROADCAST;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Broadcast>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_RAMP: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Ramp").expect("missing global function"));
+    pub fn Ramp(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::PrimExpr,
+        _3: crate::ir::Span,
+    ) -> Result<crate::tir::Ramp> {
+        let func = &*FUNC_TIR_RAMP;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Ramp>);
+        typed(_0.into(), _1.into(), _2.into(), _3.into())
+    }
+
+    static FUNC_TIR_SELECT: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Select").expect("missing global function"));
+    pub fn Select(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::PrimExpr,
+        _3: crate::ir::Span,
+    ) -> Result<crate::tir::Select> {
+        let func = &*FUNC_TIR_SELECT;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Select>);
+        typed(_0.into(), _1.into(), _2.into(), _3.into())
+    }
+
+    static FUNC_TIR_NOT: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Not").expect("missing global function"));
+    pub fn Not(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::tir::Not> {
+        let func = &*FUNC_TIR_NOT;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Not>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_OR: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Or").expect("missing global function"));
+    pub fn Or(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Or> {
+        let func = &*FUNC_TIR_OR;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Or>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_AND: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.And").expect("missing global function"));
+    pub fn And(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::And> {
+        let func = &*FUNC_TIR_AND;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::And>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_GE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.GE").expect("missing global function"));
+    pub fn GE(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::GE> {
+        let func = &*FUNC_TIR_GE;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::GE>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_GT: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.GT").expect("missing global function"));
+    pub fn GT(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::GT> {
+        let func = &*FUNC_TIR_GT;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::GT>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_LE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.LE").expect("missing global function"));
+    pub fn LE(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::LE> {
+        let func = &*FUNC_TIR_LE;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::LE>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_LT: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.LT").expect("missing global function"));
+    pub fn LT(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::LT> {
+        let func = &*FUNC_TIR_LT;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::LT>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_NE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.NE").expect("missing global function"));
+    pub fn NE(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::NE> {
+        let func = &*FUNC_TIR_NE;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::NE>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_EQ: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.EQ").expect("missing global function"));
+    pub fn EQ(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::EQ> {
+        let func = &*FUNC_TIR_EQ;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::EQ>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_MAX: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Max").expect("missing global function"));
+    pub fn Max(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Max> {
+        let func = &*FUNC_TIR_MAX;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Max>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_MIN: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Min").expect("missing global function"));
+    pub fn Min(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Min> {
+        let func = &*FUNC_TIR_MIN;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Min>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_FLOORMOD: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.FloorMod").expect("missing global function"));
+    pub fn FloorMod(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::FloorMod> {
+        let func = &*FUNC_TIR_FLOORMOD;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::FloorMod>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_FLOORDIV: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.FloorDiv").expect("missing global function"));
+    pub fn FloorDiv(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::FloorDiv> {
+        let func = &*FUNC_TIR_FLOORDIV;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::FloorDiv>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_MOD: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Mod").expect("missing global function"));
+    pub fn Mod(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Mod> {
+        let func = &*FUNC_TIR_MOD;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Mod>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_DIV: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Div").expect("missing global function"));
+    pub fn Div(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Div> {
+        let func = &*FUNC_TIR_DIV;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Div>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_MUL: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Mul").expect("missing global function"));
+    pub fn Mul(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Mul> {
+        let func = &*FUNC_TIR_MUL;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Mul>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_SUB: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Sub").expect("missing global function"));
+    pub fn Sub(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Sub> {
+        let func = &*FUNC_TIR_SUB;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Sub>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_ADD: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Add").expect("missing global function"));
+    pub fn Add(
+        _0: crate::ir::PrimExpr,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Add> {
+        let func = &*FUNC_TIR_ADD;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Add>);
+        typed(_0.into(), _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_CAST: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Cast").expect("missing global function"));
+    pub fn Cast(
+        _0: tvm_ffi::DLDataType,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Cast> {
+        let func = &*FUNC_TIR_CAST;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Cast>);
+        typed(_0, _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_STRINGIMM: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.StringImm").expect("missing global function"));
+    pub fn StringImm(_0: tvm_ffi::String, _1: crate::ir::Span) -> Result<crate::tir::StringImm> {
+        let func = &*FUNC_TIR_STRINGIMM;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::StringImm>);
+        typed(_0, _1.into())
+    }
+
+    static FUNC_TIR_ITERVAR: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.IterVar").expect("missing global function"));
+    pub fn IterVar(
+        _0: crate::ir::Range,
+        _1: crate::tir::Var,
+        _2: i64,
+        _3: tvm_ffi::String,
+        _4: crate::ir::Span,
+    ) -> Result<crate::tir::IterVar> {
+        let func = &*FUNC_TIR_ITERVAR;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::IterVar>);
+        typed(_0.into(), _1.into(), _2, _3, _4.into())
+    }
+
+    static FUNC_TIR_SIZEVAR: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.SizeVar").expect("missing global function"));
+    pub fn SizeVar(
+        _0: tvm_ffi::String,
+        _1: tvm_ffi::DLDataType,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::SizeVar> {
+        let func = &*FUNC_TIR_SIZEVAR;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String, tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::tir::SizeVar>);
+        typed(_0, _1, _2.into())
+    }
+
+    static FUNC_TIR_VAR: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.Var").expect("missing global function"));
+    pub fn Var(
+        _0: tvm_ffi::String,
+        _1: tvm_ffi::AnyValue,
+        _2: crate::ir::Span,
+    ) -> Result<crate::tir::Var> {
+        let func = &*FUNC_TIR_VAR;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::String, tvm_ffi::AnyValue, tvm_ffi::object::ObjectRef) -> Result<crate::tir::Var>);
+        typed(_0, _1, _2.into())
+    }
+
+    static FUNC_TIR_CONVERT: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.convert").expect("missing global function"));
+    pub fn convert(args: &[Any]) -> Result<Any> {
+        let func = &*FUNC_TIR_CONVERT;
+        let views: Vec<AnyView<'_>> = args.iter().map(AnyView::from).collect();
+        func.call_packed(&views)
     }
 
     static FUNC_TIR_COMMREDUCER: LazyLock<Function> =
@@ -13691,14 +13699,6 @@ pub mod tir {
             ) -> Result<tvm_ffi::Array<crate::ir::PrimExpr>>
         );
         typed(_0.into(), _1, _2)
-    }
-
-    static FUNC_TIR_CALL: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.Call").expect("missing global function"));
-    pub fn Call(args: &[Any]) -> Result<Any> {
-        let func = &*FUNC_TIR_CALL;
-        let views: Vec<AnyView<'_>> = args.iter().map(AnyView::from).collect();
-        func.call_packed(&views)
     }
 
     static FUNC_TIR_PRIMFUNC: LazyLock<Function> =
@@ -14378,168 +14378,6 @@ pub mod tir {
         typed(_0, _1)
     }
 
-    static FUNC_TIR_RET: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.ret").expect("missing global function"));
-    pub fn ret(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_RET;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_THREAD_RETURN: LazyLock<Function> = LazyLock::new(|| {
-        Function::get_global("tir.thread_return").expect("missing global function")
-    });
-    pub fn thread_return(_0: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_THREAD_RETURN;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into())
-    }
-
-    static FUNC_TIR_CONTINUE_LOOP: LazyLock<Function> = LazyLock::new(|| {
-        Function::get_global("tir.continue_loop").expect("missing global function")
-    });
-    pub fn continue_loop(_0: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_CONTINUE_LOOP;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into())
-    }
-
-    static FUNC_TIR_BREAK_LOOP: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.break_loop").expect("missing global function"));
-    pub fn break_loop(_0: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_BREAK_LOOP;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into())
-    }
-
-    static FUNC_TIR_MIN_VALUE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.min_value").expect("missing global function"));
-    pub fn min_value(_0: tvm_ffi::DLDataType, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_MIN_VALUE;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0, _1.into())
-    }
-
-    static FUNC_TIR_MAX_VALUE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.max_value").expect("missing global function"));
-    pub fn max_value(_0: tvm_ffi::DLDataType, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_MAX_VALUE;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0, _1.into())
-    }
-
-    static FUNC_TIR_INFINITY: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.infinity").expect("missing global function"));
-    pub fn infinity(_0: tvm_ffi::DLDataType, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_INFINITY;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0, _1.into())
-    }
-
-    static FUNC_TIR_ABS: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.abs").expect("missing global function"));
-    pub fn abs(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_ABS;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_LIKELY: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.likely").expect("missing global function"));
-    pub fn likely(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_LIKELY;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_ISNAN: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.isnan").expect("missing global function"));
-    pub fn isnan(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_ISNAN;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_ISFINITE: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.isfinite").expect("missing global function"));
-    pub fn isfinite(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_ISFINITE;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_ISINF: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.isinf").expect("missing global function"));
-    pub fn isinf(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_ISINF;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_FLOOR: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.floor").expect("missing global function"));
-    pub fn floor(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_FLOOR;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_CEIL: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.ceil").expect("missing global function"));
-    pub fn ceil(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_CEIL;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_ROUND: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.round").expect("missing global function"));
-    pub fn round(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_ROUND;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_NEARBYINT: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.nearbyint").expect("missing global function"));
-    pub fn nearbyint(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_NEARBYINT;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR_TRUNC: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.trunc").expect("missing global function"));
-    pub fn trunc(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_TRUNC;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0.into(), _1.into())
-    }
-
-    static FUNC_TIR__CAST: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir._cast").expect("missing global function"));
-    pub fn _cast(
-        _0: tvm_ffi::DLDataType,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR__CAST;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0, _1.into(), _2.into())
-    }
-
-    static FUNC_TIR_REINTERPRET: LazyLock<Function> =
-        LazyLock::new(|| Function::get_global("tir.reinterpret").expect("missing global function"));
-    pub fn reinterpret(
-        _0: tvm_ffi::DLDataType,
-        _1: crate::ir::PrimExpr,
-        _2: crate::ir::Span,
-    ) -> Result<crate::ir::PrimExpr> {
-        let func = &*FUNC_TIR_REINTERPRET;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
-        typed(_0, _1.into(), _2.into())
-    }
-
     static FUNC_TIR_BITWISE_NOT: LazyLock<Function> =
         LazyLock::new(|| Function::get_global("tir.bitwise_not").expect("missing global function"));
     pub fn bitwise_not(
@@ -14900,6 +14738,168 @@ pub mod tir {
         let func = &*FUNC_TIR_RIGHT_SHIFT;
         let views: Vec<AnyView<'_>> = args.iter().map(AnyView::from).collect();
         func.call_packed(&views)
+    }
+
+    static FUNC_TIR_RET: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.ret").expect("missing global function"));
+    pub fn ret(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_RET;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_THREAD_RETURN: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tir.thread_return").expect("missing global function")
+    });
+    pub fn thread_return(_0: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_THREAD_RETURN;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into())
+    }
+
+    static FUNC_TIR_CONTINUE_LOOP: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tir.continue_loop").expect("missing global function")
+    });
+    pub fn continue_loop(_0: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_CONTINUE_LOOP;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into())
+    }
+
+    static FUNC_TIR_BREAK_LOOP: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.break_loop").expect("missing global function"));
+    pub fn break_loop(_0: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_BREAK_LOOP;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into())
+    }
+
+    static FUNC_TIR_MIN_VALUE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.min_value").expect("missing global function"));
+    pub fn min_value(_0: tvm_ffi::DLDataType, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_MIN_VALUE;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0, _1.into())
+    }
+
+    static FUNC_TIR_MAX_VALUE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.max_value").expect("missing global function"));
+    pub fn max_value(_0: tvm_ffi::DLDataType, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_MAX_VALUE;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0, _1.into())
+    }
+
+    static FUNC_TIR_INFINITY: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.infinity").expect("missing global function"));
+    pub fn infinity(_0: tvm_ffi::DLDataType, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_INFINITY;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0, _1.into())
+    }
+
+    static FUNC_TIR_ABS: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.abs").expect("missing global function"));
+    pub fn abs(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_ABS;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_LIKELY: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.likely").expect("missing global function"));
+    pub fn likely(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_LIKELY;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_ISNAN: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.isnan").expect("missing global function"));
+    pub fn isnan(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_ISNAN;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_ISFINITE: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.isfinite").expect("missing global function"));
+    pub fn isfinite(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_ISFINITE;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_ISINF: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.isinf").expect("missing global function"));
+    pub fn isinf(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_ISINF;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_FLOOR: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.floor").expect("missing global function"));
+    pub fn floor(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_FLOOR;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_CEIL: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.ceil").expect("missing global function"));
+    pub fn ceil(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_CEIL;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_ROUND: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.round").expect("missing global function"));
+    pub fn round(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_ROUND;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_NEARBYINT: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.nearbyint").expect("missing global function"));
+    pub fn nearbyint(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_NEARBYINT;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR_TRUNC: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.trunc").expect("missing global function"));
+    pub fn trunc(_0: crate::ir::PrimExpr, _1: crate::ir::Span) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_TRUNC;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0.into(), _1.into())
+    }
+
+    static FUNC_TIR__CAST: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir._cast").expect("missing global function"));
+    pub fn _cast(
+        _0: tvm_ffi::DLDataType,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR__CAST;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0, _1.into(), _2.into())
+    }
+
+    static FUNC_TIR_REINTERPRET: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tir.reinterpret").expect("missing global function"));
+    pub fn reinterpret(
+        _0: tvm_ffi::DLDataType,
+        _1: crate::ir::PrimExpr,
+        _2: crate::ir::Span,
+    ) -> Result<crate::ir::PrimExpr> {
+        let func = &*FUNC_TIR_REINTERPRET;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::DLDataType, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<crate::ir::PrimExpr>);
+        typed(_0, _1.into(), _2.into())
     }
 
     static FUNC_TIR_RENEWDEFS: LazyLock<Function> =
@@ -15315,6 +15315,233 @@ pub mod tir {
             typed(_0, _1, _2)
         }
 
+        static FUNC_TIR_SCHEDULE_SCHEDULEANNOTATEBUFFERACCESS: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tir.schedule.ScheduleAnnotateBufferAccess")
+                    .expect("missing global function")
+            });
+        pub fn ScheduleAnnotateBufferAccess(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: i64,
+            _4: crate::tir::IndexMap,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEANNOTATEBUFFERACCESS;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, i64, tvm_ffi::object::ObjectRef) -> Result<()>);
+            typed(_0.into(), _1.into(), _2, _3, _4.into())
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEANNOTATE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleAnnotate").expect("missing global function")
+        });
+        pub fn ScheduleAnnotate(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+            _2: tvm_ffi::String,
+            _3: tvm_ffi::AnyValue,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEANNOTATE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String, tvm_ffi::AnyValue) -> Result<()>);
+            typed(_0.into(), _1, _2, _3)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEUNANNOTATE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleUnannotate")
+                .expect("missing global function")
+        });
+        pub fn ScheduleUnannotate(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+            _2: tvm_ffi::String,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEUNANNOTATE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String) -> Result<()>);
+            typed(_0.into(), _1, _2)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEBLOCKIZE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleBlockize").expect("missing global function")
+        });
+        pub fn ScheduleBlockize(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+            _2: bool,
+        ) -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEBLOCKIZE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, bool) -> Result<crate::tir::BlockRV>);
+            typed(_0.into(), _1, _2)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULETENSORIZE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleTensorize").expect("missing global function")
+        });
+        pub fn ScheduleTensorize(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+            _2: tvm_ffi::String,
+            _3: bool,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULETENSORIZE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String, bool) -> Result<()>);
+            typed(_0.into(), _1, _2, _3)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEGET: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGet").expect("missing global function")
+        });
+        pub fn ScheduleGet(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+        ) -> Result<tvm_ffi::object::ObjectRef> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGET;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::object::ObjectRef>);
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETSREF: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGetSRef").expect("missing global function")
+        });
+        pub fn ScheduleGetSRef(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+        ) -> Result<Option<tvm_ffi::object::ObjectRef>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETSREF;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<Option<tvm_ffi::object::ObjectRef>>);
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEREMOVERV: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleRemoveRV").expect("missing global function")
+        });
+        pub fn ScheduleRemoveRV(
+            _0: crate::tir::Schedule,
+            _1: tvm_ffi::object::ObjectRef,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREMOVERV;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<()>);
+            typed(_0.into(), _1)
+        }
+
+        static FUNC_TIR_SCHEDULE_BLOCKRV: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.BlockRV").expect("missing global function")
+        });
+        pub fn BlockRV() -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_BLOCKRV;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::tir::BlockRV>);
+            typed()
+        }
+
+        static FUNC_TIR_SCHEDULE_LOOPRV: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.LoopRV").expect("missing global function")
+        });
+        pub fn LoopRV() -> Result<crate::tir::LoopRV> {
+            let func = &*FUNC_TIR_SCHEDULE_LOOPRV;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::tir::LoopRV>);
+            typed()
+        }
+
+        static FUNC_TIR_SCHEDULE_CONCRETESCHEDULE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ConcreteSchedule").expect("missing global function")
+        });
+        pub fn ConcreteSchedule(
+            _0: crate::ir::IRModule,
+            _1: i64,
+            _2: i64,
+            _3: i64,
+            _4: bool,
+        ) -> Result<crate::tir::Schedule> {
+            let func = &*FUNC_TIR_SCHEDULE_CONCRETESCHEDULE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64, i64, i64, bool) -> Result<crate::tir::Schedule>);
+            typed(_0.into(), _1, _2, _3, _4)
+        }
+
+        static FUNC_TIR_SCHEDULE_TRACEDSCHEDULE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.TracedSchedule").expect("missing global function")
+        });
+        pub fn TracedSchedule(
+            _0: crate::ir::IRModule,
+            _1: i64,
+            _2: i64,
+            _3: i64,
+            _4: bool,
+        ) -> Result<crate::tir::Schedule> {
+            let func = &*FUNC_TIR_SCHEDULE_TRACEDSCHEDULE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64, i64, i64, bool) -> Result<crate::tir::Schedule>);
+            typed(_0.into(), _1, _2, _3, _4)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMLAYOUT: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tir.schedule.ScheduleTransformLayout")
+                    .expect("missing global function")
+            });
+        pub fn ScheduleTransformLayout(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: i64,
+            _4: crate::tir::IndexMap,
+            _5: Option<crate::tir::IndexMap>,
+            _6: bool,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMLAYOUT;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::object::ObjectRef,
+                    i64,
+                    i64,
+                    tvm_ffi::object::ObjectRef,
+                    Option<crate::tir::IndexMap>,
+                    bool,
+                ) -> Result<()>
+            );
+            typed(_0.into(), _1.into(), _2, _3, _4.into(), _5, _6)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMBLOCKLAYOUT: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tir.schedule.ScheduleTransformBlockLayout")
+                    .expect("missing global function")
+            });
+        pub fn ScheduleTransformBlockLayout(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: crate::tir::IndexMap,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMBLOCKLAYOUT;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<()>);
+            typed(_0.into(), _1.into(), _2.into())
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULESETAXISSEPARATOR: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tir.schedule.ScheduleSetAxisSeparator")
+                    .expect("missing global function")
+            });
+        pub fn ScheduleSetAxisSeparator(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: i64,
+            _4: tvm_ffi::Array<crate::ir::IntImm>,
+        ) -> Result<()> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULESETAXISSEPARATOR;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::object::ObjectRef,
+                    i64,
+                    i64,
+                    tvm_ffi::Array<crate::ir::IntImm>,
+                ) -> Result<()>
+            );
+            typed(_0.into(), _1.into(), _2, _3, _4)
+        }
+
         static FUNC_TIR_SCHEDULE_SCHEDULESTORAGEALIGN: LazyLock<Function> = LazyLock::new(|| {
             Function::get_global("tir.schedule.ScheduleStorageAlign")
                 .expect("missing global function")
@@ -15391,6 +15618,134 @@ pub mod tir {
             typed(_0.into(), _1.into(), _2.into(), _3, _4)
         }
 
+        static FUNC_TIR_SCHEDULE_SCHEDULECACHEREAD: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleCacheRead").expect("missing global function")
+        });
+        pub fn ScheduleCacheRead(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: tvm_ffi::String,
+            _4: tvm_ffi::Array<crate::tir::BlockRV>,
+        ) -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEREAD;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::object::ObjectRef,
+                    i64,
+                    tvm_ffi::String,
+                    tvm_ffi::Array<crate::tir::BlockRV>,
+                ) -> Result<crate::tir::BlockRV>
+            );
+            typed(_0.into(), _1.into(), _2, _3, _4)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULECACHEWRITE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleCacheWrite")
+                .expect("missing global function")
+        });
+        pub fn ScheduleCacheWrite(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: tvm_ffi::String,
+            _4: tvm_ffi::Array<crate::tir::BlockRV>,
+        ) -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEWRITE;
+            let typed = tvm_ffi::into_typed_fn!(
+                func.clone(),
+                Fn(
+                    tvm_ffi::object::ObjectRef,
+                    tvm_ffi::object::ObjectRef,
+                    i64,
+                    tvm_ffi::String,
+                    tvm_ffi::Array<crate::tir::BlockRV>,
+                ) -> Result<crate::tir::BlockRV>
+            );
+            typed(_0.into(), _1.into(), _2, _3, _4)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEREAD: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tir.schedule.ScheduleReindexCacheRead")
+                    .expect("missing global function")
+            });
+        pub fn ScheduleReindexCacheRead(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: tvm_ffi::String,
+            _4: crate::tir::IndexMap,
+        ) -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEREAD;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::BlockRV>);
+            typed(_0.into(), _1.into(), _2, _3, _4.into())
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEWRITE: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tir.schedule.ScheduleReindexCacheWrite")
+                    .expect("missing global function")
+            });
+        pub fn ScheduleReindexCacheWrite(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: tvm_ffi::String,
+            _4: crate::tir::IndexMap,
+        ) -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEWRITE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::BlockRV>);
+            typed(_0.into(), _1.into(), _2, _3, _4.into())
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULECACHEINPLACE: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleCacheInplace")
+                .expect("missing global function")
+        });
+        pub fn ScheduleCacheInplace(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: tvm_ffi::String,
+        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEINPLACE;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
+            typed(_0.into(), _1.into(), _2, _3)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULECACHEINDEX: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleCacheIndex")
+                .expect("missing global function")
+        });
+        pub fn ScheduleCacheIndex(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: tvm_ffi::String,
+            _3: i64,
+        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEINDEX;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String, i64) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
+            typed(_0.into(), _1.into(), _2, _3)
+        }
+
+        static FUNC_TIR_SCHEDULE_SCHEDULEREINDEX: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleReIndex").expect("missing global function")
+        });
+        pub fn ScheduleReIndex(
+            _0: crate::tir::Schedule,
+            _1: crate::tir::BlockRV,
+            _2: i64,
+            _3: i64,
+            _4: bool,
+        ) -> Result<crate::tir::BlockRV> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREINDEX;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, i64, bool) -> Result<crate::tir::BlockRV>);
+            typed(_0.into(), _1.into(), _2, _3, _4)
+        }
+
         static FUNC_TIR_SCHEDULE_SCHEDULEPARALLEL: LazyLock<Function> = LazyLock::new(|| {
             Function::get_global("tir.schedule.ScheduleParallel").expect("missing global function")
         });
@@ -15428,175 +15783,6 @@ pub mod tir {
         pub fn ScheduleUnroll(_0: crate::tir::Schedule, _1: crate::tir::LoopRV) -> Result<()> {
             let func = &*FUNC_TIR_SCHEDULE_SCHEDULEUNROLL;
             let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<()>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_TIR_SCHEDULE_BLOCKRV: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.BlockRV").expect("missing global function")
-        });
-        pub fn BlockRV() -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_BLOCKRV;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::tir::BlockRV>);
-            typed()
-        }
-
-        static FUNC_TIR_SCHEDULE_LOOPRV: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.LoopRV").expect("missing global function")
-        });
-        pub fn LoopRV() -> Result<crate::tir::LoopRV> {
-            let func = &*FUNC_TIR_SCHEDULE_LOOPRV;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::tir::LoopRV>);
-            typed()
-        }
-
-        static FUNC_TIR_SCHEDULE_CONCRETESCHEDULE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ConcreteSchedule").expect("missing global function")
-        });
-        pub fn ConcreteSchedule(
-            _0: crate::ir::IRModule,
-            _1: i64,
-            _2: i64,
-            _3: i64,
-            _4: bool,
-        ) -> Result<crate::tir::Schedule> {
-            let func = &*FUNC_TIR_SCHEDULE_CONCRETESCHEDULE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64, i64, i64, bool) -> Result<crate::tir::Schedule>);
-            typed(_0.into(), _1, _2, _3, _4)
-        }
-
-        static FUNC_TIR_SCHEDULE_TRACEDSCHEDULE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.TracedSchedule").expect("missing global function")
-        });
-        pub fn TracedSchedule(
-            _0: crate::ir::IRModule,
-            _1: i64,
-            _2: i64,
-            _3: i64,
-            _4: bool,
-        ) -> Result<crate::tir::Schedule> {
-            let func = &*FUNC_TIR_SCHEDULE_TRACEDSCHEDULE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64, i64, i64, bool) -> Result<crate::tir::Schedule>);
-            typed(_0.into(), _1, _2, _3, _4)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGET: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGet").expect("missing global function")
-        });
-        pub fn ScheduleGet(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-        ) -> Result<tvm_ffi::object::ObjectRef> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGET;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::object::ObjectRef>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETSREF: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGetSRef").expect("missing global function")
-        });
-        pub fn ScheduleGetSRef(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-        ) -> Result<Option<tvm_ffi::object::ObjectRef>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETSREF;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<Option<tvm_ffi::object::ObjectRef>>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEREMOVERV: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleRemoveRV").expect("missing global function")
-        });
-        pub fn ScheduleRemoveRV(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREMOVERV;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<()>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETBLOCK: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGetBlock").expect("missing global function")
-        });
-        pub fn ScheduleGetBlock(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::String,
-            _2: Option<tvm_ffi::String>,
-        ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETBLOCK;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::String,
-                    Option<tvm_ffi::String>,
-                ) -> Result<crate::tir::BlockRV>
-            );
-            typed(_0.into(), _1, _2)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETLOOPS: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGetLoops").expect("missing global function")
-        });
-        pub fn ScheduleGetLoops(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-        ) -> Result<tvm_ffi::Array<crate::tir::LoopRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETLOOPS;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::LoopRV>>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETCHILDBLOCKS: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGetChildBlocks")
-                .expect("missing global function")
-        });
-        pub fn ScheduleGetChildBlocks(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETCHILDBLOCKS;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
-            typed(_0.into(), _1)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETPRODUCERS: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGetProducers")
-                .expect("missing global function")
-        });
-        pub fn ScheduleGetProducers(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETPRODUCERS;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETCONSUMERS: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleGetConsumers")
-                .expect("missing global function")
-        });
-        pub fn ScheduleGetConsumers(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETCONSUMERS;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
-            typed(_0.into(), _1.into())
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEGETOUTPUTBLOCKS: LazyLock<Function> =
-            LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleGetOutputBlocks")
-                    .expect("missing global function")
-            });
-        pub fn ScheduleGetOutputBlocks(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETOUTPUTBLOCKS;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
             typed(_0.into(), _1.into())
         }
 
@@ -15735,275 +15921,89 @@ pub mod tir {
             typed(_0.into(), _1)
         }
 
-        static FUNC_TIR_SCHEDULE_SCHEDULECACHEREAD: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleCacheRead").expect("missing global function")
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETBLOCK: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGetBlock").expect("missing global function")
         });
-        pub fn ScheduleCacheRead(
+        pub fn ScheduleGetBlock(
             _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: tvm_ffi::String,
-            _4: tvm_ffi::Array<crate::tir::BlockRV>,
+            _1: tvm_ffi::String,
+            _2: Option<tvm_ffi::String>,
         ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEREAD;
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETBLOCK;
             let typed = tvm_ffi::into_typed_fn!(
                 func.clone(),
                 Fn(
                     tvm_ffi::object::ObjectRef,
-                    tvm_ffi::object::ObjectRef,
-                    i64,
                     tvm_ffi::String,
-                    tvm_ffi::Array<crate::tir::BlockRV>,
+                    Option<tvm_ffi::String>,
                 ) -> Result<crate::tir::BlockRV>
             );
-            typed(_0.into(), _1.into(), _2, _3, _4)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULECACHEWRITE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleCacheWrite")
-                .expect("missing global function")
-        });
-        pub fn ScheduleCacheWrite(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: tvm_ffi::String,
-            _4: tvm_ffi::Array<crate::tir::BlockRV>,
-        ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEWRITE;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::object::ObjectRef,
-                    i64,
-                    tvm_ffi::String,
-                    tvm_ffi::Array<crate::tir::BlockRV>,
-                ) -> Result<crate::tir::BlockRV>
-            );
-            typed(_0.into(), _1.into(), _2, _3, _4)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEREAD: LazyLock<Function> =
-            LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleReindexCacheRead")
-                    .expect("missing global function")
-            });
-        pub fn ScheduleReindexCacheRead(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: tvm_ffi::String,
-            _4: crate::tir::IndexMap,
-        ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEREAD;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::BlockRV>);
-            typed(_0.into(), _1.into(), _2, _3, _4.into())
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEWRITE: LazyLock<Function> =
-            LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleReindexCacheWrite")
-                    .expect("missing global function")
-            });
-        pub fn ScheduleReindexCacheWrite(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: tvm_ffi::String,
-            _4: crate::tir::IndexMap,
-        ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREINDEXCACHEWRITE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String, tvm_ffi::object::ObjectRef) -> Result<crate::tir::BlockRV>);
-            typed(_0.into(), _1.into(), _2, _3, _4.into())
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULECACHEINPLACE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleCacheInplace")
-                .expect("missing global function")
-        });
-        pub fn ScheduleCacheInplace(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: tvm_ffi::String,
-        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEINPLACE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, tvm_ffi::String) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
-            typed(_0.into(), _1.into(), _2, _3)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULECACHEINDEX: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleCacheIndex")
-                .expect("missing global function")
-        });
-        pub fn ScheduleCacheIndex(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: tvm_ffi::String,
-            _3: i64,
-        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULECACHEINDEX;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String, i64) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
-            typed(_0.into(), _1.into(), _2, _3)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEREINDEX: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleReIndex").expect("missing global function")
-        });
-        pub fn ScheduleReIndex(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: i64,
-            _4: bool,
-        ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEREINDEX;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, i64, bool) -> Result<crate::tir::BlockRV>);
-            typed(_0.into(), _1.into(), _2, _3, _4)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEBLOCKIZE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleBlockize").expect("missing global function")
-        });
-        pub fn ScheduleBlockize(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-            _2: bool,
-        ) -> Result<crate::tir::BlockRV> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEBLOCKIZE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, bool) -> Result<crate::tir::BlockRV>);
             typed(_0.into(), _1, _2)
         }
 
-        static FUNC_TIR_SCHEDULE_SCHEDULETENSORIZE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleTensorize").expect("missing global function")
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETLOOPS: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGetLoops").expect("missing global function")
         });
-        pub fn ScheduleTensorize(
+        pub fn ScheduleGetLoops(
             _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-            _2: tvm_ffi::String,
-            _3: bool,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULETENSORIZE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String, bool) -> Result<()>);
-            typed(_0.into(), _1, _2, _3)
+            _1: crate::tir::BlockRV,
+        ) -> Result<tvm_ffi::Array<crate::tir::LoopRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETLOOPS;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::LoopRV>>);
+            typed(_0.into(), _1.into())
         }
 
-        static FUNC_TIR_SCHEDULE_SCHEDULEANNOTATE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleAnnotate").expect("missing global function")
-        });
-        pub fn ScheduleAnnotate(
-            _0: crate::tir::Schedule,
-            _1: tvm_ffi::object::ObjectRef,
-            _2: tvm_ffi::String,
-            _3: tvm_ffi::AnyValue,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEANNOTATE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String, tvm_ffi::AnyValue) -> Result<()>);
-            typed(_0.into(), _1, _2, _3)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEUNANNOTATE: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tir.schedule.ScheduleUnannotate")
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETCHILDBLOCKS: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGetChildBlocks")
                 .expect("missing global function")
         });
-        pub fn ScheduleUnannotate(
+        pub fn ScheduleGetChildBlocks(
             _0: crate::tir::Schedule,
             _1: tvm_ffi::object::ObjectRef,
-            _2: tvm_ffi::String,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEUNANNOTATE;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::String) -> Result<()>);
-            typed(_0.into(), _1, _2)
+        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETCHILDBLOCKS;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
+            typed(_0.into(), _1)
         }
 
-        static FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMLAYOUT: LazyLock<Function> =
-            LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleTransformLayout")
-                    .expect("missing global function")
-            });
-        pub fn ScheduleTransformLayout(
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETPRODUCERS: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGetProducers")
+                .expect("missing global function")
+        });
+        pub fn ScheduleGetProducers(
             _0: crate::tir::Schedule,
             _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: i64,
-            _4: crate::tir::IndexMap,
-            _5: Option<crate::tir::IndexMap>,
-            _6: bool,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMLAYOUT;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::object::ObjectRef,
-                    i64,
-                    i64,
-                    tvm_ffi::object::ObjectRef,
-                    Option<crate::tir::IndexMap>,
-                    bool,
-                ) -> Result<()>
-            );
-            typed(_0.into(), _1.into(), _2, _3, _4.into(), _5, _6)
+        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETPRODUCERS;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
+            typed(_0.into(), _1.into())
         }
 
-        static FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMBLOCKLAYOUT: LazyLock<Function> =
-            LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleTransformBlockLayout")
-                    .expect("missing global function")
-            });
-        pub fn ScheduleTransformBlockLayout(
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETCONSUMERS: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tir.schedule.ScheduleGetConsumers")
+                .expect("missing global function")
+        });
+        pub fn ScheduleGetConsumers(
             _0: crate::tir::Schedule,
             _1: crate::tir::BlockRV,
-            _2: crate::tir::IndexMap,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULETRANSFORMBLOCKLAYOUT;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<()>);
-            typed(_0.into(), _1.into(), _2.into())
+        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETCONSUMERS;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
+            typed(_0.into(), _1.into())
         }
 
-        static FUNC_TIR_SCHEDULE_SCHEDULESETAXISSEPARATOR: LazyLock<Function> =
+        static FUNC_TIR_SCHEDULE_SCHEDULEGETOUTPUTBLOCKS: LazyLock<Function> =
             LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleSetAxisSeparator")
+                Function::get_global("tir.schedule.ScheduleGetOutputBlocks")
                     .expect("missing global function")
             });
-        pub fn ScheduleSetAxisSeparator(
+        pub fn ScheduleGetOutputBlocks(
             _0: crate::tir::Schedule,
             _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: i64,
-            _4: tvm_ffi::Array<crate::ir::IntImm>,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULESETAXISSEPARATOR;
-            let typed = tvm_ffi::into_typed_fn!(
-                func.clone(),
-                Fn(
-                    tvm_ffi::object::ObjectRef,
-                    tvm_ffi::object::ObjectRef,
-                    i64,
-                    i64,
-                    tvm_ffi::Array<crate::ir::IntImm>,
-                ) -> Result<()>
-            );
-            typed(_0.into(), _1.into(), _2, _3, _4)
-        }
-
-        static FUNC_TIR_SCHEDULE_SCHEDULEANNOTATEBUFFERACCESS: LazyLock<Function> =
-            LazyLock::new(|| {
-                Function::get_global("tir.schedule.ScheduleAnnotateBufferAccess")
-                    .expect("missing global function")
-            });
-        pub fn ScheduleAnnotateBufferAccess(
-            _0: crate::tir::Schedule,
-            _1: crate::tir::BlockRV,
-            _2: i64,
-            _3: i64,
-            _4: crate::tir::IndexMap,
-        ) -> Result<()> {
-            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEANNOTATEBUFFERACCESS;
-            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef, i64, i64, tvm_ffi::object::ObjectRef) -> Result<()>);
-            typed(_0.into(), _1.into(), _2, _3, _4.into())
+        ) -> Result<tvm_ffi::Array<crate::tir::BlockRV>> {
+            let func = &*FUNC_TIR_SCHEDULE_SCHEDULEGETOUTPUTBLOCKS;
+            let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::tir::BlockRV>>);
+            typed(_0.into(), _1.into())
         }
 
         static FUNC_TIR_SCHEDULE_SCHEDULEGETMOD: LazyLock<Function> = LazyLock::new(|| {
@@ -17660,6 +17660,28 @@ pub mod tl {
         typed(_0.into())
     }
 
+    static FUNC_TL_LAYOUT_RESHAPE: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tl.Layout_reshape").expect("missing global function")
+    });
+    pub fn Layout_reshape(
+        _0: crate::tl::Layout,
+        _1: tvm_ffi::Array<crate::ir::PrimExpr>,
+        _2: crate::ir::PrimExpr,
+        _3: crate::ir::PrimExpr,
+    ) -> Result<crate::tl::Layout> {
+        let func = &*FUNC_TL_LAYOUT_RESHAPE;
+        let typed = tvm_ffi::into_typed_fn!(
+            func.clone(),
+            Fn(
+                tvm_ffi::object::ObjectRef,
+                tvm_ffi::Array<crate::ir::PrimExpr>,
+                tvm_ffi::object::ObjectRef,
+                tvm_ffi::object::ObjectRef,
+            ) -> Result<crate::tl::Layout>
+        );
+        typed(_0.into(), _1, _2.into(), _3.into())
+    }
+
     static FUNC_TL_LAYOUT_INDEX: LazyLock<Function> =
         LazyLock::new(|| Function::get_global("tl.Layout_index").expect("missing global function"));
     pub fn Layout_index(_0: crate::tl::Layout) -> Result<tvm_ffi::Array<crate::ir::PrimExpr>> {
@@ -17677,6 +17699,33 @@ pub mod tl {
         let func = &*FUNC_TL_LAYOUT_FORWARD_VARS;
         let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<tvm_ffi::Array<crate::ir::PrimExpr>>);
         typed(_0.into())
+    }
+
+    static FUNC_TL_LAYOUT_REPEAT: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tl.Layout_repeat").expect("missing global function")
+    });
+    pub fn Layout_repeat(_0: crate::tl::Layout, _1: i64, _2: i64) -> Result<crate::tl::Layout> {
+        let func = &*FUNC_TL_LAYOUT_REPEAT;
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef, i64, i64) -> Result<crate::tl::Layout>);
+        typed(_0.into(), _1, _2)
+    }
+
+    static FUNC_TL_LAYOUT_EXPAND: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tl.Layout_expand").expect("missing global function")
+    });
+    pub fn Layout_expand(
+        _0: crate::tl::Layout,
+        _1: tvm_ffi::Array<crate::ir::PrimExpr>,
+    ) -> Result<crate::tl::Layout> {
+        let func = &*FUNC_TL_LAYOUT_EXPAND;
+        let typed = tvm_ffi::into_typed_fn!(
+            func.clone(),
+            Fn(
+                tvm_ffi::object::ObjectRef,
+                tvm_ffi::Array<crate::ir::PrimExpr>,
+            ) -> Result<crate::tl::Layout>
+        );
+        typed(_0.into(), _1)
     }
 
     static FUNC_TL_LAYOUT_IS_EQUAL: LazyLock<Function> = LazyLock::new(|| {
@@ -17838,36 +17887,29 @@ pub mod tl {
     static FUNC_TL_MAKE_FULL_BANK_SWIZZLED_LAYOUT: LazyLock<Function> = LazyLock::new(|| {
         Function::get_global("tl.make_full_bank_swizzled_layout").expect("missing global function")
     });
-    pub fn make_full_bank_swizzled_layout(_0: i64, _1: i64, _2: i64) -> Result<crate::tl::Layout> {
+    pub fn make_full_bank_swizzled_layout(_0: crate::tir::Buffer) -> Result<crate::tl::Layout> {
         let func = &*FUNC_TL_MAKE_FULL_BANK_SWIZZLED_LAYOUT;
-        let typed =
-            tvm_ffi::into_typed_fn!(func.clone(), Fn(i64, i64, i64) -> Result<crate::tl::Layout>);
-        typed(_0, _1, _2)
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::tl::Layout>);
+        typed(_0.into())
     }
 
     static FUNC_TL_MAKE_HALF_BANK_SWIZZLED_LAYOUT: LazyLock<Function> = LazyLock::new(|| {
         Function::get_global("tl.make_half_bank_swizzled_layout").expect("missing global function")
     });
-    pub fn make_half_bank_swizzled_layout(_0: i64, _1: i64, _2: i64) -> Result<crate::tl::Layout> {
+    pub fn make_half_bank_swizzled_layout(_0: crate::tir::Buffer) -> Result<crate::tl::Layout> {
         let func = &*FUNC_TL_MAKE_HALF_BANK_SWIZZLED_LAYOUT;
-        let typed =
-            tvm_ffi::into_typed_fn!(func.clone(), Fn(i64, i64, i64) -> Result<crate::tl::Layout>);
-        typed(_0, _1, _2)
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::tl::Layout>);
+        typed(_0.into())
     }
 
     static FUNC_TL_MAKE_QUARTER_BANK_SWIZZLED_LAYOUT: LazyLock<Function> = LazyLock::new(|| {
         Function::get_global("tl.make_quarter_bank_swizzled_layout")
             .expect("missing global function")
     });
-    pub fn make_quarter_bank_swizzled_layout(
-        _0: i64,
-        _1: i64,
-        _2: i64,
-    ) -> Result<crate::tl::Layout> {
+    pub fn make_quarter_bank_swizzled_layout(_0: crate::tir::Buffer) -> Result<crate::tl::Layout> {
         let func = &*FUNC_TL_MAKE_QUARTER_BANK_SWIZZLED_LAYOUT;
-        let typed =
-            tvm_ffi::into_typed_fn!(func.clone(), Fn(i64, i64, i64) -> Result<crate::tl::Layout>);
-        typed(_0, _1, _2)
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<crate::tl::Layout>);
+        typed(_0.into())
     }
 
     static FUNC_TL_MAKE_LINEAR_LAYOUT: LazyLock<Function> = LazyLock::new(|| {
@@ -17949,10 +17991,11 @@ pub mod tl {
         _2: i64,
         _3: tvm_ffi::DLDataType,
         _4: tvm_ffi::DLDataType,
+        _5: bool,
     ) -> Result<tvm_ffi::Array<crate::ir::IntImm>> {
         let func = &*FUNC_TL_GET_TCGEN5_MMA_META;
-        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(i64, i64, i64, tvm_ffi::DLDataType, tvm_ffi::DLDataType) -> Result<tvm_ffi::Array<crate::ir::IntImm>>);
-        typed(_0, _1, _2, _3, _4)
+        let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn(i64, i64, i64, tvm_ffi::DLDataType, tvm_ffi::DLDataType, bool) -> Result<tvm_ffi::Array<crate::ir::IntImm>>);
+        typed(_0, _1, _2, _3, _4, _5)
     }
 
     static FUNC_TL_GET_TCGEN5_INSTR_DESC: LazyLock<Function> = LazyLock::new(|| {
@@ -18087,6 +18130,25 @@ pub mod tl {
         LazyLock::new(|| Function::get_global("tl.TargetIsCDNA").expect("missing global function"));
     pub fn TargetIsCDNA(_0: crate::target::Target) -> Result<bool> {
         let func = &*FUNC_TL_TARGETISCDNA;
+        let typed =
+            tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<bool>);
+        typed(_0.into())
+    }
+
+    static FUNC_TL_TARGETISRDNA: LazyLock<Function> =
+        LazyLock::new(|| Function::get_global("tl.TargetIsRDNA").expect("missing global function"));
+    pub fn TargetIsRDNA(_0: crate::target::Target) -> Result<bool> {
+        let func = &*FUNC_TL_TARGETISRDNA;
+        let typed =
+            tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<bool>);
+        typed(_0.into())
+    }
+
+    static FUNC_TL_TARGETISGFX950: LazyLock<Function> = LazyLock::new(|| {
+        Function::get_global("tl.TargetIsGfx950").expect("missing global function")
+    });
+    pub fn TargetIsGfx950(_0: crate::target::Target) -> Result<bool> {
+        let func = &*FUNC_TL_TARGETISGFX950;
         let typed =
             tvm_ffi::into_typed_fn!(func.clone(), Fn(tvm_ffi::object::ObjectRef) -> Result<bool>);
         typed(_0.into())
@@ -18245,6 +18307,30 @@ pub mod tl {
             typed()
         }
 
+        static FUNC_TL_TRANSFORM_FUSEMBARRIERARRIVEEXPECTTX: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tl.transform.FuseMBarrierArriveExpectTx")
+                    .expect("missing global function")
+            });
+        pub fn FuseMBarrierArriveExpectTx() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_FUSEMBARRIERARRIVEEXPECTTX;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
+            typed()
+        }
+
+        static FUNC_TL_TRANSFORM_HOISTGLOBALBUFFERALLOCATIONS: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tl.transform.HoistGlobalBufferAllocations")
+                    .expect("missing global function")
+            });
+        pub fn HoistGlobalBufferAllocations() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_HOISTGLOBALBUFFERALLOCATIONS;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
+            typed()
+        }
+
         static FUNC_TL_TRANSFORM_HOISTNONRESTRICTPARAMS: LazyLock<Function> = LazyLock::new(|| {
             Function::get_global("tl.transform.HoistNonRestrictParams")
                 .expect("missing global function")
@@ -18292,27 +18378,6 @@ pub mod tl {
         });
         pub fn InjectSoftwarePipeline() -> Result<crate::transform::Pass> {
             let func = &*FUNC_TL_TRANSFORM_INJECTSOFTWAREPIPELINE;
-            let typed =
-                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
-            typed()
-        }
-
-        static FUNC_TL_TRANSFORM_INJECTPTXASYNCCOPY: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tl.transform.InjectPTXAsyncCopy")
-                .expect("missing global function")
-        });
-        pub fn InjectPTXAsyncCopy() -> Result<crate::transform::Pass> {
-            let func = &*FUNC_TL_TRANSFORM_INJECTPTXASYNCCOPY;
-            let typed =
-                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
-            typed()
-        }
-
-        static FUNC_TL_TRANSFORM_INJECTTMABARRIER: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tl.transform.InjectTmaBarrier").expect("missing global function")
-        });
-        pub fn InjectTmaBarrier() -> Result<crate::transform::Pass> {
-            let func = &*FUNC_TL_TRANSFORM_INJECTTMABARRIER;
             let typed =
                 tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
             typed()
@@ -18377,6 +18442,26 @@ pub mod tl {
         });
         pub fn LoopUnswitching() -> Result<crate::transform::Pass> {
             let func = &*FUNC_TL_TRANSFORM_LOOPUNSWITCHING;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
+            typed()
+        }
+
+        static FUNC_TL_TRANSFORM_LOWERACCESSPTR: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tl.transform.LowerAccessPtr").expect("missing global function")
+        });
+        pub fn LowerAccessPtr() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_LOWERACCESSPTR;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
+            typed()
+        }
+
+        static FUNC_TL_TRANSFORM_LOWERBLACKWELL2SM: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tl.transform.LowerBlackwell2SM").expect("missing global function")
+        });
+        pub fn LowerBlackwell2SM() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_LOWERBLACKWELL2SM;
             let typed =
                 tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
             typed()
@@ -18466,6 +18551,16 @@ pub mod tl {
             typed(_0)
         }
 
+        static FUNC_TL_TRANSFORM_LOWERPTXASYNCCOPY: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tl.transform.LowerPTXAsyncCopy").expect("missing global function")
+        });
+        pub fn LowerPTXAsyncCopy() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_LOWERPTXASYNCCOPY;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
+            typed()
+        }
+
         static FUNC_TL_TRANSFORM_LOWERSHAREDBARRIER: LazyLock<Function> = LazyLock::new(|| {
             Function::get_global("tl.transform.LowerSharedBarrier")
                 .expect("missing global function")
@@ -18543,8 +18638,19 @@ pub mod tl {
             Function::get_global("tl.transform.MultiVersionBuffer")
                 .expect("missing global function")
         });
-        pub fn MultiVersionBuffer() -> Result<crate::transform::Pass> {
+        pub fn MultiVersionBuffer(_0: bool) -> Result<crate::transform::Pass> {
             let func = &*FUNC_TL_TRANSFORM_MULTIVERSIONBUFFER;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn(bool) -> Result<crate::transform::Pass>);
+            typed(_0)
+        }
+
+        static FUNC_TL_TRANSFORM_OPTIMIZECPASYNCSYNC: LazyLock<Function> = LazyLock::new(|| {
+            Function::get_global("tl.transform.OptimizeCPAsyncSync")
+                .expect("missing global function")
+        });
+        pub fn OptimizeCPAsyncSync() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_OPTIMIZECPASYNCSYNC;
             let typed =
                 tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
             typed()
@@ -18578,6 +18684,18 @@ pub mod tl {
             });
         pub fn PlanAndUpdateBufferAllocationLocation() -> Result<crate::transform::Pass> {
             let func = &*FUNC_TL_TRANSFORM_PLANANDUPDATEBUFFERALLOCATIONLOCATION;
+            let typed =
+                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
+            typed()
+        }
+
+        static FUNC_TL_TRANSFORM_PRODUCERCONSUMERWARPSPECIALIZED: LazyLock<Function> =
+            LazyLock::new(|| {
+                Function::get_global("tl.transform.ProducerConsumerWarpSpecialized")
+                    .expect("missing global function")
+            });
+        pub fn ProducerConsumerWarpSpecialized() -> Result<crate::transform::Pass> {
+            let func = &*FUNC_TL_TRANSFORM_PRODUCERCONSUMERWARPSPECIALIZED;
             let typed =
                 tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
             typed()
@@ -18660,16 +18778,6 @@ pub mod tl {
         });
         pub fn VerifyParallelLoop() -> Result<crate::transform::Pass> {
             let func = &*FUNC_TL_TRANSFORM_VERIFYPARALLELLOOP;
-            let typed =
-                tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
-            typed()
-        }
-
-        static FUNC_TL_TRANSFORM_WARPSPECIALIZED: LazyLock<Function> = LazyLock::new(|| {
-            Function::get_global("tl.transform.WarpSpecialized").expect("missing global function")
-        });
-        pub fn WarpSpecialized() -> Result<crate::transform::Pass> {
-            let func = &*FUNC_TL_TRANSFORM_WARPSPECIALIZED;
             let typed =
                 tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::transform::Pass>);
             typed()

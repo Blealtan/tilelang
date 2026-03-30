@@ -107,14 +107,6 @@ pub mod ffi {
             tvm_ffi::object_wrapper::FieldGetter::new("ffi.reflection.AccessPath", "step")
                 .expect("non-layout field step must be registered in TVM reflection")
         });
-        static METHOD_FFI_REFLECTION_ACCESSPATH____FFI_SHALLOW_COPY__: LazyLock<tvm_ffi::Function> =
-            LazyLock::new(|| {
-                tvm_ffi::object_wrapper::resolve_type_method(
-                    "ffi.reflection.AccessPath",
-                    "__ffi_shallow_copy__",
-                )
-                .expect("missing type method")
-            });
         static METHOD_FFI_REFLECTION_ACCESSPATH___ROOT: LazyLock<tvm_ffi::Function> =
             LazyLock::new(|| {
                 tvm_ffi::object_wrapper::resolve_type_method("ffi.reflection.AccessPath", "_root")
@@ -195,13 +187,6 @@ pub mod ffi {
                 .expect("missing type method")
             });
         impl AccessPath {
-            pub fn __ffi_shallow_copy__(&self, args: &[Any]) -> Result<Any> {
-                let func = &*METHOD_FFI_REFLECTION_ACCESSPATH____FFI_SHALLOW_COPY__;
-                let mut views: Vec<AnyView<'_>> = Vec::with_capacity(args.len() + 1);
-                views.push(AnyView::from(self as &tvm_ffi::object::ObjectRef));
-                views.extend(args.iter().map(AnyView::from));
-                func.call_packed(&views)
-            }
             pub fn _root() -> Result<crate::ffi::reflection::AccessPath> {
                 let func = &*METHOD_FFI_REFLECTION_ACCESSPATH___ROOT;
                 let typed = tvm_ffi::into_typed_fn!(func.clone(), Fn() -> Result<crate::ffi::reflection::AccessPath>);
@@ -11512,6 +11497,31 @@ pub mod tir {
 
         #[repr(C)]
         #[derive(tvm_ffi::derive::Object)]
+        #[type_key = "tir.transform.HoistIfThenElseConfig"]
+        pub struct HoistIfThenElseConfigObj {
+            __tvm_ffi_object_parent: tvm_ffi::object::Object,
+            support_block_scope_hoisting: bool,
+            _gap0: [u8; 15],
+        }
+
+        #[repr(C)]
+        #[derive(tvm_ffi::derive::ObjectRef, Clone)]
+        pub struct HoistIfThenElseConfig {
+            data: tvm_ffi::object::ObjectArc<HoistIfThenElseConfigObj>,
+        }
+
+        tvm_ffi::impl_object_hierarchy!(HoistIfThenElseConfig: tvm_ffi::object::ObjectRef);
+
+        impl HoistIfThenElseConfig {
+            pub fn get_support_block_scope_hoisting(&self) -> bool {
+                self.data.support_block_scope_hoisting
+            }
+        }
+
+        impl HoistIfThenElseConfig {}
+
+        #[repr(C)]
+        #[derive(tvm_ffi::derive::Object)]
         #[type_key = "tir.transform.HoistExpressionConfig"]
         pub struct HoistExpressionConfigObj {
             __tvm_ffi_object_parent: tvm_ffi::object::Object,
@@ -11538,31 +11548,6 @@ pub mod tir {
         }
 
         impl HoistExpressionConfig {}
-
-        #[repr(C)]
-        #[derive(tvm_ffi::derive::Object)]
-        #[type_key = "tir.transform.HoistIfThenElseConfig"]
-        pub struct HoistIfThenElseConfigObj {
-            __tvm_ffi_object_parent: tvm_ffi::object::Object,
-            support_block_scope_hoisting: bool,
-            _gap0: [u8; 15],
-        }
-
-        #[repr(C)]
-        #[derive(tvm_ffi::derive::ObjectRef, Clone)]
-        pub struct HoistIfThenElseConfig {
-            data: tvm_ffi::object::ObjectArc<HoistIfThenElseConfigObj>,
-        }
-
-        tvm_ffi::impl_object_hierarchy!(HoistIfThenElseConfig: tvm_ffi::object::ObjectRef);
-
-        impl HoistIfThenElseConfig {
-            pub fn get_support_block_scope_hoisting(&self) -> bool {
-                self.data.support_block_scope_hoisting
-            }
-        }
-
-        impl HoistIfThenElseConfig {}
 
         #[repr(C)]
         #[derive(tvm_ffi::derive::Object)]
@@ -12427,7 +12412,11 @@ pub mod tl {
         clearAccum: crate::ir::PrimExpr,
         kPack: i32,
         wgWait: i32,
-        _gap1: [u8; 32],
+        isWgmma: bool,
+        isTcgen05: bool,
+        _gap1: [u8; 6],
+        mbar: crate::tir::BufferLoad,
+        cCoords: tvm_ffi::Array<crate::ir::PrimExpr>,
         policy: crate::tl::GemmWarpPolicy,
         _gap2: [u8; 16],
     }
@@ -12491,6 +12480,18 @@ pub mod tl {
         }
         pub fn get_wgWait(&self) -> i32 {
             self.data.wgWait
+        }
+        pub fn get_isWgmma(&self) -> bool {
+            self.data.isWgmma
+        }
+        pub fn get_isTcgen05(&self) -> bool {
+            self.data.isTcgen05
+        }
+        pub fn get_mbar(&self) -> crate::tir::BufferLoad {
+            self.data.mbar.clone()
+        }
+        pub fn get_cCoords(&self) -> tvm_ffi::Array<crate::ir::PrimExpr> {
+            self.data.cCoords.clone()
         }
         pub fn get_policy(&self) -> crate::tl::GemmWarpPolicy {
             self.data.policy.clone()
@@ -12566,13 +12567,16 @@ pub mod tl {
         offsetA: i32,
         offsetB: i32,
         clearAccum: crate::ir::PrimExpr,
-        mbarRegion: crate::tir::BufferRegion,
-        mbar: crate::tir::Buffer,
+        mbar: crate::tir::BufferLoad,
         cCoords: tvm_ffi::Array<crate::ir::PrimExpr>,
         kPack: i32,
         wgWait: i32,
+        isWgmma: bool,
+        isTcgen05: bool,
+        _gap1: [u8; 6],
         policy: crate::tl::GemmWarpPolicy,
-        _gap1: [u8; 16],
+        annotations: tvm_ffi::Map<tvm_ffi::String, tvm_ffi::object::ObjectRef>,
+        _gap2: [u8; 16],
     }
 
     #[repr(C)]
@@ -12629,10 +12633,7 @@ pub mod tl {
         pub fn get_clearAccum(&self) -> crate::ir::PrimExpr {
             self.data.clearAccum.clone()
         }
-        pub fn get_mbarRegion(&self) -> crate::tir::BufferRegion {
-            self.data.mbarRegion.clone()
-        }
-        pub fn get_mbar(&self) -> crate::tir::Buffer {
+        pub fn get_mbar(&self) -> crate::tir::BufferLoad {
             self.data.mbar.clone()
         }
         pub fn get_cCoords(&self) -> tvm_ffi::Array<crate::ir::PrimExpr> {
@@ -12644,8 +12645,17 @@ pub mod tl {
         pub fn get_wgWait(&self) -> i32 {
             self.data.wgWait
         }
+        pub fn get_isWgmma(&self) -> bool {
+            self.data.isWgmma
+        }
+        pub fn get_isTcgen05(&self) -> bool {
+            self.data.isTcgen05
+        }
         pub fn get_policy(&self) -> crate::tl::GemmWarpPolicy {
             self.data.policy.clone()
+        }
+        pub fn get_annotations(&self) -> tvm_ffi::Map<tvm_ffi::String, tvm_ffi::object::ObjectRef> {
+            self.data.annotations.clone()
         }
     }
 
@@ -13160,6 +13170,52 @@ pub mod tl {
             FIELD_TL_REGIONOP__BUFFER
                 .get(&__obj)
                 .expect("non-layout field buffer should be accessible")
+        }
+    }
+
+    #[repr(C)]
+    #[derive(tvm_ffi::derive::Object)]
+    #[type_key = "tl.Transpose"]
+    pub struct TransposeObj {
+        __tvm_ffi_object_parent: crate::_tvm_ffi_stubgen_detail::types::tl::TileOperatorObj,
+        dst: crate::tir::Buffer,
+        src_range: tvm_ffi::Array<crate::ir::Range>,
+        dst_range: tvm_ffi::Array<crate::ir::Range>,
+        _gap0: [u8; 8],
+    }
+
+    #[repr(C)]
+    #[derive(tvm_ffi::derive::ObjectRef, Clone)]
+    pub struct Transpose {
+        data: tvm_ffi::object::ObjectArc<TransposeObj>,
+    }
+
+    tvm_ffi::impl_object_hierarchy!(Transpose: crate::tl::TileOperator, tvm_ffi::object::ObjectRef);
+
+    impl Transpose {
+        pub fn get_dst(&self) -> crate::tir::Buffer {
+            self.data.dst.clone()
+        }
+        pub fn get_src_range(&self) -> tvm_ffi::Array<crate::ir::Range> {
+            self.data.src_range.clone()
+        }
+        pub fn get_dst_range(&self) -> tvm_ffi::Array<crate::ir::Range> {
+            self.data.dst_range.clone()
+        }
+    }
+
+    static FIELD_TL_TRANSPOSE__SRC: std::sync::LazyLock<
+        tvm_ffi::object_wrapper::FieldGetter<crate::tir::Buffer>,
+    > = std::sync::LazyLock::new(|| {
+        tvm_ffi::object_wrapper::FieldGetter::new("tl.Transpose", "src")
+            .expect("non-layout field src must be registered in TVM reflection")
+    });
+    impl Transpose {
+        pub fn get_src(&self) -> crate::tir::Buffer {
+            let __obj: tvm_ffi::object::ObjectRef = self.clone().into();
+            FIELD_TL_TRANSPOSE__SRC
+                .get(&__obj)
+                .expect("non-layout field src should be accessible")
         }
     }
 

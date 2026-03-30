@@ -34,7 +34,7 @@ fn runtime_falls_back_when_explicit_paths_are_missing() {
     );
     let _tilelang_guard = EnvGuard::set(
         "TILELANG_RS_TILELANG_MODULE_PATH",
-        "/definitely/missing/libtilelang_module.so".to_string(),
+        "/definitely/missing/libtilelang.so".to_string(),
     );
     let _runtime_dir_guard = EnvGuard::set(
         "TILELANG_RS_RUNTIME_DIR",

@@ -50,7 +50,7 @@ fn runtime_loads_from_explicit_env_paths_and_is_idempotent() -> Result<()> {
     );
     let _tilelang_guard = EnvGuard::set(
         "TILELANG_RS_TILELANG_MODULE_PATH",
-        lib_dir.join("libtilelang_module.so").display().to_string(),
+        lib_dir.join("libtilelang.so").display().to_string(),
     );
 
     runtime::ensure_runtime_loaded()?;

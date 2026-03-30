@@ -239,9 +239,9 @@ fn runtime_suggestions() -> Vec<String> {
 
 fn platform_library_names() -> (&'static str, &'static str) {
     match env::consts::OS {
-        "macos" => ("libtvm.dylib", "libtilelang_module.dylib"),
-        "windows" => ("tvm.dll", "tilelang_module.dll"),
-        _ => ("libtvm.so", "libtilelang_module.so"),
+        "macos" => ("libtvm.dylib", "libtilelang.dylib"),
+        "windows" => ("tvm.dll", "tilelang.dll"),
+        _ => ("libtvm.so", "libtilelang.so"),
     }
 }
 
@@ -264,11 +264,8 @@ mod tests {
     #[test]
     fn diagnostics_include_library_and_attempts() {
         let error = RuntimeLoadError {
-            missing_library: "libtilelang_module.so",
-            attempted_paths: vec![
-                "/tmp/libtilelang_module.so".into(),
-                "libtilelang_module.so".into(),
-            ],
+            missing_library: "libtilelang.so",
+            attempted_paths: vec!["/tmp/libtilelang.so".into(), "libtilelang.so".into()],
             env_snapshot: vec![
                 (TILELANG_MODULE_ENV, None),
                 (TVM_ENV, Some("/tmp/libtvm.so".into())),
@@ -278,8 +275,8 @@ mod tests {
         };
 
         let message = error.format_message();
-        assert!(message.contains("libtilelang_module.so"));
-        assert!(message.contains("/tmp/libtilelang_module.so"));
+        assert!(message.contains("libtilelang.so"));
+        assert!(message.contains("/tmp/libtilelang.so"));
         assert!(message.contains("TILELANG_RS_TVM_PATH=/tmp/libtvm.so"));
         assert!(message.contains("set TILELANG_RS_RUNTIME_DIR"));
     }

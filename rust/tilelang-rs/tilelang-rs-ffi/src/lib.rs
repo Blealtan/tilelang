@@ -1679,12 +1679,15 @@ pub mod tl {
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::GemmWarpPolicyComputeWarpPartition;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::KernelLaunch;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_expand;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_forward_vars;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_index;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_input_shape;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_inverse;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_is_equal;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_output_shape;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_repeat;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Layout_reshape;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Parallel;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Persistent;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::Pipelined;
@@ -1697,8 +1700,10 @@ pub mod tl {
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsAmpere;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsCDNA;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsCuda;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsGfx950;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsHopper;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsMetal;
+    pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsRDNA;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsRocm;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsSM120;
     pub use crate::_tvm_ffi_stubgen_detail::functions::tl::TargetIsTuring;
@@ -1739,6 +1744,7 @@ pub mod tl {
     pub use crate::_tvm_ffi_stubgen_detail::types::tl::ReduceType;
     pub use crate::_tvm_ffi_stubgen_detail::types::tl::RegionOp;
     pub use crate::_tvm_ffi_stubgen_detail::types::tl::TileOperator;
+    pub use crate::_tvm_ffi_stubgen_detail::types::tl::Transpose;
     pub use crate::_tvm_ffi_stubgen_detail::types::tl::WarpSpecializeFrame;
     pub mod transform {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::AlignDynamicSharedMemoryAllocations;
@@ -1749,13 +1755,13 @@ pub mod tl {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::ConfigIndexBitwidth;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::EliminateStorageSyncForMBarrier;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::FlattenBuffer;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::FuseMBarrierArriveExpectTx;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::HoistGlobalBufferAllocations;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::HoistNonRestrictParams;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::IfStmtBinding;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::InjectAssumes;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::InjectFenceProxy;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::InjectPTXAsyncCopy;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::InjectSoftwarePipeline;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::InjectTmaBarrier;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LayoutInference;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LayoutReducer;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LegalizeNegativeIndex;
@@ -1763,6 +1769,8 @@ pub mod tl {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LegalizeVectorizedLoop;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LetInline;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LoopUnswitching;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerAccessPtr;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerBlackwell2SM;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerDeviceKernelLaunch;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerDeviceStorageAccessInfo;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerHopperIntrin;
@@ -1770,6 +1778,7 @@ pub mod tl {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerL2Persistent;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerLDGSTG;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerOpaqueBlock;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerPTXAsyncCopy;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerSharedBarrier;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerSharedTmem;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::LowerThreadAllreduce;
@@ -1779,10 +1788,12 @@ pub mod tl {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::MergeIfStmt;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::MergeSharedMemoryAllocations;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::MultiVersionBuffer;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::OptimizeCPAsyncSync;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::PersistThreadblock;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::PipelinePlanning;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::PlanAndUpdateBufferAllocationLocation;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::PointerValueTypeRewrite;
+        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::ProducerConsumerWarpSpecialized;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::RewriteWgmmaSync;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::Simplify;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::SplitHostDevice;
@@ -1791,7 +1802,6 @@ pub mod tl {
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::UnrollLoop;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::VectorizeLoop;
         pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::VerifyParallelLoop;
-        pub use crate::_tvm_ffi_stubgen_detail::functions::tl::transform::WarpSpecialized;
         pub use crate::_tvm_ffi_stubgen_detail::types::tl::transform::SimplifyConfig;
         pub use crate::_tvm_ffi_stubgen_detail::types::tl::transform::UnrollLoopConfig;
     }

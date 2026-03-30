@@ -116,7 +116,7 @@ WORKSPACE_ROOT="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 REPO_ROOT="$(cd -- "${WORKSPACE_ROOT}/../.." && pwd)"
 TVM_FFI_RUST_ROOT="${REPO_ROOT}/3rdparty/tvm/3rdparty/tvm-ffi/rust"
 DEFAULT_OUT_DIR="${WORKSPACE_ROOT}/tilelang-rs-ffi"
-DEFAULT_TILELANG_SO="${REPO_ROOT}/build/lib/libtilelang_module.so"
+DEFAULT_TILELANG_SO="${REPO_ROOT}/build/lib/libtilelang.so"
 DEFAULT_TVM_SO="${REPO_ROOT}/build/lib/libtvm.so"
 DEFAULT_TVM_FFI_PATH="${REPO_ROOT}/3rdparty/tvm/3rdparty/tvm-ffi/rust/tvm-ffi"
 
